@@ -35,6 +35,13 @@ export function CharacterRig({ def }: { def: CharacterDef }) {
     const s = st.current;
     s.t += dt;
     const t = s.t;
+    if (def.id === "monkey-rainbow") {
+      const hue = (t * 0.22) % 1;
+      m.main.color.setHSL(hue, 0.9, 0.48);
+      m.second.color.setHSL((hue + 0.34) % 1, 0.82, 0.62);
+      m.accent.color.setHSL((hue + 0.67) % 1, 0.95, 0.58);
+      m.main.emissive.setHSL(hue, 0.85, 0.12);
+    }
     const sim = runtime.sim;
     const mode = runtime.mode;
     const screen = useUI.getState().screen;
