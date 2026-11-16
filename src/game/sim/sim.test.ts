@@ -141,6 +141,28 @@ describe("NO COIN rules", () => {
     expect(sim.player.lane).toBe(0);
   });
 
+  it("three-row training creates five consecutive coin walls across all lanes", () => {
+    const sim = new Sim({
+      difficulty: "normal", speedMult: 1, coinSize: 1, laneGrip: 1,
+      weights: W, seed: 7, challenge: "three-rows",
+    });
+    const first = sim.coins.slice(0, 15);
+    expect(first).toHaveLength(15);
+    expect(new Set(first.map((c) => c.lane))).toEqual(new Set([-1, 0, 1]));
+    expect(new Set(first.map((c) => c.s)).size).toBe(5);
+  });
+
+  it("Nerdola spawns two outer-lane trains and coins in the center and on their roofs", () => {
+    const sim = new Sim({
+      difficulty: "normal", speedMult: 1, coinSize: 1, laneGrip: 1,
+      weights: W, seed: 7, challenge: "nerdola",
+    });
+    const trains = sim.obstacles.filter((o) => o.kind === "train").slice(0, 2);
+    expect(trains.map((o) => o.lane)).toEqual([-1, 1]);
+    expect(sim.coins.some((c) => c.lane === 0 && c.y === 1)).toBe(true);
+    expect(sim.coins.some((c) => c.lane === -1 && c.y > TRAIN_TOP)).toBe(true);
+    expect(sim.coins.some((c) => c.lane === 1 && c.y > TRAIN_TOP)).toBe(true);
+  });
   it("speed setting scales the starting speed", () => {
     expect(emptySim(1.5).speed).toBeCloseTo(BASE_SPEED * 1.5);
     expect(emptySim(0.6).speed).toBeCloseTo(BASE_SPEED * 0.6);
