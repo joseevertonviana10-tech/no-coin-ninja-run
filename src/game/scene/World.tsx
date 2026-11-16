@@ -103,9 +103,9 @@ function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; ti
       />
       {(quality === "high" || quality === "ultra") && (
         <Environment resolution={64}>
-          <Lightformer intensity={1.6} color={map.hemiSky} position={[0, 6, 0]} rotation-x={Math.PI / 2} scale={[12, 12, 1]} />
-          <Lightformer intensity={1} color={map.sun} position={[-6, 2, -2]} rotation-y={Math.PI / 2} scale={[16, 2, 1]} />
-          <Lightformer intensity={0.6} color={map.fog} position={[6, 2, 2]} rotation-y={-Math.PI / 2} scale={[16, 2, 1]} />
+          <Lightformer intensity={night ? 0.18 : afternoon ? 1.1 : 1.6} color={map.hemiSky} position={[0, 6, 0]} rotation-x={Math.PI / 2} scale={[12, 12, 1]} />
+          <Lightformer intensity={night ? 0.12 : afternoon ? 0.75 : 1} color={map.sun} position={[-6, 2, -2]} rotation-y={Math.PI / 2} scale={[16, 2, 1]} />
+          <Lightformer intensity={night ? 0.1 : afternoon ? 0.45 : 0.6} color={map.fog} position={[6, 2, 2]} rotation-y={-Math.PI / 2} scale={[16, 2, 1]} />
         </Environment>
       )}
     </>
