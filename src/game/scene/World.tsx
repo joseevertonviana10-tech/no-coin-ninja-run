@@ -124,7 +124,7 @@ function Stepper({ map }: { map: MapDef }) {
   const spectralAcc = useRef(0);
 
   useFrame((_, rawDelta) => {
-    const dt = Math.min(rawDelta, 0.1);
+    const dt = Math.min(rawDelta, 0.1) * runtime.timeScale;
     const set = useSettings.getState();
     const sim = runtime.sim;
     const fx = set.visualEffects;
