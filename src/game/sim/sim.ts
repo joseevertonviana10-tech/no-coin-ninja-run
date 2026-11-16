@@ -24,7 +24,7 @@ import {
   type Difficulty,
   type DifficultyId,
 } from "./constants";
-import { TrackGenerator } from "./generator";
+import { TrackGenerator, type ChallengeMode } from "./generator";
 import { makeRng } from "./rng";
 import type { Coin, DeathReason, KindWeights, Obstacle, SimEvent } from "./types";
 
@@ -37,6 +37,7 @@ export interface SimConfig {
   seed: number;
   /** Spawn content at all (false for tests that place things by hand). */
   generate?: boolean;
+  challenge?: ChallengeMode;
 }
 
 export interface PlayerState {
@@ -96,7 +97,7 @@ export class Sim {
     this.laneK = LANE_K * cfg.laneGrip;
     this.coinR = COIN_R * cfg.coinSize;
     this.generate = cfg.generate !== false;
-    this.gen = new TrackGenerator(makeRng(cfg.seed), this.diff, cfg.weights);
+    this.gen = new TrackGenerator(makeRng(cfg.seed), this.diff, cfg.weights, cfg.challenge ?? "standard");
     if (this.generate) this.gen.fill(this.obstacles, this.coins, LOOKAHEAD, this.maxSpeed * 0.6);
   }
 
