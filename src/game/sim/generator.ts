@@ -127,6 +127,9 @@ export class TrackGenerator {
     // Burla Nerdola: trens nas pistas externas, moedas no centro e nos tetos.
     const nerdola = this.challenge === "nerdola" || (this.challenge === "standard" && this.rng.chance(this.diff.coinDensity * 0.09));
     if (blockedCount === 0 && nerdola) {
+      this.safeLane = 0;
+      const lastRow = this.rows[this.rows.length - 1];
+      if (lastRow) lastRow.safe = 0;
       const trainStart = s + 5;
       for (const lane of [-1, 1] as const) {
         this.add(obstacles, "ramp", lane, s);
