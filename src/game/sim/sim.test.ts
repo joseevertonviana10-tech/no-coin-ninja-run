@@ -173,6 +173,8 @@ describe("NO COIN rules", () => {
 function botStep(sim: Sim) {
   const p = sim.player;
   const d = sim.dist;
+  const coinAhead = sim.coins.find((c) => c.alive && c.lane === p.lane && c.s > d + 0.5 && c.s - d < sim.speed * 0.4 + 2);
+  if (coinAhead && p.grounded) sim.jump();
   const next = sim.gen.rows.find((r) => r.s > d - 0.2);
   const look = sim.speed * 0.28 + 2;
   const laneClear = (lane: number) =>
