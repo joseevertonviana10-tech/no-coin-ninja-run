@@ -16,7 +16,7 @@ export const STEP_TOL = 0.32; // feet within this of a top => land on it
 export const BASE_SPEED = 12;
 export const MAX_SPEED = 28;
 export const COIN_R = 0.42;
-export const LANE_K = 18; // lane smoothing (higher = snappier)
+export const LANE_K = 22; // lane smoothing (higher = snappier)
 export const FALL_DEATH_Y = -1.6;
 export const SUBSTEP = 1 / 120;
 export const MAX_FRAME_DT = 0.1;
