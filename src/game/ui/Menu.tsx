@@ -1,4 +1,4 @@
-import { BarChart3, Map, Play, Settings, Shirt, Trophy } from "lucide-react";
+import { BarChart3, Map, Play, Settings, Shirt, Target, Trophy } from "lucide-react";
 import { CHARACTER_BY_ID } from "../data/characters";
 import { MAP_BY_ID } from "../data/maps";
 import { startRun } from "../runtime";
@@ -62,6 +62,9 @@ export function Menu() {
           </ArcadeButton>
           <ArcadeButton onClick={() => setScreen("records")}>
             <BarChart3 className="h-4 w-4" /> Recordes
+          </ArcadeButton>
+          <ArcadeButton onClick={() => setScreen("training")}>
+            <Target className="h-4 w-4" /> Treino 3 fileiras
           </ArcadeButton>
           <ArcadeButton onClick={() => setScreen("settings")}>
             <Settings className="h-4 w-4" /> Ajustes
