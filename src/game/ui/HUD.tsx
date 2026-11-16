@@ -13,6 +13,7 @@ export function HUD() {
   const timer = useRef<HTMLSpanElement>(null);
   const speed = useRef<HTMLSpanElement>(null);
   const best = useStats((s) => s.bestTime);
+  const keys = useStats((s) => s.keys);
   const mapId = useSettings((s) => s.map);
   const charId = useSettings((s) => s.character);
   const [dead, setDead] = useState<string | null>(null);
@@ -69,6 +70,7 @@ export function HUD() {
               <span className={cn("h-2 w-2 rounded-full", dead ? "bg-primary" : "animate-pulse-dot bg-success")} />
               {dead ? "ENCERRADO" : runtime.training ? runtime.timeScale.toFixed(2) + "× TREINO" : "DESAFIO ATIVO"}
             </span>
+            <span className="chip text-sky-300">🔑 {keys}</span>
           </div>
           <span ref={speed} className="timer-text mt-1 text-[10px] text-muted-foreground" />
         </div>
