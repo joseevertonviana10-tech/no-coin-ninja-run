@@ -104,7 +104,7 @@ export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
         <group>
           <Cap r={0.18} len={0.38} m={m.main} pos={[0, 0.3, 0]} scale={[1.25, 0.85, 0.9]} />
           <Ball r={0.12} m={m.second} pos={[0, 0.14, -0.16]} scale={[1.25, 0.75, 0.55]} />
-          <Cap r={0.07} len={0.65} m={m.main} pos={[0, 0.02, 0.43]} rot={[0.8, 0, 0]} />
+          <group rotation={[0.8, 0, 0]}><Cap r={0.07} len={0.65} m={m.main} pos={[0, 0.02, 0.43]} /></group>
           <Ball r={0.075} m={m.accent} pos={[-0.22, 0.48, -0.02]} />
           <Ball r={0.075} m={m.accent} pos={[0.22, 0.48, -0.02]} />
           <Box s={[0.12, 0.08, 0.08]} m={m.second} pos={[0, 0.5, -0.12]} />
@@ -114,7 +114,7 @@ export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
       return (
         <group>
           <Cap r={0.25} len={0.42} m={m.main} pos={[0, 0.3, 0]} scale={[1.25, 1, 1.1]} />
-          <Cap r={0.08} len={0.62} m={m.main} pos={[0, 0.12, 0.45]} rot={[0.9, 0, 0]} />
+          <group rotation={[0.9, 0, 0]}><Cap r={0.08} len={0.62} m={m.main} pos={[0, 0.12, 0.45]} /></group>
           {[-0.22, -0.08, 0.08, 0.22].map((x, i) => (
             <mesh key={x} position={[x, 0.58 + (i % 2) * 0.04, 0]} material={m.accent} castShadow>
               <coneGeometry args={[0.07, 0.2, 6]} />
@@ -387,7 +387,7 @@ export function Head({ def, m }: { def: CharacterDef; m: Mats }) {
       return (
         <group>
           <Ball r={0.22} m={m.main} pos={[0, 0.23, 0]} scale={[1.1, 1.05, 1.15]} />
-          <Cap r={0.13} len={0.22} m={m.main} pos={[0, 0.11, -0.2]} rot={[Math.PI / 2, 0, 0]} />
+          <group rotation={[Math.PI / 2, 0, 0]}><Cap r={0.13} len={0.22} m={m.main} pos={[0, 0.11, -0.2]} /></group>
           <Ball r={0.035} m={m.white} pos={[-0.12, 0.28, -0.18]} />
           <Ball r={0.035} m={m.white} pos={[0.12, 0.28, -0.18]} />
           <Ball r={0.02} m={m.dark} pos={[-0.12, 0.28, -0.21]} />
