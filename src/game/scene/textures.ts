@@ -301,7 +301,7 @@ export function crowdTexture() {
   const cols = ["#e63946", "#f1faee", "#ffd166", "#457b9d", "#2a9d8f", "#f4a261"];
   for (let y = 6; y < 64; y += 10)
     for (let x = 2; x < 256; x += 6) {
-      g.fillStyle = cols[Math.floor(Math.random() * cols.length)];
+      g.fillStyle = cols[Math.floor(Math.random() * cols.length)] ?? "#ffffff";
       g.beginPath();
       g.arc(x + Math.random() * 2, y, 2.4, 0, Math.PI * 2);
       g.fill();

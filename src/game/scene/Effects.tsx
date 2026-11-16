@@ -53,7 +53,7 @@ export function Particles() {
     [],
   );
   useEffect(() => {
-    mat.uniforms.uScale.value = (size.height * dpr) / 2.2;
+    mat.uniforms['uScale']!.value = (size.height * dpr) / 2.2;
   }, [size.height, dpr, mat]);
   useEffect(() => () => {
     geom.dispose();
@@ -87,7 +87,7 @@ export function Weather({ map, count }: { map: MapDef; count: number }) {
       pos[i * 3] = (Math.random() - 0.5) * 40;
       pos[i * 3 + 1] = Math.random() * 16;
       pos[i * 3 + 2] = -Math.random() * 90 + 10;
-      c.set(pal[i % pal.length]);
+      c.set(pal[i % pal.length] ?? "#ffffff");
       col.set([c.r, c.g, c.b], i * 3);
       seed[i] = Math.random();
     }
@@ -123,7 +123,7 @@ export function Weather({ map, count }: { map: MapDef; count: number }) {
     const w = map.weather;
     for (let i = 0; i < count; i++) {
       const j = i * 3;
-      const sd = seed[i];
+      const sd = seed[i]!;
       let vx = 0;
       let vy = 0;
       if (w === "snow") {
@@ -144,14 +144,14 @@ export function Weather({ map, count }: { map: MapDef; count: number }) {
         vy = -1.2 - sd;
         vx = Math.sin(t * 4 + sd * 10) * 1.5;
       }
-      pos[j] += vx * dt;
-      pos[j + 1] += vy * dt;
-      pos[j + 2] += scroll * dt;
-      if (pos[j + 1] < 0) pos[j + 1] += 16;
-      if (pos[j + 1] > 16) pos[j + 1] -= 16;
-      if (pos[j] > 20) pos[j] -= 40;
-      if (pos[j] < -20) pos[j] += 40;
-      if (pos[j + 2] > 10) pos[j + 2] -= 100;
+      pos[j] = pos[j]! + vx * dt;
+      pos[j + 1] = pos[j + 1]! + vy * dt;
+      pos[j + 2] = pos[j + 2]! + scroll * dt;
+      if (pos[j + 1]! < 0) pos[j + 1] = pos[j + 1]! + 16;
+      if (pos[j + 1]! > 16) pos[j + 1] = pos[j + 1]! - 16;
+      if (pos[j]! > 20) pos[j] = pos[j]! - 40;
+      if (pos[j]! < -20) pos[j] = pos[j]! + 40;
+      if (pos[j + 2]! > 10) pos[j + 2] = pos[j + 2]! - 100;
     }
     (data.g.getAttribute("position") as THREE.BufferAttribute).needsUpdate = true;
   });

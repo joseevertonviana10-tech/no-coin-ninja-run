@@ -27,7 +27,7 @@ export function useCharacterMats(def: CharacterDef): Mats {
       skin: std(def.skin, {
         roughness: 0.6,
         map: def.style === "zombie" ? patternTexture("stains") : def.style === "alien" ? patternTexture("scales") : null,
-        emissive: def.id === "zombie-rad" ? new THREE.Color(def.glow) : undefined,
+        emissive: new THREE.Color(def.id === "zombie-rad" ? (def.glow ?? "#000000") : "#000000"),
         emissiveIntensity: def.id === "zombie-rad" ? 0.25 : 0,
       }),
       dark: std("#141418", { roughness: 0.5 }),
@@ -44,17 +44,17 @@ export function useCharacterMats(def: CharacterDef): Mats {
   return mats;
 }
 
-const Cap = ({ r, len, m, pos = [0, 0, 0], scale }: { r: number; len: number; m: THREE.Material; pos?: [number, number, number]; scale?: [number, number, number] }) => (
+const Cap = ({ r, len, m, pos = [0, 0, 0], scale = [1, 1, 1] }: { r: number; len: number; m: THREE.Material; pos?: [number, number, number]; scale?: [number, number, number] }) => (
   <mesh position={pos} scale={scale} material={m} castShadow>
     <capsuleGeometry args={[r, len, 4, 10]} />
   </mesh>
 );
-const Box = ({ s, m, pos = [0, 0, 0], rot }: { s: [number, number, number]; m: THREE.Material; pos?: [number, number, number]; rot?: [number, number, number] }) => (
+const Box = ({ s, m, pos = [0, 0, 0], rot = [0, 0, 0] }: { s: [number, number, number]; m: THREE.Material; pos?: [number, number, number]; rot?: [number, number, number] }) => (
   <mesh position={pos} rotation={rot} material={m} castShadow>
     <boxGeometry args={s} />
   </mesh>
 );
-const Ball = ({ r, m, pos = [0, 0, 0], scale }: { r: number; m: THREE.Material; pos?: [number, number, number]; scale?: [number, number, number] }) => (
+const Ball = ({ r, m, pos = [0, 0, 0], scale = [1, 1, 1] }: { r: number; m: THREE.Material; pos?: [number, number, number]; scale?: [number, number, number] }) => (
   <mesh position={pos} scale={scale} material={m} castShadow>
     <sphereGeometry args={[r, 16, 12]} />
   </mesh>

@@ -140,12 +140,10 @@ export class Sim {
     this.status = "dead";
     this.reason = reason;
     this.killer = killer;
-    this.events.push({
-      type: "death",
-      reason,
-      coin: reason === "coin" ? (killer as Coin) : undefined,
-      obstacle: reason === "collision" ? (killer as Obstacle) : undefined,
-    });
+    const e: SimEvent = { type: "death", reason };
+    if (reason === "coin") e.coin = killer as Coin;
+    if (reason === "collision") e.obstacle = killer as Obstacle;
+    this.events.push(e);
   }
 
   private overlapsX(x: number, o: { lane: number }, extra = 0) {

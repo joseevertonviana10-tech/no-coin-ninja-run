@@ -67,17 +67,17 @@ function makeMats(map: MapDef) {
   };
 }
 
-const B = ({ s, m, p, r }: { s: [number, number, number]; m: THREE.Material; p: [number, number, number]; r?: [number, number, number] }) => (
+const B = ({ s, m, p, r = [0, 0, 0] }: { s: [number, number, number]; m: THREE.Material; p: [number, number, number]; r?: [number, number, number] }) => (
   <mesh position={p} rotation={r} material={m} castShadow receiveShadow>
     <boxGeometry args={s} />
   </mesh>
 );
-const Cyl = ({ a, m, p, r }: { a: [number, number, number, number?]; m: THREE.Material; p: [number, number, number]; r?: [number, number, number] }) => (
+const Cyl = ({ a, m, p, r = [0, 0, 0] }: { a: [number, number, number, number?]; m: THREE.Material; p: [number, number, number]; r?: [number, number, number] }) => (
   <mesh position={p} rotation={r} material={m} castShadow receiveShadow>
     <cylinderGeometry args={[a[0], a[1], a[2], a[3] ?? 14]} />
   </mesh>
 );
-const Rock = ({ r, m, p, s }: { r: number; m: THREE.Material; p: [number, number, number]; s?: [number, number, number] }) => (
+const Rock = ({ r, m, p, s = [1, 1, 1] }: { r: number; m: THREE.Material; p: [number, number, number]; s?: [number, number, number] }) => (
   <mesh position={p} scale={s} material={m} castShadow receiveShadow>
     <dodecahedronGeometry args={[r, 0]} />
   </mesh>

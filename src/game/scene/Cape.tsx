@@ -86,9 +86,9 @@ export function Cape({
           const ay = -9.8 + flutter * 0.8;
           const az = wind * 0.8 * (r / ROWS) + 0.6;
           for (let a = 0; a < 3; a++) {
-            const v = (pos[k + a] - prev[k + a]) * 0.965;
-            prev[k + a] = pos[k + a];
-            pos[k + a] += v + (a === 0 ? ax : a === 1 ? ay : az) * h * h;
+            const v = (pos[k + a]! - prev[k + a]!) * 0.965;
+            prev[k + a] = pos[k + a]!;
+            pos[k + a] = pos[k + a]! + v + (a === 0 ? ax : a === 1 ? ay : az) * h * h;
           }
         }
       center.set(0, 0.3, 0.02);
@@ -112,7 +112,7 @@ export function Cape({
           const k = i * 3;
           push(pos, k, center, 0.27);
           push(pos, k, hip, 0.22);
-          if (pos[k + 1] < floor + 0.03) pos[k + 1] = floor + 0.03;
+          if (pos[k + 1]! < floor + 0.03) pos[k + 1] = floor + 0.03;
         }
       }
     }
@@ -129,25 +129,25 @@ export function Cape({
 function solve(p: Float32Array, a: number, b: number, rest: number, aPinned: boolean) {
   const ia = a * 3;
   const ib = b * 3;
-  const dx = p[ib] - p[ia];
-  const dy = p[ib + 1] - p[ia + 1];
-  const dz = p[ib + 2] - p[ia + 2];
+  const dx = p[ib]! - p[ia]!;
+  const dy = p[ib + 1]! - p[ia + 1]!;
+  const dz = p[ib + 2]! - p[ia + 2]!;
   const d = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1e-6;
   const diff = (d - rest) / d;
   const wa = aPinned ? 0 : 0.5;
   const wb = aPinned ? 1 : 0.5;
-  p[ia] += dx * diff * wa;
-  p[ia + 1] += dy * diff * wa;
-  p[ia + 2] += dz * diff * wa;
-  p[ib] -= dx * diff * wb;
-  p[ib + 1] -= dy * diff * wb;
-  p[ib + 2] -= dz * diff * wb;
+  p[ia] = p[ia]! + dx * diff * wa;
+  p[ia + 1] = p[ia + 1]! + dy * diff * wa;
+  p[ia + 2] = p[ia + 2]! + dz * diff * wa;
+  p[ib] = p[ib]! - dx * diff * wb;
+  p[ib + 1] = p[ib + 1]! - dy * diff * wb;
+  p[ib + 2] = p[ib + 2]! - dz * diff * wb;
 }
 
 function push(p: Float32Array, k: number, c: THREE.Vector3, r: number) {
-  const dx = p[k] - c.x;
-  const dy = p[k + 1] - c.y;
-  const dz = p[k + 2] - c.z;
+  const dx = p[k]! - c.x;
+  const dy = p[k + 1]! - c.y;
+  const dz = p[k + 2]! - c.z;
   const d2 = dx * dx + dy * dy + dz * dz;
   if (d2 < r * r) {
     const d = Math.sqrt(d2) || 1e-6;

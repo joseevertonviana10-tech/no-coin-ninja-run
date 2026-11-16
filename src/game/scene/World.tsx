@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { audio } from "../audio";
-import { CHARACTER_BY_ID } from "../data/characters";
+import { CHARACTERS, CHARACTER_BY_ID } from "../data/characters";
 import { COIN_BY_ID } from "../data/coins";
 import { MAP_BY_ID, type MapDef } from "../data/maps";
 import { updateInput } from "../input";
@@ -276,7 +276,7 @@ export function World() {
   const charId = useSettings((s) => s.character);
   const quality = useSettings((s) => s.quality);
   const map = MAP_BY_ID[mapId] ?? MAP_BY_ID.city;
-  const def = CHARACTER_BY_ID[charId] ?? CHARACTER_BY_ID["ninja-cape-red"];
+  const def = CHARACTER_BY_ID[charId] ?? CHARACTERS[0]!;
   const perSide = { low: 7, medium: 11, high: 15, ultra: 20 }[quality];
   const weather = { low: 150, medium: 350, high: 600, ultra: 900 }[quality];
   return (

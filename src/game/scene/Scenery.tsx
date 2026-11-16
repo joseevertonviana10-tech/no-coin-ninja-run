@@ -61,7 +61,7 @@ function PropView({ p, m }: { p: Prop; m: SM }) {
   switch (p.kind) {
     case "building": {
       const w = 6 + p.v * 4;
-      const mat = [m.b1, m.b2, m.b3][Math.floor(p.v * 3)];
+      const mat = [m.b1, m.b2, m.b3][Math.floor(p.v * 3)] ?? m.b1;
       return (
         <group position={[s * (8 + w / 2), 0, 0]}>
           <mesh position={[0, p.h / 2, 0]} material={mat} castShadow receiveShadow>
@@ -358,7 +358,7 @@ export function Scenery({ map, perSide }: { map: MapDef; perSide: number }) {
       for (let i = 0; i < perSide; i++) {
         const v = Math.random();
         list.push({
-          kind: kinds[Math.floor(Math.random() * kinds.length)],
+          kind: kinds[Math.floor(Math.random() * kinds.length)] ?? "building",
           side,
           x: 0,
           s: -70 + i * step + Math.random() * step * 0.6,

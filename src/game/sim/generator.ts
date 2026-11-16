@@ -109,7 +109,7 @@ export class TrackGenerator {
     for (const lane of [-1, 0, 1]) {
       if (lane === safe) {
         if (this.rng.chance(this.diff.density * 0.35)) {
-          const k = this.rng.pick(["low", "high", "hole"] as const);
+          const k = this.rng.pick(["low", "high", "hole"] as const) ?? "low";
           if (this.weights[k] > 0) this.add(obstacles, k, lane, s);
         }
         continue;

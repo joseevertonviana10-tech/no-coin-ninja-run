@@ -48,19 +48,19 @@ export class ParticlePool {
 
   update(dt: number, scroll: number) {
     for (let i = 0; i < this.max; i++) {
-      if (this.life[i] <= 0) {
+      if (this.life[i]! <= 0) {
         this.alpha[i] = 0;
         continue;
       }
-      this.life[i] -= dt;
+      this.life[i] = this.life[i]! - dt;
       const j = i * 3;
-      this.vel[j + 1] -= this.gravity[i] * dt;
-      this.pos[j] += this.vel[j] * dt;
-      this.pos[j + 1] += this.vel[j + 1] * dt;
-      this.pos[j + 2] += (this.vel[j + 2] + scroll) * dt;
-      const t = Math.max(0, this.life[i] / this.maxLife[i]);
+      this.vel[j + 1] = this.vel[j + 1]! - this.gravity[i]! * dt;
+      this.pos[j] = this.pos[j]! + this.vel[j]! * dt;
+      this.pos[j + 1] = this.pos[j + 1]! + this.vel[j + 1]! * dt;
+      this.pos[j + 2] = this.pos[j + 2]! + (this.vel[j + 2]! + scroll) * dt;
+      const t = Math.max(0, this.life[i]! / this.maxLife[i]!);
       this.alpha[i] = t;
-      if (this.life[i] <= 0) this.pos[j + 1] = -999;
+      if (this.life[i]! <= 0) this.pos[j + 1] = -999;
     }
   }
 

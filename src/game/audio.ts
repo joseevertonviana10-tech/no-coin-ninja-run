@@ -214,21 +214,21 @@ class AudioEngine {
     if (!this.vol.on || this.vol.music <= 0) return;
     const i = step % 16;
     const bar = Math.floor(step / 16) % d.prog.length;
-    const chord = d.prog[bar];
+    const chord = d.prog[bar] ?? 0;
     const note = (deg: number, oct: number) => {
       const idx = deg + chord;
       const s = d.scale;
       const o = Math.floor(idx / s.length);
-      const n = s[((idx % s.length) + s.length) % s.length];
+      const n = s[((idx % s.length) + s.length) % s.length] ?? 0;
       return midi(d.root + n + 12 * (o + oct));
     };
     if (d.kick[i] === "x") this.tone(150, 0.18, "sine", this.music, 0.5, 45, 0, t);
     if (d.snare[i] === "x") this.noise(0.12, this.music, 0.22, 1800, "bandpass", undefined, t);
     if (d.hat[i] === "x") this.noise(0.03, this.music, 0.07, 8000, "highpass", undefined, t);
     const b = d.bass[i];
-    if (b !== null) this.tone(note(b, 0), stepDur * 1.6, d.bassWave, this.music, 0.09, undefined, 0, t);
+    if (b !== null && b !== undefined) this.tone(note(b, 0), stepDur * 1.6, d.bassWave, this.music, 0.09, undefined, 0, t);
     const l = d.lead[i];
-    if (l !== null && Math.floor(step / 64) % 2 === 1) this.tone(note(l, 1), stepDur * 1.8, d.leadWave, this.music, d.leadGain, undefined, 0, t);
+    if (l !== null && l !== undefined && Math.floor(step / 64) % 2 === 1) this.tone(note(l, 1), stepDur * 1.8, d.leadWave, this.music, d.leadGain, undefined, 0, t);
   }
 }
 
