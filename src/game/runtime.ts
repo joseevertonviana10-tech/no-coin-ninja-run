@@ -19,9 +19,11 @@ export const runtime = {
   coinFx: null as null | { x: number; y: number; z: number; t: number },
   particles: new ParticlePool(420),
   runId: 0,
+  training: false,
+  timeScale: 1,
 };
 
-export function startRun() {
+export function startRun(training = false) {
   const s = useSettings.getState();
   const map = MAP_BY_ID[s.map] ?? MAP_BY_ID.city;
   runtime.sim = new Sim({
@@ -31,8 +33,11 @@ export function startRun() {
     laneGrip: map.laneGrip,
     weights: map.weights,
     seed: (Math.random() * 1e9) | 0,
+    challenge: training ? "three-rows" : "standard",
   });
   runtime.mode = "playing";
+  runtime.training = training;
+  runtime.timeScale = training ? s.trainingTimescale : 1;
   runtime.deathT = 0;
   runtime.shake = 0;
   runtime.hitFlash = 0;
@@ -59,6 +64,8 @@ export function resumeRun() {
 
 export function toMenu() {
   runtime.mode = "menu";
+  runtime.training = false;
+  runtime.timeScale = 1;
   runtime.sim = null;
   runtime.particles.clear();
   runtime.coinFx = null;
