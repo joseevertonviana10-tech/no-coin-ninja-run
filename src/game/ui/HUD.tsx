@@ -54,7 +54,7 @@ export function HUD() {
         <div className="flex flex-col items-center">
           <div className={cn("glass px-4 py-1.5 text-center", dead && "border-primary")}>
             <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold tracking-[0.2em] text-muted-foreground">
-              <Ban className="h-3 w-3 text-primary" /> NO COIN TIME
+              <Ban className="h-3 w-3 text-primary" /> {runtime.training ? "TREINO 3 FILEIRAS" : "NO COIN TIME"}
             </div>
             <span ref={timer} className={cn("timer-text block text-3xl sm:text-4xl", beating ? "text-success" : "text-foreground")}>
               00:00.00
@@ -67,7 +67,7 @@ export function HUD() {
             </span>
             <span className="chip">
               <span className={cn("h-2 w-2 rounded-full", dead ? "bg-primary" : "animate-pulse-dot bg-success")} />
-              {dead ? "ENCERRADO" : "DESAFIO ATIVO"}
+              {dead ? "ENCERRADO" : runtime.training ? runtime.timeScale.toFixed(2) + "× TREINO" : "DESAFIO ATIVO"}
             </span>
           </div>
           <span ref={speed} className="timer-text mt-1 text-[10px] text-muted-foreground" />
