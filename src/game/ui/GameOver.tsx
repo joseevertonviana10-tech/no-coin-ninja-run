@@ -2,7 +2,7 @@ import { Home, Play, RotateCcw, Settings, Trophy } from "lucide-react";
 import { useState } from "react";
 import { CHARACTER_BY_ID } from "../data/characters";
 import { MAP_BY_ID } from "../data/maps";
-import { resumeRun, startRun, toMenu } from "../runtime";
+import { resumeRun, runtime, startRun, toMenu } from "../runtime";
 import { formatTime, useStats, useUI } from "../store";
 import { ArcadeButton } from "./kit";
 import { SettingsScreen } from "./SettingsScreen";
@@ -49,7 +49,7 @@ export function GameOver() {
             {r.text} · {MAP_BY_ID[run.map]?.name} · {CHARACTER_BY_ID[run.character]?.name}
           </div>
         </div>
-        <ArcadeButton variant="primary" className="w-full py-3.5 text-lg" onClick={startRun}>
+        <ArcadeButton variant="primary" className="w-full py-3.5 text-lg" onClick={() => startRun(runtime.training)}>
           <RotateCcw className="h-5 w-5" /> TENTAR NOVAMENTE
         </ArcadeButton>
         <ArcadeButton className="w-full" onClick={toMenu}>
