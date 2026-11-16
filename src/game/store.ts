@@ -140,6 +140,7 @@ export function applyRun(
     falls: stats.falls + (run.reason === "fall" ? 1 : 0),
     totalTime: stats.totalTime + run.time,
     totalDistance: stats.totalDistance + run.distance,
+    keys: stats.keys,
     bestByMap: { ...stats.bestByMap, [run.map]: Math.max(stats.bestByMap[run.map] ?? 0, run.time) },
     bestByCharacter: {
       ...stats.bestByCharacter,
