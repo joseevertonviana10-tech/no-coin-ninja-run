@@ -11,7 +11,9 @@ export type CharStyle =
   | "explorer"
   | "alien"
   | "monkey"
-  | "coat";
+  | "coat"
+  | "lizard"
+  | "dinosaur";
 export type Pattern = "fabric" | "rust" | "camo" | "plates" | "circuit" | "stains" | "plain" | "scales" | "chain";
 export type Category = "Ninjas" | "Samurais" | "Robôs" | "Zumbis" | "Outros" | "Macacos";
 
@@ -45,6 +47,7 @@ export const CHARACTERS: CharacterDef[] = [
   { id: "ninja-cape-red", name: "Ninja Capa Vermelha", category: "Ninjas", style: "ninja", main: "#26262c", second: "#121216", accent: "#e63946", skin: NINJA_SKIN, pattern: "fabric", cape: "#b5121b", weapon: "katana", desc: "A capa escarlate tremula ao vento." },
 
   { id: "coat-detective", name: "Detetive de Sobretudo", category: "Outros", style: "coat", main: "#20232b", second: "#b7b2a8", accent: "#8b5a2b", skin: "#e4b995", pattern: "fabric", desc: "Sobretudo longo, gola alta e chapéu." },
+  { id: "coat-noir", name: "Detetive Noir", category: "Outros", style: "coat", main: "#111722", second: "#343d4b", accent: "#c7a56b", skin: "#d6ae91", pattern: "fabric", cape: "#171d28", desc: "Sobretudo escuro, lapelas e visual de investigador." },
   { id: "skeleton-cape", name: "Esqueleto de Capa", category: "Outros", style: "skeleton", main: "#eee7d6", second: "#b9b1a1", accent: "#252333", skin: "#eee7d6", pattern: "plain", cape: "#171725", glow: "#8b79ff", desc: "Ossos antigos sob uma capa sombria." },
   { id: "skeleton-spectral", name: "Esqueleto Espectral", category: "Outros", style: "skeleton", main: "#e9f7f5", second: "#a8d7d5", accent: "#45eaff", skin: "#e9f7f5", pattern: "plain", glow: "#45eaff", desc: "Emite partículas espectrais enquanto corre." },
 
@@ -75,6 +78,8 @@ export const CHARACTERS: CharacterDef[] = [
   { id: "monkey-blue", name: "Macaco Azul", category: "Macacos", style: "monkey", main: "#2468c9", second: "#a8d8f5", accent: "#12366e", skin: "#b88970", pattern: "plain", desc: "Pelagem azul vibrante." },
   { id: "monkey-red", name: "Macaco Vermelho", category: "Macacos", style: "monkey", main: "#bd3038", second: "#f0b18e", accent: "#6c151d", skin: "#c58d70", pattern: "plain", desc: "Pelagem vermelha intensa." },
   { id: "monkey-rainbow", name: "Macaco Arco-íris", category: "Macacos", style: "monkey", main: "#e64b67", second: "#ffd166", accent: "#4cc9f0", skin: "#c98f73", pattern: "plain", desc: "Cores vivas em uma skin especial." },
+  { id: "lizard-gecko", name: "Lagartixa", category: "Outros", style: "lizard", main: "#4dbb62", second: "#287a43", accent: "#d8f36a", skin: "#9be58a", pattern: "scales", desc: "Lagartixa ágil com pele escamosa e cauda longa." },
+  { id: "dino-raptor", name: "Dinossauro Raptor", category: "Outros", style: "dinosaur", main: "#4b8b48", second: "#285333", accent: "#e2b65c", skin: "#8fbd70", pattern: "scales", desc: "Pequeno dinossauro veloz com crista e cauda." },
   { id: "alien", name: "Alienígena", category: "Outros", style: "alien", main: "#5a6b8a", second: "#2a3448", accent: "#c0ff3a", skin: "#7ee08a", pattern: "scales", glow: "#c0ff3a", desc: "Veio de muito longe." },
 ];
 
