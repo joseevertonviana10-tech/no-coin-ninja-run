@@ -3,7 +3,7 @@ import { audio } from "./audio";
 import { MAP_BY_ID } from "./data/maps";
 import { ParticlePool } from "./particles";
 import { Sim } from "./sim/sim";
-import { useSettings, useUI } from "./store";
+import { useSettings, useStats, useUI } from "./store";
 
 export type Mode = "menu" | "playing" | "paused" | "dead" | "over";
 
