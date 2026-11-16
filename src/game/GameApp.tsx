@@ -13,6 +13,7 @@ import { MapSelect } from "./ui/MapSelect";
 import { Menu } from "./ui/Menu";
 import { Records } from "./ui/Records";
 import { TrainingScreen } from "./ui/TrainingScreen";
+import { EffectsShop } from "./ui/EffectsShop";
 import { SettingsScreen } from "./ui/SettingsScreen";
 import { VirtualControls } from "./ui/VirtualControls";
 
@@ -160,6 +161,7 @@ export function GameApp() {
       {screen === "settings" && <SettingsScreen />}
       {screen === "records" && <Records />}
       {screen === "training" && <TrainingScreen />}
+      {screen === "effects" && <EffectsShop />}
       {(screen === "playing" || screen === "paused") && <HUD />}
       {screen === "playing" && <VirtualControls />}
       {screen === "paused" && <PauseMenu />}

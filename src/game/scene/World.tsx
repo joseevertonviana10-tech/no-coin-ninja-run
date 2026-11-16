@@ -134,6 +134,11 @@ function Stepper({ map }: { map: MapDef }) {
     if (sim && runtime.mode === "playing") {
       updateInput(dt);
       sim.update(dt);
+      const earnedMilestone = Math.floor(sim.time / 10);
+      if (earnedMilestone > runtime.keyMilestone) {
+        useStats.getState().addKeys(earnedMilestone - runtime.keyMilestone);
+        runtime.keyMilestone = earnedMilestone;
+      }
       for (const e of sim.events) {
         const p = sim.player;
         switch (e.type) {
@@ -197,8 +202,24 @@ function Stepper({ map }: { map: MapDef }) {
         }
       }
       sim.events.length = 0;
-      // Running dust / slide sparks
+      // Equipped character trail effect, independently saved for each character.
       const p = sim.player;
+      const equipped = set.equippedEffects[set.character];
+      if (fx && equipped && sim.status === "running") {
+        const palettes: Record<string, [number, number, number]> = {
+          fire: [1, 0.22, 0.025], "blue-smoke": [0.12, 0.58, 1], "gold-stars": [1, 0.72, 0.12],
+          shadow: [0.16, 0.12, 0.28], rainbow: [0.8, 0.18, 1], emerald: [0.12, 1, 0.32],
+          ice: [0.35, 0.9, 1], starlight: [0.95, 0.95, 1],
+        };
+        const color = palettes[equipped] ?? palettes.fire!;
+        spectralAcc.current += dt * 24;
+        while (spectralAcc.current >= 1) {
+          spectralAcc.current--;
+          const rgb: [number, number, number] = equipped === "rainbow" ? [Math.random(), Math.random(), 1] : color;
+          P.emit(p.x + (Math.random() - 0.5) * 0.55, p.y + 0.25 + Math.random() * 0.7, 0.2, (Math.random() - 0.5) * 1.2, equipped === "fire" ? 1.8 : 0.9, 1.1, rgb[0], rgb[1], rgb[2], 0.75 + Math.random() * 0.6, equipped === "blue-smoke" || equipped === "shadow" ? 0.48 : 0.22, equipped === "fire" ? -1.8 : -0.3);
+        }
+      }
+      // Running dust / slide sparks
       if (fx && p.grounded && sim.status === "running") {
         dustAcc.current += dt * (p.slideT > 0 ? 50 : 18);
         while (dustAcc.current > 1) {

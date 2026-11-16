@@ -38,6 +38,8 @@ export interface Settings {
   rgbPhone: boolean;
   autoDodge: boolean;
   allCharactersRgb: boolean;
+  equippedEffects: Record<string, string>;
+  unlockedEffects: string[];
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -68,6 +70,8 @@ export const DEFAULT_SETTINGS: Settings = {
   rgbPhone: false,
   autoDodge: false,
   allCharactersRgb: false,
+  equippedEffects: {},
+  unlockedEffects: [],
 };
 
 interface SettingsStore extends Settings {
@@ -105,6 +109,7 @@ export interface Stats {
   falls: number;
   totalTime: number;
   totalDistance: number;
+  keys: number;
   bestByMap: Record<string, number>;
   bestByCharacter: Record<string, number>;
 }
@@ -117,6 +122,7 @@ export const EMPTY_STATS: Stats = {
   falls: 0,
   totalTime: 0,
   totalDistance: 0,
+  keys: 0,
   bestByMap: {},
   bestByCharacter: {},
 };
@@ -145,6 +151,8 @@ export function applyRun(
 interface StatsStore extends Stats {
   record: (run: { time: number; reason: DeathReason; map: string; character: string; distance: number }) => void;
   resetStats: () => void;
+  addKeys: (amount: number) => void;
+  spendKey: () => boolean;
 }
 
 export const useStats = create<StatsStore>()(
@@ -153,12 +161,18 @@ export const useStats = create<StatsStore>()(
       ...EMPTY_STATS,
       record: (run) => set(applyRun(get(), run)),
       resetStats: () => set(EMPTY_STATS),
+      addKeys: (amount) => set((state) => ({ keys: state.keys + Math.max(0, Math.floor(amount)) })),
+      spendKey: () => {
+        if (get().keys <= 0) return false;
+        set((state) => ({ keys: state.keys - 1 }));
+        return true;
+      },
     }),
     { name: "nocoin-stats-v1", storage: createJSONStorage(() => localStorage) },
   ),
 );
 
-export type Screen = "menu" | "characters" | "maps" | "settings" | "records" | "training" | "playing" | "paused" | "gameover";
+export type Screen = "menu" | "characters" | "maps" | "settings" | "records" | "training" | "effects" | "playing" | "paused" | "gameover";
 
 interface UIStore {
   screen: Screen;

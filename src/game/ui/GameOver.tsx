@@ -2,7 +2,7 @@ import { Home, Play, RotateCcw, Settings, Trophy } from "lucide-react";
 import { useState } from "react";
 import { CHARACTER_BY_ID } from "../data/characters";
 import { MAP_BY_ID } from "../data/maps";
-import { resumeRun, runtime, startRun, toMenu } from "../runtime";
+import { resumeRun, reviveRun, runtime, startRun, toMenu } from "../runtime";
 import { formatTime, useStats, useUI } from "../store";
 import { ArcadeButton } from "./kit";
 import { SettingsScreen } from "./SettingsScreen";
@@ -16,6 +16,7 @@ const REASON: Record<string, { title: string; text: string }> = {
 export function GameOver() {
   const run = useUI((s) => s.lastRun);
   const best = useStats((s) => s.bestTime);
+  const keys = useStats((s) => s.keys);
   if (!run) return null;
   const r = REASON[run.reason] ?? REASON['collision']!;
   return (
@@ -49,6 +50,11 @@ export function GameOver() {
             {r.text} · {MAP_BY_ID[run.map]?.name} · {CHARACTER_BY_ID[run.character]?.name}
           </div>
         </div>
+        {keys > 0 && (
+          <ArcadeButton variant="primary" className="w-full py-3.5 text-lg" onClick={reviveRun}>
+            <span className="text-sky-300">✦</span> REVIVER · 1 CHAVE ({keys} DISPONÍVEIS)
+          </ArcadeButton>
+        )}
         <ArcadeButton variant="primary" className="w-full py-3.5 text-lg" onClick={() => startRun(runtime.training)}>
           <RotateCcw className="h-5 w-5" /> TENTAR NOVAMENTE
         </ArcadeButton>

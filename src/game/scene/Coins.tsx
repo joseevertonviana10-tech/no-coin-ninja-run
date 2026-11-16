@@ -23,7 +23,7 @@ export function Coins() {
   const mats = useMemo(() => {
     const def = COIN_BY_ID[coinColor];
     const rainbow = coinColor === "rainbow";
-    const emissive = new THREE.Color(def.emissive);
+    const emissive = new THREE.Color(rainbow ? "#ffffff" : def.emissive);
     const mk = (map?: THREE.Texture) =>
       new THREE.MeshStandardMaterial({
         color: "#ffffff",
@@ -31,7 +31,8 @@ export function Coins() {
         metalness: coinColor === "black" ? 0.6 : 0.85,
         roughness: 0.25,
         emissive,
-        emissiveIntensity: (rainbow ? 0.25 : 0.35) * coinGlow,
+        emissiveIntensity: (rainbow ? 0.95 : 0.35) * coinGlow,
+        toneMapped: false,
       });
     const face = mk(coinFaceTexture());
     const side = mk();
@@ -64,7 +65,7 @@ export function Coins() {
         tmp.o.scale.setScalar(coinSize);
         tmp.o.updateMatrix();
         im.setMatrixAt(n, tmp.o.matrix);
-        if (rainbow) im.setColorAt(n, tmp.c.setHSL((t * 0.25 + c.id * 0.07) % 1, 0.9, 0.55));
+        if (rainbow) im.setColorAt(n, tmp.c.setHSL((t * 0.42 + c.id * 0.11) % 1, 1, 0.58));
         n++;
       }
     }
