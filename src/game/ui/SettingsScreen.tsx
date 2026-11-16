@@ -3,7 +3,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { COIN_COLORS } from "../data/coins";
 import { DIFFICULTIES, type DifficultyId } from "../sim/constants";
-import { useSettings, useUI, type CameraMode, type ControlsPos, type Quality } from "../store";
+import { useSettings, useUI, type CameraMode, type ControlsPos, type Quality, type TimeOfDay } from "../store";
 import { ArcadeButton, clickSfx, pct, Row, ScreenHeader, Segmented, SliderRow, SwitchRow } from "./kit";
 
 const TABS = ["Gráficos", "Áudio", "Controles", "Jogo", "Moedas", "Painel Hack"] as const;
@@ -139,6 +139,17 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
                 />
               </Row>
               <SliderRow label="Velocidade da corrida" value={s.speedMult} min={0.6} max={1.6} step={0.05} format={pct} onChange={(v) => s.set({ speedMult: v })} />
+              <Row label="Horário do mapa">
+                <Segmented<TimeOfDay>
+                  value={s.timeOfDay}
+                  onChange={(v) => s.set({ timeOfDay: v })}
+                  options={[
+                    { value: "day", label: "Dia" },
+                    { value: "afternoon", label: "Tarde" },
+                    { value: "night", label: "Noite" },
+                  ]}
+                />
+              </Row>
               <Row label="Câmera">
                 <Segmented<CameraMode>
                   value={s.camera}

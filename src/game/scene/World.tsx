@@ -63,7 +63,7 @@ function Ground({ map }: { map: MapDef }) {
 
 const SHADOW: Record<Quality, number> = { low: 0, medium: 1024, high: 2048, ultra: 2048 };
 
-function Lights({ map, quality }: { map: MapDef; quality: Quality }) {
+function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; timeOfDay: "day" | "afternoon" | "night" }) {
   const sun = useRef<THREE.DirectionalLight>(null!);
   const { scene } = useThree();
   useEffect(() => {
@@ -78,13 +78,18 @@ function Lights({ map, quality }: { map: MapDef; quality: Quality }) {
     sun.current.target.position.set(x, 0, -8);
   });
   const sm = SHADOW[quality];
+  const night = timeOfDay === "night";
+  const afternoon = timeOfDay === "afternoon";
+  const sunColor = night ? "#9bbcff" : afternoon ? "#ffbd83" : map.sun;
+  const sunPower = map.sunIntensity * (night ? 0.12 : afternoon ? 0.72 : 1);
+  const hemiPower = map.hemiIntensity * (night ? 0.28 : afternoon ? 0.82 : 1);
   return (
     <>
-      <hemisphereLight args={[map.hemiSky, map.hemiGround, map.hemiIntensity]} />
+      <hemisphereLight args={[night ? "#263b68" : afternoon ? "#ffd0a0" : map.hemiSky, night ? "#080d18" : map.hemiGround, hemiPower]} />
       <directionalLight
         ref={sun}
-        color={map.sun}
-        intensity={map.sunIntensity}
+        color={sunColor}
+        intensity={sunPower}
         castShadow={sm > 0}
         shadow-mapSize={[sm || 512, sm || 512]}
         shadow-camera-left={-12}
@@ -308,16 +313,21 @@ export function World() {
   const mapId = useSettings((s) => s.map);
   const charId = useSettings((s) => s.character);
   const quality = useSettings((s) => s.quality);
+  const timeOfDay = useSettings((s) => s.timeOfDay);
   const map = MAP_BY_ID[mapId] ?? MAP_BY_ID.city;
+  const night = timeOfDay === "night";
+  const afternoon = timeOfDay === "afternoon";
+  const sky = night ? "#050914" : afternoon ? "#d99368" : map.sky;
+  const fog = night ? "#0a1020" : afternoon ? "#e6b18e" : map.fog;
   const def = CHARACTER_BY_ID[charId] ?? CHARACTERS[0]!;
   const perSide = { low: 7, medium: 11, high: 15, ultra: 20 }[quality];
   const weather = { low: 150, medium: 350, high: 600, ultra: 900 }[quality];
   return (
     <>
       <Stepper map={map} />
-      <color attach="background" args={[map.sky]} />
-      <fog attach="fog" args={[map.fog, map.fogNear, map.fogFar]} />
-      <Lights map={map} quality={quality} />
+      <color attach="background" args={[sky]} />
+      <fog attach="fog" args={[fog, night ? 12 : map.fogNear, night ? 82 : map.fogFar]} />
+      <Lights map={map} quality={quality} timeOfDay={timeOfDay} />
       <Ground map={map} />
       <Scenery key={map.id + perSide} map={map} perSide={perSide} />
       <Obstacles map={map} />

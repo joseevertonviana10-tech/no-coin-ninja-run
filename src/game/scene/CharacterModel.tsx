@@ -263,6 +263,16 @@ export function BackGear({ def, m }: { def: CharacterDef; m: Mats }) {
         <Box s={[0.3, 0.08, 0.02]} m={m.accent} pos={[0, 0.04, 0.065]} />
       </group>
     );
+  if (def.weapon === "shotgun")
+    return (
+      <group position={[0, 0.32, 0.34]} rotation={[0, 0, -0.72]}>
+        <Box s={[0.12, 0.66, 0.1]} m={m.dark} pos={[0, 0.02, 0]} />
+        <Box s={[0.08, 0.24, 0.09]} m={m.second} pos={[0, -0.25, 0]} />
+        <mesh position={[0, 0.38, 0]} material={m.steel}><cylinderGeometry args={[0.035, 0.035, 0.28, 10]} /></mesh>
+        <mesh position={[0.055, 0.38, 0]} material={m.steel}><cylinderGeometry args={[0.025, 0.025, 0.28, 10]} /></mesh>
+        <Box s={[0.16, 0.06, 0.12]} m={m.accent} pos={[0, 0.08, 0.01]} />
+      </group>
+    );
   if (def.weapon === "rifle")
     return (
       <group position={[0, 0.3, 0.33]} rotation={[0, 0, -0.8]}>
@@ -356,6 +366,14 @@ export function Head({ def, m }: { def: CharacterDef; m: Mats }) {
           {[-0.06, -0.02, 0.02, 0.06].map((x) => (
             <Box key={x} s={[0.015, 0.04, 0.01]} m={m.dark} pos={[x, 0.1, -0.142]} />
           ))}
+          {def.id === "skeleton-gold" && (
+            <group position={[0, 0.43, 0]}>
+              <mesh position={[0, 0.02, 0]} material={m.accent}><torusGeometry args={[0.16, 0.025, 8, 20]} /></mesh>
+              <mesh position={[0, 0.1, 0]} material={m.accent}><cylinderGeometry args={[0.14, 0.16, 0.13, 8]} /></mesh>
+              {[-0.1, 0, 0.1].map((x) => <mesh key={x} position={[x, 0.23, 0]} material={m.accent}><coneGeometry args={[0.045, 0.18, 5]} /></mesh>)}
+              <Ball r={0.055} m={m.glow} pos={[0, 0.13, -0.14]} />
+            </group>
+          )}
         </group>
       );
     case "monkey":
@@ -428,6 +446,14 @@ export function Head({ def, m }: { def: CharacterDef; m: Mats }) {
           <mesh position={[0, 0.55, 0.16]} rotation={[1.2, 0, 0]} material={m.second} castShadow>
             <coneGeometry args={[0.05, 0.28, 8]} />
           </mesh>
+          {def.id === "king-emerald" && (
+            <group position={[0, 0.55, 0]}>
+              <mesh position={[0, 0.06, 0]} material={m.accent}><torusGeometry args={[0.17, 0.025, 8, 20]} /></mesh>
+              <mesh position={[0, 0.14, 0]} material={m.accent}><cylinderGeometry args={[0.14, 0.17, 0.14, 8]} /></mesh>
+              {[-0.1, 0, 0.1].map((x) => <mesh key={x} position={[x, 0.27, 0]} material={m.accent}><coneGeometry args={[0.045, 0.18, 5]} /></mesh>)}
+              <mesh position={[0, 0.16, -0.145]} material={m.glow}><octahedronGeometry args={[0.07, 0]} /></mesh>
+            </group>
+          )}
         </group>
       );
     case "soldier":

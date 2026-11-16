@@ -6,6 +6,7 @@ import { runtime } from "../runtime";
 import { LANE_W } from "../sim/constants";
 import { useSettings, useUI } from "../store";
 import { Cape } from "./Cape";
+import { Accessories } from "./Accessories";
 import { BackGear, Forearm, Head, Shin, Thigh, Torso, UpperArm, useCharacterMats } from "./CharacterModel";
 
 const HIP_Y = 0.92;
@@ -16,6 +17,8 @@ const zero = (): Pose => Object.fromEntries(JOINTS.map((j) => [j, 0])) as Pose;
 export function CharacterRig({ def }: { def: CharacterDef }) {
   const m = useCharacterMats(def);
   const allRgb = useSettings((s) => s.allCharactersRgb);
+  const accessory = useSettings((s) => s.equippedAccessories[def.id]);
+  const timeOfDay = useSettings((s) => s.timeOfDay);
   const root = useRef<THREE.Group>(null!);
   const visual = useRef<THREE.Group>(null!);
   const hips = useRef<THREE.Group>(null!);
@@ -250,11 +253,13 @@ export function CharacterRig({ def }: { def: CharacterDef }) {
   return (
     <group>
       <group ref={root}>
+        <pointLight position={[0, 1.25, 0.2]} color="#c9e4ff" intensity={2.4} distance={6.5} decay={2} visible={timeOfDay === "night"} />
         <group ref={visual}>
           <group ref={hips} position={[0, HIP_Y, 0]}>
             <group ref={torso}>
               <Torso def={def} m={m} />
               <BackGear def={def} m={m} />
+              <Accessories accessoryId={accessory} />
               <group ref={head} position={[0, 0.62, 0]}>
                 <Head def={def} m={m} />
               </group>
@@ -290,6 +295,7 @@ export function CharacterRig({ def }: { def: CharacterDef }) {
         <Cape
           key={def.id}
           color={def.cape}
+          long={def.id === "king-emerald"}
           torso={torso}
           getWind={() => st.current.wind}
           getFloor={() => st.current.floor}

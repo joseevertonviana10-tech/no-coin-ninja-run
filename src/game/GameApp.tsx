@@ -14,6 +14,7 @@ import { Menu } from "./ui/Menu";
 import { Records } from "./ui/Records";
 import { TrainingScreen } from "./ui/TrainingScreen";
 import { EffectsShop } from "./ui/EffectsShop";
+import { AccessoriesShop } from "./ui/AccessoriesShop";
 import { SettingsScreen } from "./ui/SettingsScreen";
 import { VirtualControls } from "./ui/VirtualControls";
 
@@ -162,6 +163,7 @@ export function GameApp() {
       {screen === "records" && <Records />}
       {screen === "training" && <TrainingScreen />}
       {screen === "effects" && <EffectsShop />}
+      {screen === "accessories" && <AccessoriesShop />}
       {(screen === "playing" || screen === "paused") && <HUD />}
       {screen === "playing" && <VirtualControls />}
       {screen === "paused" && <PauseMenu />}

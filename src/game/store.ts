@@ -9,6 +9,7 @@ export type Quality = "low" | "medium" | "high" | "ultra";
 export type ControlsPos = "left" | "center" | "right";
 export type CameraMode = "near" | "normal" | "far";
 export type TrainingSpeed = 0.75 | 0.5 | 0.25;
+export type TimeOfDay = "day" | "afternoon" | "night";
 
 export interface Settings {
   quality: Quality;
@@ -40,6 +41,9 @@ export interface Settings {
   allCharactersRgb: boolean;
   equippedEffects: Record<string, string>;
   unlockedEffects: string[];
+  equippedAccessories: Record<string, string>;
+  unlockedAccessories: string[];
+  timeOfDay: TimeOfDay;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -72,6 +76,9 @@ export const DEFAULT_SETTINGS: Settings = {
   allCharactersRgb: false,
   equippedEffects: {},
   unlockedEffects: [],
+  equippedAccessories: {},
+  unlockedAccessories: [],
+  timeOfDay: "day",
 };
 
 interface SettingsStore extends Settings {
@@ -173,7 +180,7 @@ export const useStats = create<StatsStore>()(
   ),
 );
 
-export type Screen = "menu" | "characters" | "maps" | "settings" | "records" | "training" | "effects" | "playing" | "paused" | "gameover";
+export type Screen = "menu" | "characters" | "maps" | "settings" | "records" | "training" | "effects" | "accessories" | "playing" | "paused" | "gameover";
 
 interface UIStore {
   screen: Screen;

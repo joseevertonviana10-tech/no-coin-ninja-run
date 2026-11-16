@@ -31,7 +31,7 @@ export interface CharacterDef {
   glow?: string; // emissive accents (eyes, neon strips, radiation)
   cape?: string;
   armor?: "light" | "full";
-  weapon?: "katana" | "sword" | "none" | "rifle";
+  weapon?: "katana" | "sword" | "none" | "rifle" | "shotgun";
   desc: string;
 }
 
@@ -80,6 +80,12 @@ export const CHARACTERS: CharacterDef[] = [
   { id: "monkey-rainbow", name: "Macaco Arco-íris", category: "Macacos", style: "monkey", main: "#e64b67", second: "#ffd166", accent: "#4cc9f0", skin: "#c98f73", pattern: "plain", desc: "Cores vivas em uma skin especial." },
   { id: "lizard-gecko", name: "Lagartixa", category: "Outros", style: "lizard", main: "#4dbb62", second: "#287a43", accent: "#d8f36a", skin: "#9be58a", pattern: "scales", desc: "Lagartixa ágil com pele escamosa e cauda longa." },
   { id: "dino-raptor", name: "Dinossauro Raptor", category: "Outros", style: "dinosaur", main: "#4b8b48", second: "#285333", accent: "#e2b65c", skin: "#8fbd70", pattern: "scales", desc: "Pequeno dinossauro veloz com crista e cauda." },
+  { id: "king-emerald", name: "Rei Esmeralda", category: "Outros", style: "knight", main: "#d6b24a", second: "#4b174f", accent: "#f6d76b", skin: "#e0b088", pattern: "plates", metal: 0.72, cape: "#321044", armor: "full", weapon: "sword", desc: "Rei de armadura dourada, coroa real e capa longa." },
+  { id: "vigilante-shotgun", name: "Justiceiro", category: "Outros", style: "coat", main: "#24252b", second: "#111318", accent: "#a52d32", skin: "#c99a74", pattern: "fabric", weapon: "shotgun", desc: "Vigilante de sobretudo com espingarda presa às costas." },
+  { id: "skeleton-green", name: "Esqueleto Verde", category: "Outros", style: "skeleton", main: "#6ee45d", second: "#2e8c45", accent: "#b8ff82", skin: "#6ee45d", pattern: "plain", glow: "#66ff72", desc: "Ossos verdes com brilho radioativo." },
+  { id: "skeleton-blue", name: "Esqueleto Azul", category: "Outros", style: "skeleton", main: "#59baff", second: "#2463b5", accent: "#a5e7ff", skin: "#59baff", pattern: "plain", glow: "#4bc8ff", desc: "Ossos azuis com energia congelante." },
+  { id: "skeleton-purple", name: "Esqueleto Roxo", category: "Outros", style: "skeleton", main: "#a56bdb", second: "#59318b", accent: "#e0b0ff", skin: "#a56bdb", pattern: "plain", glow: "#c17bff", desc: "Ossos violetas e olhos sobrenaturais." },
+  { id: "skeleton-gold", name: "Esqueleto Dourado", category: "Outros", style: "skeleton", main: "#e8b72e", second: "#9b6a12", accent: "#f7df75", skin: "#e8b72e", pattern: "plain", metal: 0.7, glow: "#43ff9a", desc: "Esqueleto de ouro com coroa e esmeralda brilhante." },
   { id: "alien", name: "Alienígena", category: "Outros", style: "alien", main: "#5a6b8a", second: "#2a3448", accent: "#c0ff3a", skin: "#7ee08a", pattern: "scales", glow: "#c0ff3a", desc: "Veio de muito longe." },
 ];
 

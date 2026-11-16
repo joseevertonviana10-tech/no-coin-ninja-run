@@ -15,16 +15,19 @@ const ITER = 4;
  */
 export function Cape({
   color,
+  long = false,
   torso,
   getWind,
   getFloor,
 }: {
   color: string;
+  long?: boolean;
   torso: React.RefObject<THREE.Group | null>;
   getWind: () => number;
   getFloor: () => number;
 }) {
   const meshRef = useRef<THREE.Mesh>(null!);
+  const segmentLength = long ? 0.145 : SEG;
   const state = useMemo(() => {
     const n = COLS * ROWS;
     return { pos: new Float32Array(n * 3), prev: new Float32Array(n * 3), init: false, acc: 0, t: 0 };
@@ -64,7 +67,7 @@ export function Cape({
         for (let r = 0; r < ROWS; r++) {
           const k = (r * COLS + c) * 3;
           pos[k] = prev[k] = a.x;
-          pos[k + 1] = prev[k + 1] = a.y - r * SEG;
+          pos[k + 1] = prev[k + 1] = a.y - r * segmentLength;
           pos[k + 2] = prev[k + 2] = a.z + 0.02 * r;
         }
       }
@@ -106,7 +109,7 @@ export function Cape({
           for (let c = 0; c < COLS; c++) {
             const i = r * COLS + c;
             if (r > 0 && c < COLS - 1) solve(pos, i, i + 1, SEG * 0.95, false);
-            if (r < ROWS - 1) solve(pos, i, i + COLS, SEG, r === 0);
+            if (r < ROWS - 1) solve(pos, i, i + COLS, segmentLength, r === 0);
           }
         for (let i = COLS; i < COLS * ROWS; i++) {
           const k = i * 3;
