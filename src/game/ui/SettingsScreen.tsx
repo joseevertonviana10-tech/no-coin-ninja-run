@@ -79,12 +79,12 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
           {tab === "Controles" && (
             <>
               <SwitchRow label="Controles virtuais na tela" checked={s.controlsVisible} onChange={(v) => s.set({ controlsVisible: v })} />
-              <SliderRow label="Tamanho dos botões" value={s.controlsSize} min={0.6} max={1.8} step={0.05} format={pct} onChange={(v) => s.set({ controlsSize: v })} />
+              <SliderRow label="Tamanho dos botões (até 230%)" value={s.controlsSize} min={0.6} max={2.3} step={0.05} format={pct} onChange={(v) => s.set({ controlsSize: v })} />
               <div className="flex gap-2 pb-2">
                 <ArcadeButton className="flex-1 py-2 text-sm" onClick={() => s.set({ controlsSize: Math.max(0.6, +(s.controlsSize - 0.1).toFixed(2)) })}>
                   − Diminuir
                 </ArcadeButton>
-                <ArcadeButton className="flex-1 py-2 text-sm" onClick={() => s.set({ controlsSize: Math.min(1.8, +(s.controlsSize + 0.1).toFixed(2)) })}>
+                <ArcadeButton className="flex-1 py-2 text-sm" onClick={() => s.set({ controlsSize: Math.min(2.3, +(s.controlsSize + 0.1).toFixed(2)) })}>
                   + Aumentar
                 </ArcadeButton>
               </div>
