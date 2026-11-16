@@ -8,6 +8,7 @@ import type { DeathReason } from "./sim/types";
 export type Quality = "low" | "medium" | "high" | "ultra";
 export type ControlsPos = "left" | "center" | "right";
 export type CameraMode = "near" | "normal" | "far";
+export type TrainingSpeed = 0.75 | 0.5 | 0.25;
 
 export interface Settings {
   quality: Quality;
@@ -31,6 +32,7 @@ export interface Settings {
   coinGlow: number;
   character: string;
   map: MapId;
+  trainingTimescale: TrainingSpeed;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -55,6 +57,7 @@ export const DEFAULT_SETTINGS: Settings = {
   coinGlow: 1,
   character: "ninja-cape-red",
   map: "city",
+  trainingTimescale: 0.75,
 };
 
 interface SettingsStore extends Settings {
@@ -145,7 +148,7 @@ export const useStats = create<StatsStore>()(
   ),
 );
 
-export type Screen = "menu" | "characters" | "maps" | "settings" | "records" | "playing" | "paused" | "gameover";
+export type Screen = "menu" | "characters" | "maps" | "settings" | "records" | "training" | "playing" | "paused" | "gameover";
 
 interface UIStore {
   screen: Screen;
