@@ -26,7 +26,7 @@ export function useCharacterMats(def: CharacterDef): Mats {
       accent: std(def.accent, { metalness: 0.3, roughness: 0.45 }),
       skin: std(def.skin, {
         roughness: 0.6,
-        map: def.style === "zombie" ? patternTexture("stains") : def.style === "alien" ? patternTexture("scales") : null,
+        map: def.style === "zombie" ? patternTexture("stains") : (def.style === "alien" || def.style === "lizard" || def.style === "dinosaur") ? patternTexture("scales") : null,
         emissive: new THREE.Color(def.id === "zombie-rad" ? (def.glow ?? "#000000") : "#000000"),
         emissiveIntensity: def.id === "zombie-rad" ? 0.25 : 0,
       }),
@@ -88,14 +88,39 @@ export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
     case "monkey":
       return (
         <group>
-          <Cap r={0.2} len={0.34} m={m.main} pos={[0, 0.3, 0]} scale={[1.1, 1, 0.9]} />
-          <Ball r={0.15} m={m.second} pos={[0, 0.12, -0.17]} scale={[1.15, 1, 0.45]} />
-          <Box s={[0.42, 0.08, 0.08]} m={m.accent} pos={[0, 0.43, -0.15]} />
+          <Cap r={0.23} len={0.38} m={m.main} pos={[0, 0.3, 0]} scale={[1.18, 1, 1]} />
+          <Ball r={0.17} m={m.second} pos={[0, 0.12, -0.17]} scale={[1.18, 1, 0.5]} />
+          <Ball r={0.11} m={m.second} pos={[0, 0.34, -0.18]} scale={[1.2, 1.1, 0.42]} />
+          <Box s={[0.38, 0.07, 0.08]} m={m.accent} pos={[0, 0.48, -0.14]} />
           <mesh position={[0.16, -0.08, 0.22]} rotation={[0.2, 0, 0.35]} material={m.main}>
-            <torusGeometry args={[0.14, 0.035, 8, 18, Math.PI * 1.6]} />
+            <torusGeometry args={[0.16, 0.04, 8, 20, Math.PI * 1.7]} />
           </mesh>
-          <Ball r={0.055} m={m.accent} pos={[-0.28, 0.5, 0]} />
-          <Ball r={0.055} m={m.accent} pos={[0.28, 0.5, 0]} />
+          <Ball r={0.065} m={m.second} pos={[-0.29, 0.48, 0]} />
+          <Ball r={0.065} m={m.second} pos={[0.29, 0.48, 0]} />
+        </group>
+      );
+    case "lizard":
+      return (
+        <group>
+          <Cap r={0.18} len={0.38} m={m.main} pos={[0, 0.3, 0]} scale={[1.25, 0.85, 0.9]} />
+          <Ball r={0.12} m={m.second} pos={[0, 0.14, -0.16]} scale={[1.25, 0.75, 0.55]} />
+          <Cap r={0.07} len={0.65} m={m.main} pos={[0, 0.02, 0.43]} rot={[0.8, 0, 0]} />
+          <Ball r={0.075} m={m.accent} pos={[-0.22, 0.48, -0.02]} />
+          <Ball r={0.075} m={m.accent} pos={[0.22, 0.48, -0.02]} />
+          <Box s={[0.12, 0.08, 0.08]} m={m.second} pos={[0, 0.5, -0.12]} />
+        </group>
+      );
+    case "dinosaur":
+      return (
+        <group>
+          <Cap r={0.25} len={0.42} m={m.main} pos={[0, 0.3, 0]} scale={[1.25, 1, 1.1]} />
+          <Cap r={0.08} len={0.62} m={m.main} pos={[0, 0.12, 0.45]} rot={[0.9, 0, 0]} />
+          {[-0.22, -0.08, 0.08, 0.22].map((x, i) => (
+            <mesh key={x} position={[x, 0.58 + (i % 2) * 0.04, 0]} material={m.accent} castShadow>
+              <coneGeometry args={[0.07, 0.2, 6]} />
+            </mesh>
+          ))}
+          <Box s={[0.16, 0.1, 0.12]} m={m.second} pos={[0, 0.12, -0.2]} />
         </group>
       );
     case "coat":
@@ -336,11 +361,42 @@ export function Head({ def, m }: { def: CharacterDef; m: Mats }) {
     case "monkey":
       return (
         <group>
-          <Ball r={0.22} m={m.main} pos={[0, 0.23, 0]} scale={[1.05, 1.15, 0.95]} />
-          <Ball r={0.11} m={m.second} pos={[0, 0.13, -0.18]} scale={[1.25, 0.8, 0.65]} />
-          <Ball r={0.06} m={m.accent} pos={[-0.2, 0.35, -0.02]} />
-          <Ball r={0.06} m={m.accent} pos={[0.2, 0.35, -0.02]} />
-          {eyes(m.dark, 0.025, 0.27, -0.18)}
+          <Ball r={0.23} m={m.main} pos={[0, 0.23, 0]} scale={[1.08, 1.18, 0.98]} />
+          <Ball r={0.12} m={m.second} pos={[0, 0.12, -0.18]} scale={[1.3, 0.82, 0.65]} />
+          <Ball r={0.075} m={m.second} pos={[-0.205, 0.35, -0.015]} />
+          <Ball r={0.075} m={m.second} pos={[0.205, 0.35, -0.015]} />
+          <Ball r={0.04} m={m.white} pos={[-0.078, 0.28, -0.19]} />
+          <Ball r={0.04} m={m.white} pos={[0.078, 0.28, -0.19]} />
+          {eyes(m.dark, 0.024, 0.28, -0.222)}
+          <Ball r={0.025} m={m.dark} pos={[0, 0.16, -0.25]} />
+        </group>
+      );
+    case "lizard":
+      return (
+        <group>
+          <Ball r={0.2} m={m.main} pos={[0, 0.22, 0]} scale={[1.15, 0.9, 1.2]} />
+          <Ball r={0.15} m={m.second} pos={[0, 0.13, -0.17]} scale={[1.35, 0.7, 0.7]} />
+          <Ball r={0.065} m={m.accent} pos={[-0.17, 0.34, -0.04]} />
+          <Ball r={0.065} m={m.accent} pos={[0.17, 0.34, -0.04]} />
+          <Ball r={0.028} m={m.dark} pos={[-0.17, 0.35, -0.095]} />
+          <Ball r={0.028} m={m.dark} pos={[0.17, 0.35, -0.095]} />
+          <Box s={[0.16, 0.025, 0.02]} m={m.dark} pos={[0, 0.1, -0.22]} />
+        </group>
+      );
+    case "dinosaur":
+      return (
+        <group>
+          <Ball r={0.22} m={m.main} pos={[0, 0.23, 0]} scale={[1.1, 1.05, 1.15]} />
+          <Cap r={0.13} len={0.22} m={m.main} pos={[0, 0.11, -0.2]} rot={[Math.PI / 2, 0, 0]} />
+          <Ball r={0.035} m={m.white} pos={[-0.12, 0.28, -0.18]} />
+          <Ball r={0.035} m={m.white} pos={[0.12, 0.28, -0.18]} />
+          <Ball r={0.02} m={m.dark} pos={[-0.12, 0.28, -0.21]} />
+          <Ball r={0.02} m={m.dark} pos={[0.12, 0.28, -0.21]} />
+          {[-0.16, -0.04, 0.08, 0.2].map((x, i) => (
+            <mesh key={x} position={[x, 0.43 + (i % 2) * 0.035, 0]} material={m.accent}>
+              <coneGeometry args={[0.045, 0.13, 6]} />
+            </mesh>
+          ))}
         </group>
       );
     case "coat":
