@@ -32,6 +32,10 @@ export class TrackGenerator {
     return changed;
   }
 
+  private blocked(lane: number) {
+    return this.blockedUntil[lane + 1] ?? -1e9;
+  }
+
   private dims(kind: ObstacleKind) {
     switch (kind) {
       case "low":
@@ -90,21 +94,21 @@ export class TrackGenerator {
       r -= w;
       if (r <= 0) return k;
     }
-    return entries[0][0];
+    return entries[0]?.[0] ?? "low";
   }
 
   private row(obstacles: Obstacle[], coins: Coin[], s: number, gap: number, speed: number) {
     const margin = speed * 0.35 + 2;
-    const free = [-1, 0, 1].filter((l) => this.blockedUntil[l + 1] < s - margin);
+    const free = [-1, 0, 1].filter((l) => this.blocked(l) < s - margin);
     let candidates = free.filter((l) => Math.abs(l - this.safeLane) <= 1);
     if (candidates.length === 0) candidates = [this.safeLane];
     // Prefer keeping lane sometimes, moving other times.
-    const safe = this.rng.chance(0.45) && candidates.includes(this.safeLane) ? this.safeLane : this.rng.pick(candidates);
+    const safe = this.rng.chance(0.45) && candidates.includes(this.safeLane) ? this.safeLane : (this.rng.pick(candidates) ?? this.safeLane);
     this.safeLane = safe;
     this.rows.push({ s, safe });
 
     const coinMax = gap * 0.42;
-    let blockedCount = [-1, 0, 1].filter((l) => this.blockedUntil[l + 1] >= s - 1).length;
+    let blockedCount = [-1, 0, 1].filter((l) => this.blocked(l) >= s - 1).length;
 
     for (const lane of [-1, 0, 1]) {
       if (lane === safe) {
@@ -114,9 +118,9 @@ export class TrackGenerator {
         }
         continue;
       }
-      if (this.blockedUntil[lane + 1] >= s - 1) {
+      if (this.blocked(lane) >= s - 1) {
         // Lane is under a train: maybe coin trap on the roof.
-        const end = this.blockedUntil[lane + 1] - 1;
+        const end = this.blocked(lane) - 1;
         if (end - s > 5 && this.rng.chance(this.diff.coinDensity * 0.5)) {
           this.coinLine(coins, lane, s + 1, Math.min(coinMax, end - s - 1), TRAIN_TOP + COIN_Y);
         }

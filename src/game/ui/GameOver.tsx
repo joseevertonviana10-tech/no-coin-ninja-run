@@ -17,7 +17,7 @@ export function GameOver() {
   const run = useUI((s) => s.lastRun);
   const best = useStats((s) => s.bestTime);
   if (!run) return null;
-  const r = REASON[run.reason];
+  const r = REASON[run.reason] ?? REASON['collision']!;
   return (
     <div className="absolute inset-0 flex items-end justify-center p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:items-center">
       <div className="glass w-full max-w-sm animate-pop-in space-y-3 p-5 text-center">

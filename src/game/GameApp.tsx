@@ -140,7 +140,7 @@ export function GameApp() {
       <CanvasBoundary>
         <Canvas
           key={quality}
-          shadows={quality !== "low" ? "soft" : false}
+          shadows={quality !== "low"}
           dpr={[1, DPR[quality]]}
           camera={{ position: [1.8, 1.5, -4.2], fov: 60, near: 0.1, far: 400 }}
           gl={{ antialias: quality !== "low", powerPreference: "high-performance" }}

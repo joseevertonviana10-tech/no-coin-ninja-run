@@ -81,7 +81,7 @@ export function Weather({ map, count }: { map: MapDef; count: number }) {
       confetti: ["#e63946", "#ffd166", "#06d6a0", "#118ab2", "#ffffff"],
       none: ["#ffffff"],
     };
-    const pal = palette[map.weather];
+    const pal = palette[map.weather] ?? ["#ffffff"];
     const c = new THREE.Color();
     for (let i = 0; i < count; i++) {
       pos[i * 3] = (Math.random() - 0.5) * 40;

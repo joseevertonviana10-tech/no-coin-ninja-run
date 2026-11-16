@@ -109,7 +109,7 @@ export function SliderRow({
 }) {
   return (
     <Row label={label} hint={format ? format(value) : String(value)}>
-      <Slider value={[value]} min={min} max={max} step={step} onValueChange={(v) => onChange(v[0])} className="py-2" />
+      <Slider value={[value]} min={min} max={max} step={step} onValueChange={(v) => onChange(v[0] ?? value)} className="py-2" />
     </Row>
   );
 }

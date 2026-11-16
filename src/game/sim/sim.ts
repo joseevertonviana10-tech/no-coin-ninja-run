@@ -283,11 +283,11 @@ export class Sim {
     }
 
     // Recycle and spawn
-    if (this.obstacles.length && this.obstacles[0].s1 < d - 30) {
+    if (this.obstacles.length && this.obstacles[0]!.s1 < d - 30) {
       this.obstacles = this.obstacles.filter((o) => o.s1 >= d - 30);
       this.version++;
     }
-    if (this.coins.length && this.coins[0].s < d - 20) {
+    if (this.coins.length && this.coins[0]!.s < d - 20) {
       this.coins = this.coins.filter((c) => c.s >= d - 20);
       this.version++;
     }
