@@ -66,8 +66,8 @@ function syncHeld() {
 /** Called once per frame by the stepper: repeats held lane changes. */
 export function updateInput(dt: number) {
   syncHeld();
-  const delay = 0.32 / sensitivity;
-  const rate = 0.2 / sensitivity;
+  const delay = 0.28 / sensitivity;
+  const rate = 0.18 / sensitivity;
   for (const a of ["left", "right"] as const) {
     const h = held[a];
     if (!h.on) continue;
