@@ -121,6 +121,7 @@ function Stepper({ map }: { map: MapDef }) {
   const shakeOff = useRef(new THREE.Vector3());
   const frames = useRef(0);
   const dustAcc = useRef(0);
+  const spectralAcc = useRef(0);
 
   useFrame((_, rawDelta) => {
     const dt = Math.min(rawDelta, 0.1);
@@ -199,10 +200,20 @@ function Stepper({ map }: { map: MapDef }) {
       // Running dust / slide sparks
       const p = sim.player;
       if (fx && p.grounded && sim.status === "running") {
-        dustAcc.current += dt * (p.slideT > 0 ? 50 : 14);
+        dustAcc.current += dt * (p.slideT > 0 ? 50 : 18);
         while (dustAcc.current > 1) {
           dustAcc.current--;
-          P.emit(p.x + (Math.random() - 0.5) * 0.4, p.y + 0.05, 0.25, (Math.random() - 0.5) * 1.2, 0.6 + Math.random() * 1.2, 1.5, dust[0], dust[1], dust[2], 0.5, p.slideT > 0 ? 0.4 : 0.28, 2);
+          P.emit(p.x + (Math.random() - 0.5) * 0.5, p.y + 0.04, 0.25, (Math.random() - 0.5) * 1.5, 0.6 + Math.random() * 1.4, 1.8, dust[0], dust[1], dust[2], 0.58, p.slideT > 0 ? 0.46 : 0.32, 2.2);
+        }
+      }
+      if (fx && set.character === "skeleton-spectral" && sim.status === "running") {
+        spectralAcc.current += dt * 14;
+        while (spectralAcc.current >= 1) {
+          spectralAcc.current -= 1;
+          const cyan = hexRgb("#45eaff");
+          const purple = hexRgb("#9b7bff");
+          const color = Math.random() > 0.5 ? cyan : purple;
+          P.emit(p.x + (Math.random() - 0.5) * 0.7, p.y + 0.45 + Math.random() * 0.9, 0.15 + Math.random() * 0.2, (Math.random() - 0.5) * 1.8, 0.8 + Math.random() * 1.8, 1.2, color[0], color[1], color[2], 0.7, 0.16 + Math.random() * 0.12, -0.8);
         }
       }
     } else if (runtime.mode === "dead") {
