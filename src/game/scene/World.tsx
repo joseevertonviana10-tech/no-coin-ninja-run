@@ -215,7 +215,8 @@ function Stepper({ map }: { map: MapDef }) {
         spectralAcc.current += dt * 24;
         while (spectralAcc.current >= 1) {
           spectralAcc.current--;
-          const rgb: [number, number, number] = equipped === "rainbow" ? [Math.random(), Math.random(), 1] : color;
+          const hue = ((sim.time * 0.42) % 1) * Math.PI * 2;
+          const rgb: [number, number, number] = equipped === "rainbow" ? [0.5 + 0.5 * Math.sin(hue), 0.5 + 0.5 * Math.sin(hue + 2.094), 0.5 + 0.5 * Math.sin(hue + 4.188)] : color;
           P.emit(p.x + (Math.random() - 0.5) * 0.55, p.y + 0.25 + Math.random() * 0.7, 0.2, (Math.random() - 0.5) * 1.2, equipped === "fire" ? 1.8 : 0.9, 1.1, rgb[0], rgb[1], rgb[2], 0.75 + Math.random() * 0.6, equipped === "blue-smoke" || equipped === "shadow" ? 0.48 : 0.22, equipped === "fire" ? -1.8 : -0.3);
         }
       }
