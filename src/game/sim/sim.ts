@@ -200,7 +200,7 @@ export class Sim {
     if (this.autoDodge && p.grounded) {
       const danger = this.obstacles
         .filter((o) => o.kind !== "ramp" && o.s1 >= this.dist + 1 && o.s0 <= this.dist + Math.max(10, this.speed * 1.15))
-        .filter((o) => this.overlapsX(p.x, o))
+        .filter((o) => o.lane === p.lane)
         .sort((a, b) => a.s0 - b.s0)[0];
       if (danger) {
         const options = [-1, 0, 1]
