@@ -110,10 +110,11 @@ export class TrackGenerator {
     const coinMax = gap * 0.42;
     let blockedCount = [-1, 0, 1].filter((l) => this.blocked(l) >= s - 1).length;
 
-    // Burla das três fileiras: moedas ocupam as três pistas ao mesmo tempo.
-    // O jogador precisa saltar por cima da faixa de moedas para continuar no NO COIN.
+    // Burla das três fileiras: uma barreira de moedas cobre as três pistas.
+    // Um salto bem cronometrado permite passar sem coletar nenhuma moeda.
     if (blockedCount === 0 && this.rng.chance(this.diff.coinDensity * 0.22)) {
-      for (const lane of [-1, 0, 1]) this.coinLine(coins, lane, s + 1, Math.min(12, coinMax + 2), COIN_Y);
+      const coinS = s + Math.min(4, gap * 0.22);
+      for (const lane of [-1, 0, 1]) coins.push({ id: this.id++, lane, s: coinS, y: COIN_Y, alive: true });
       return;
     }
 
