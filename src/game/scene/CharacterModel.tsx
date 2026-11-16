@@ -85,6 +85,30 @@ export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
           )}
         </group>
       );
+    case "monkey":
+      return (
+        <group>
+          <Cap r={0.2} len={0.34} m={m.main} pos={[0, 0.3, 0]} scale={[1.1, 1, 0.9]} />
+          <Ball r={0.15} m={m.second} pos={[0, 0.12, -0.17]} scale={[1.15, 1, 0.45]} />
+          <Box s={[0.42, 0.08, 0.08]} m={m.accent} pos={[0, 0.43, -0.15]} />
+          <mesh position={[0.16, -0.08, 0.22]} rotation={[0.2, 0, 0.35]} material={m.main}>
+            <torusGeometry args={[0.14, 0.035, 8, 18, Math.PI * 1.6]} />
+          </mesh>
+          <Ball r={0.055} m={m.accent} pos={[-0.28, 0.5, 0]} />
+          <Ball r={0.055} m={m.accent} pos={[0.28, 0.5, 0]} />
+        </group>
+      );
+    case "coat":
+      return (
+        <group>
+          <Cap r={0.2} len={0.3} m={m.main} pos={[0, 0.3, 0]} scale={[1.2, 1, 0.9]} />
+          <Box s={[0.18, 0.46, 0.035]} m={m.second} pos={[0, 0.28, -0.18]} />
+          <Box s={[0.18, 0.46, 0.035]} m={m.main} pos={[-0.13, 0.28, -0.18]} rot={[0, 0, -0.08]} />
+          <Box s={[0.18, 0.46, 0.035]} m={m.main} pos={[0.13, 0.28, -0.18]} rot={[0, 0, 0.08]} />
+          <Box s={[0.08, 0.28, 0.025]} m={m.accent} pos={[0, 0.32, -0.22]} />
+          <Box s={[0.42, 0.06, 0.32]} m={m.second} pos={[0, 0.52, 0]} />
+        </group>
+      );
     case "skeleton":
       return (
         <group>
@@ -95,6 +119,7 @@ export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
             </mesh>
           ))}
           <Box s={[0.28, 0.1, 0.14]} m={m.main} pos={[0, 0.02, 0]} />
+          {def.glow && <Ball r={0.055} m={m.glow} pos={[0, 0.3, -0.12]} />}
           <Cap r={0.03} len={0.42} m={m.main} pos={[0, 0.54, 0]} scale={[1, 1, 1]} />
         </group>
       );
@@ -299,13 +324,33 @@ export function Head({ def, m }: { def: CharacterDef; m: Mats }) {
       return (
         <group>
           <Ball r={0.2} m={m.main} pos={[0, 0.23, 0]} scale={[0.95, 1, 1]} />
-          <Ball r={0.055} m={m.dark} pos={[-0.075, 0.25, -0.155]} />
-          <Ball r={0.055} m={m.dark} pos={[0.075, 0.25, -0.155]} />
+          <Ball r={0.055} m={def.glow ? m.glow : m.dark} pos={[-0.075, 0.25, -0.155]} />
+          <Ball r={0.055} m={def.glow ? m.glow : m.dark} pos={[0.075, 0.25, -0.155]} />
           <Box s={[0.03, 0.05, 0.03]} m={m.dark} pos={[0, 0.17, -0.19]} />
           <Box s={[0.2, 0.08, 0.16]} m={m.main} pos={[0, 0.07, -0.06]} />
           {[-0.06, -0.02, 0.02, 0.06].map((x) => (
             <Box key={x} s={[0.015, 0.04, 0.01]} m={m.dark} pos={[x, 0.1, -0.142]} />
           ))}
+        </group>
+      );
+    case "monkey":
+      return (
+        <group>
+          <Ball r={0.22} m={m.main} pos={[0, 0.23, 0]} scale={[1.05, 1.15, 0.95]} />
+          <Ball r={0.11} m={m.second} pos={[0, 0.13, -0.18]} scale={[1.25, 0.8, 0.65]} />
+          <Ball r={0.06} m={m.accent} pos={[-0.2, 0.35, -0.02]} />
+          <Ball r={0.06} m={m.accent} pos={[0.2, 0.35, -0.02]} />
+          {eyes(m.dark, 0.025, 0.27, -0.18)}
+        </group>
+      );
+    case "coat":
+      return (
+        <group>
+          <Ball r={0.19} m={m.skin} pos={[0, 0.19, 0]} />
+          {eyes(m.dark, 0.022, 0.21, -0.175)}
+          <Box s={[0.38, 0.045, 0.32]} m={m.main} pos={[0, 0.38, 0]} />
+          <Box s={[0.23, 0.12, 0.24]} m={m.main} pos={[0, 0.44, 0]} />
+          <Box s={[0.07, 0.08, 0.02]} m={m.accent} pos={[0, 0.23, -0.18]} />
         </group>
       );
     case "stick":
