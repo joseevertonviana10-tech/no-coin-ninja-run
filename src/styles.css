@@ -238,6 +238,25 @@
   }
 }
 
+#game-root[data-rgb-phone="true"]::after {
+  content: "";
+  position: fixed;
+  inset: 3px;
+  z-index: 90;
+  pointer-events: none;
+  border: 4px solid transparent;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ff315a, #ffd43b, #35ef8d, #35b8ff, #b45cff, #ff315a) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 7px #35b8ff) drop-shadow(0 0 12px #b45cff);
+  animation: phone-rgb 3.2s linear infinite;
+}
+@keyframes phone-rgb {
+  to { filter: hue-rotate(360deg) drop-shadow(0 0 7px #35b8ff) drop-shadow(0 0 12px #b45cff); }
+}
+
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.4; transform: scale(0.7); }

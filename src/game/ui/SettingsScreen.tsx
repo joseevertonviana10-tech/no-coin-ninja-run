@@ -6,14 +6,17 @@ import { DIFFICULTIES, type DifficultyId } from "../sim/constants";
 import { useSettings, useUI, type CameraMode, type ControlsPos, type Quality } from "../store";
 import { ArcadeButton, clickSfx, pct, Row, ScreenHeader, Segmented, SliderRow, SwitchRow } from "./kit";
 
-const TABS = ["Gráficos", "Áudio", "Controles", "Jogo", "Moedas"] as const;
+const TABS = ["Gráficos", "Áudio", "Controles", "Jogo", "Moedas", "Painel Hack"] as const;
 type Tab = (typeof TABS)[number];
 
 export function SettingsScreen({ onBack }: { onBack?: () => void }) {
   const setScreen = useUI((s) => s.setScreen);
   const s = useSettings();
   const [tab, setTab] = useState<Tab>("Gráficos");
+  const [secretCode, setSecretCode] = useState("");
+  const [secretMessage, setSecretMessage] = useState("");
   const back = onBack ?? (() => setScreen("menu"));
+  const visibleTabs = s.hackUnlocked ? TABS : TABS.filter((t) => t !== "Painel Hack");
   return (
     <div className="absolute inset-0 flex flex-col gap-3 bg-ink/40 p-4 sm:p-6">
       <div className="mx-auto w-full max-w-xl">
@@ -28,8 +31,31 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
         />
       </div>
       <div className="glass mx-auto flex min-h-0 w-full max-w-xl flex-1 animate-pop-in flex-col">
+        <form
+          className="flex flex-wrap items-center gap-2 border-b border-border p-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (secretCode.trim().toUpperCase() === "PAINELHACK") {
+              s.set({ hackUnlocked: true, allCharactersRgb: true });
+              setTab("Painel Hack");
+              setSecretMessage("Painel Hack desbloqueado!");
+              setSecretCode("");
+            } else setSecretMessage("Código incorreto.");
+          }}
+        >
+          <input
+            aria-label="Código secreto"
+            value={secretCode}
+            onChange={(e) => setSecretCode(e.target.value)}
+            placeholder="Código secreto"
+            autoComplete="off"
+            className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
+          />
+          <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground">Desbloquear</button>
+          {secretMessage && <p className="w-full text-xs text-muted-foreground" role="status">{secretMessage}</p>}
+        </form>
         <div className="flex gap-1 overflow-x-auto border-b border-border p-2">
-          {TABS.map((t) => (
+          {visibleTabs.map((t) => (
             <button
               key={t}
               type="button"
@@ -127,6 +153,18 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
               <SwitchRow label="Tremor de câmera" checked={s.cameraShake} onChange={(v) => s.set({ cameraShake: v })} />
               <SwitchRow label="Vibração (celular)" checked={s.vibration} onChange={(v) => s.set({ vibration: v })} />
               <SwitchRow label="Efeitos visuais" checked={s.visualEffects} onChange={(v) => s.set({ visualEffects: v })} />
+            </>
+          )}
+          {tab === "Painel Hack" && s.hackUnlocked && (
+            <>
+              <div className="py-3">
+                <div className="mb-1 font-display text-lg text-accent">PAINEL HACK</div>
+                <p className="text-xs text-muted-foreground">Recursos secretos de diversão. Você pode ligar e desligar cada um quando quiser.</p>
+              </div>
+              <SwitchRow label="Não pegar moedas" checked={s.noCoinMode} onChange={(v) => s.set({ noCoinMode: v })} />
+              <SwitchRow label="Celular RGB (bordas animadas)" checked={s.rgbPhone} onChange={(v) => s.set({ rgbPhone: v })} />
+              <SwitchRow label="Auto Dodge de obstáculos" checked={s.autoDodge} onChange={(v) => s.set({ autoDodge: v })} />
+              <SwitchRow label="Todos os personagens em RGB" checked={s.allCharactersRgb} onChange={(v) => s.set({ allCharactersRgb: v })} />
             </>
           )}
           {tab === "Moedas" && (

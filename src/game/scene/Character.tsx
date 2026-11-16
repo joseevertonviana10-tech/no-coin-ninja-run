@@ -4,7 +4,7 @@ import * as THREE from "three";
 import type { CharacterDef } from "../data/characters";
 import { runtime } from "../runtime";
 import { LANE_W } from "../sim/constants";
-import { useUI } from "../store";
+import { useSettings, useUI } from "../store";
 import { Cape } from "./Cape";
 import { BackGear, Forearm, Head, Shin, Thigh, Torso, UpperArm, useCharacterMats } from "./CharacterModel";
 
@@ -15,6 +15,7 @@ const zero = (): Pose => Object.fromEntries(JOINTS.map((j) => [j, 0])) as Pose;
 
 export function CharacterRig({ def }: { def: CharacterDef }) {
   const m = useCharacterMats(def);
+  const allRgb = useSettings((s) => s.allCharactersRgb);
   const root = useRef<THREE.Group>(null!);
   const visual = useRef<THREE.Group>(null!);
   const hips = useRef<THREE.Group>(null!);
@@ -35,7 +36,15 @@ export function CharacterRig({ def }: { def: CharacterDef }) {
     const s = st.current;
     s.t += dt;
     const t = s.t;
-    if (def.id === "monkey-rainbow") {
+    if (allRgb) {
+      const hue = (t * 0.2) % 1;
+      m.main.color.setHSL(hue, 0.95, 0.5);
+      m.second.color.setHSL((hue + 0.33) % 1, 0.9, 0.62);
+      m.accent.color.setHSL((hue + 0.66) % 1, 1, 0.58);
+      m.glow.color.setHSL(hue, 1, 0.62);
+      m.glow.emissive.setHSL(hue, 1, 0.28);
+      m.main.emissive.setHSL(hue, 0.9, 0.1);
+    } else if (def.id === "monkey-rainbow") {
       const hue = (t * 0.22) % 1;
       m.main.color.setHSL(hue, 0.9, 0.48);
       m.second.color.setHSL((hue + 0.34) % 1, 0.82, 0.62);

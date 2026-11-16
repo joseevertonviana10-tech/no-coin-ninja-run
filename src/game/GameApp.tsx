@@ -117,6 +117,7 @@ export function GameApp() {
   return (
     <div
       id="game-root"
+      data-rgb-phone={s.rgbPhone ? "true" : "false"}
       className="fixed inset-0 touch-none overflow-hidden bg-background text-foreground"
       onPointerDown={(e) => {
         if (!playing) return;

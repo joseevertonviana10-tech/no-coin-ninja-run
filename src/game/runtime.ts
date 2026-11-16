@@ -30,6 +30,8 @@ export function startRun(training = false) {
     difficulty: s.difficulty,
     speedMult: s.speedMult,
     coinSize: s.coinSize,
+    noCoin: s.noCoinMode,
+    autoDodge: s.autoDodge,
     laneGrip: map.laneGrip,
     weights: map.weights,
     seed: (Math.random() * 1e9) | 0,

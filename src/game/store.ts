@@ -33,6 +33,11 @@ export interface Settings {
   character: string;
   map: MapId;
   trainingTimescale: TrainingSpeed;
+  hackUnlocked: boolean;
+  noCoinMode: boolean;
+  rgbPhone: boolean;
+  autoDodge: boolean;
+  allCharactersRgb: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -58,6 +63,11 @@ export const DEFAULT_SETTINGS: Settings = {
   character: "ninja-cape-red",
   map: "city",
   trainingTimescale: 0.75,
+  hackUnlocked: false,
+  noCoinMode: false,
+  rgbPhone: false,
+  autoDodge: false,
+  allCharactersRgb: false,
 };
 
 interface SettingsStore extends Settings {

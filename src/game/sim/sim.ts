@@ -38,6 +38,8 @@ export interface SimConfig {
   /** Spawn content at all (false for tests that place things by hand). */
   generate?: boolean;
   challenge?: ChallengeMode;
+  noCoin?: boolean;
+  autoDodge?: boolean;
 }
 
 export interface PlayerState {
@@ -88,6 +90,8 @@ export class Sim {
   private laneK: number;
   private coinR: number;
   private generate: boolean;
+  private noCoin: boolean;
+  private autoDodge: boolean;
 
   constructor(cfg: SimConfig) {
     this.diff = DIFFICULTIES[cfg.difficulty];
@@ -97,6 +101,8 @@ export class Sim {
     this.laneK = LANE_K * cfg.laneGrip;
     this.coinR = COIN_R * cfg.coinSize;
     this.generate = cfg.generate !== false;
+    this.noCoin = cfg.noCoin ?? false;
+    this.autoDodge = cfg.autoDodge ?? false;
     this.gen = new TrackGenerator(makeRng(cfg.seed), this.diff, cfg.weights, cfg.challenge ?? "standard");
     if (this.generate) this.gen.fill(this.obstacles, this.coins, LOOKAHEAD, this.maxSpeed * 0.6);
   }
@@ -190,6 +196,27 @@ export class Sim {
     p.x += (tx - p.x) * (1 - Math.exp(-this.laneK * h));
     if (Math.abs(tx - p.x) < 0.002) p.x = tx;
 
+    // Auto Dodge: procura uma pista livre antes da zona de colisão.
+    if (this.autoDodge && p.grounded) {
+      const danger = this.obstacles
+        .filter((o) => o.kind !== "ramp" && o.s1 >= this.dist + 1 && o.s0 <= this.dist + Math.max(10, this.speed * 1.15))
+        .filter((o) => this.overlapsX(p.x, o))
+        .sort((a, b) => a.s0 - b.s0)[0];
+      if (danger) {
+        const options = [-1, 0, 1]
+          .filter((lane) => lane !== p.lane)
+          .filter((lane) => !this.obstacles.some((o) => o.kind !== "ramp" && o.lane === lane && o.s1 >= this.dist + 1 && o.s0 <= danger.s1 + 5));
+        if (options.length) {
+          const lane = options.sort((a, b) => Math.abs(a - p.lane) - Math.abs(b - p.lane))[0]!;
+          this.move(lane < p.lane ? -1 : 1);
+        } else if (danger.kind === "low" || danger.kind === "crate" || danger.kind === "car") {
+          this.jump();
+        } else if (danger.kind === "high") {
+          this.slide();
+        }
+      }
+    }
+
     // Vertical
     const prevY = p.y;
     p.coyote = p.grounded ? COYOTE : p.coyote - h;
@@ -265,7 +292,8 @@ export class Sim {
       return;
     }
 
-    // Coin pickups (they end the challenge)
+    // Coin pickups (they end the challenge), unless the secret no-coin mode is active.
+    if (!this.noCoin) {
     const r2 = this.coinR * this.coinR;
     const px0 = p.x - PLAYER_HW;
     const px1 = p.x + PLAYER_HW;
@@ -281,6 +309,7 @@ export class Sim {
         this.die("coin", c);
         return;
       }
+    }
     }
 
     // Recycle and spawn
