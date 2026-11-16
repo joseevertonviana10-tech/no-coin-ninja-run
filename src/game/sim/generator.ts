@@ -7,6 +7,8 @@ import type { Coin, KindWeights, Obstacle, ObstacleKind, RowLog } from "./types"
  * "safe" lane (no coins, no trains, at most one jump/slide obstacle) that is
  * adjacent to the previous row's safe lane, so a path always exists.
  */
+export type ChallengeMode = "standard" | "three-rows" | "nerdola";
+
 export class TrackGenerator {
   nextS = 48;
   safeLane = 0;
@@ -18,6 +20,7 @@ export class TrackGenerator {
     private rng: Rng,
     private diff: Difficulty,
     private weights: KindWeights,
+    private challenge: ChallengeMode = "standard",
   ) {}
 
   fill(obstacles: Obstacle[], coins: Coin[], limit: number, speed: number) {
@@ -110,11 +113,28 @@ export class TrackGenerator {
     const coinMax = gap * 0.42;
     let blockedCount = [-1, 0, 1].filter((l) => this.blocked(l) >= s - 1).length;
 
-    // Burla das três fileiras: uma barreira de moedas cobre as três pistas.
-    // Um salto bem cronometrado permite passar sem coletar nenhuma moeda.
-    if (blockedCount === 0 && this.rng.chance(this.diff.coinDensity * 0.22)) {
-      const coinS = s + Math.min(4, gap * 0.22);
-      for (const lane of [-1, 0, 1]) coins.push({ id: this.id++, lane, s: coinS, y: COIN_Y, alive: true });
+    // Cinco barreiras de moedas nas três pistas, atravessadas com um salto.
+    const threeRows = this.challenge === "three-rows" || (this.challenge === "standard" && this.rng.chance(this.diff.coinDensity * 0.16));
+    if (blockedCount === 0 && threeRows) {
+      const start = s + Math.min(4, gap * 0.18);
+      for (let row = 0; row < 5; row++) {
+        const coinS = start + row * 2.25;
+        for (const lane of [-1, 0, 1]) coins.push({ id: this.id++, lane, s: coinS, y: COIN_Y, alive: true });
+      }
+      return;
+    }
+
+    // Burla Nerdola: trens nas pistas externas, moedas no centro e nos tetos.
+    const nerdola = this.challenge === "nerdola" || (this.challenge === "standard" && this.rng.chance(this.diff.coinDensity * 0.09));
+    if (blockedCount === 0 && nerdola) {
+      const trainStart = s + 5;
+      for (const lane of [-1, 1] as const) {
+        this.add(obstacles, "ramp", lane, s);
+        const train = this.add(obstacles, "train", lane, trainStart);
+        this.blockedUntil[lane + 1] = train.s1;
+        this.coinLine(coins, lane, trainStart + 1.5, Math.min(9, train.s1 - trainStart - 2), TRAIN_TOP + COIN_Y);
+      }
+      this.coinLine(coins, 0, trainStart + 1.5, 9);
       return;
     }
 
