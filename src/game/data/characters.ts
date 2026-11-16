@@ -9,9 +9,11 @@ export type CharStyle =
   | "knight"
   | "soldier"
   | "explorer"
-  | "alien";
+  | "alien"
+  | "monkey"
+  | "coat";
 export type Pattern = "fabric" | "rust" | "camo" | "plates" | "circuit" | "stains" | "plain" | "scales" | "chain";
-export type Category = "Ninjas" | "Samurais" | "Robôs" | "Zumbis" | "Outros";
+export type Category = "Ninjas" | "Samurais" | "Robôs" | "Zumbis" | "Outros" | "Macacos";
 
 export interface CharacterDef {
   id: string;
@@ -42,6 +44,10 @@ export const CHARACTERS: CharacterDef[] = [
   { id: "ninja-cape-black", name: "Ninja Capa Negra", category: "Ninjas", style: "ninja", main: "#2a2a33", second: "#111116", accent: "#8a8aa0", skin: NINJA_SKIN, pattern: "fabric", cape: "#0d0d12", weapon: "katana", desc: "Capa com física dinâmica." },
   { id: "ninja-cape-red", name: "Ninja Capa Vermelha", category: "Ninjas", style: "ninja", main: "#26262c", second: "#121216", accent: "#e63946", skin: NINJA_SKIN, pattern: "fabric", cape: "#b5121b", weapon: "katana", desc: "A capa escarlate tremula ao vento." },
 
+  { id: "coat-detective", name: "Detetive de Sobretudo", category: "Outros", style: "coat", main: "#20232b", second: "#b7b2a8", accent: "#8b5a2b", skin: "#e4b995", pattern: "fabric", desc: "Sobretudo longo, gola alta e chapéu." },
+  { id: "skeleton-cape", name: "Esqueleto de Capa", category: "Outros", style: "skeleton", main: "#eee7d6", second: "#b9b1a1", accent: "#252333", skin: "#eee7d6", pattern: "plain", cape: "#171725", glow: "#8b79ff", desc: "Ossos antigos sob uma capa sombria." },
+  { id: "skeleton-spectral", name: "Esqueleto Espectral", category: "Outros", style: "skeleton", main: "#e9f7f5", second: "#a8d7d5", accent: "#45eaff", skin: "#e9f7f5", pattern: "plain", glow: "#45eaff", desc: "Emite partículas espectrais enquanto corre." },
+
   { id: "samurai-trad", name: "Samurai Tradicional", category: "Samurais", style: "samurai", main: "#8c1c13", second: "#1f1a17", accent: "#d4af37", skin: "#e0b088", pattern: "plates", armor: "light", weapon: "katana", desc: "Armadura laqueada de honra." },
   { id: "samurai-gold", name: "Samurai Dourado", category: "Samurais", style: "samurai", main: "#d4a017", second: "#3b2a05", accent: "#fff3b0", skin: "#e0b088", pattern: "plates", metal: 0.7, armor: "light", weapon: "katana", desc: "Brilho do shogun." },
   { id: "samurai-dark", name: "Samurai Sombrio", category: "Samurais", style: "samurai", main: "#1a1a20", second: "#3a0d12", accent: "#ff2d3d", skin: "#9c8a80", pattern: "plates", glow: "#ff2d3d", armor: "light", weapon: "katana", desc: "Olhos que ardem na escuridão." },
@@ -62,8 +68,15 @@ export const CHARACTERS: CharacterDef[] = [
   { id: "knight", name: "Cavaleiro Medieval", category: "Outros", style: "knight", main: "#b8c0c8", second: "#2a4a8a", accent: "#d4af37", skin: "#e0b088", pattern: "chain", metal: 0.85, armor: "full", weapon: "sword", desc: "Aço polido e brasão real." },
   { id: "soldier", name: "Soldado", category: "Outros", style: "soldier", main: "#5f6e45", second: "#3b4430", accent: "#1f1f1f", skin: "#c99a74", pattern: "camo", weapon: "rifle", desc: "Pronto para a missão." },
   { id: "explorer", name: "Explorador", category: "Outros", style: "explorer", main: "#c9a66b", second: "#6b4a2a", accent: "#2f6b5a", skin: "#e8b48a", pattern: "fabric", desc: "Chapéu e mochila de aventura." },
+  { id: "monkey-brown", name: "Macaco Marrom", category: "Macacos", style: "monkey", main: "#80502d", second: "#d9ad7c", accent: "#4a2b1b", skin: "#c88f68", pattern: "plain", desc: "Felpudo, ágil e pronto para correr." },
+  { id: "monkey-black", name: "Macaco Preto", category: "Macacos", style: "monkey", main: "#25242a", second: "#b58a68", accent: "#101014", skin: "#9c765e", pattern: "plain", desc: "Pelagem escura e olhar atento." },
+  { id: "monkey-white", name: "Macaco Branco", category: "Macacos", style: "monkey", main: "#e8e4dc", second: "#fff0d8", accent: "#a9a09a", skin: "#d6ae91", pattern: "plain", desc: "Pelagem clara como a neve." },
+  { id: "monkey-gold", name: "Macaco Dourado", category: "Macacos", style: "monkey", main: "#d7a928", second: "#f7d98b", accent: "#8c5a12", skin: "#d5a47c", pattern: "plain", metal: 0.25, desc: "Um brilho dourado em cada corrida." },
+  { id: "monkey-blue", name: "Macaco Azul", category: "Macacos", style: "monkey", main: "#2468c9", second: "#a8d8f5", accent: "#12366e", skin: "#b88970", pattern: "plain", desc: "Pelagem azul vibrante." },
+  { id: "monkey-red", name: "Macaco Vermelho", category: "Macacos", style: "monkey", main: "#bd3038", second: "#f0b18e", accent: "#6c151d", skin: "#c58d70", pattern: "plain", desc: "Pelagem vermelha intensa." },
+  { id: "monkey-rainbow", name: "Macaco Arco-íris", category: "Macacos", style: "monkey", main: "#e64b67", second: "#ffd166", accent: "#4cc9f0", skin: "#c98f73", pattern: "plain", desc: "Cores vivas em uma skin especial." },
   { id: "alien", name: "Alienígena", category: "Outros", style: "alien", main: "#5a6b8a", second: "#2a3448", accent: "#c0ff3a", skin: "#7ee08a", pattern: "scales", glow: "#c0ff3a", desc: "Veio de muito longe." },
 ];
 
 export const CHARACTER_BY_ID = Object.fromEntries(CHARACTERS.map((c) => [c.id, c])) as Record<string, CharacterDef>;
-export const CATEGORIES: Category[] = ["Ninjas", "Samurais", "Robôs", "Zumbis", "Outros"];
+export const CATEGORIES: Category[] = ["Ninjas", "Samurais", "Robôs", "Zumbis", "Outros", "Macacos"];
