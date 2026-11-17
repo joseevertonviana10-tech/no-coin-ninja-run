@@ -20,7 +20,7 @@ export interface Coin {
   alive: boolean;
 }
 
-export type DeathReason = "coin" | "collision" | "fall";
+export type DeathReason = "coin" | "collision" | "fall" | "victory";
 
 export type SimEvent =
   | { type: "jump" }

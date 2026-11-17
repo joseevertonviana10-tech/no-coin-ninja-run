@@ -1,4 +1,4 @@
-import { BarChart3, Map, Play, Settings, Shirt, Sparkles, Target, Trophy, Gem } from "lucide-react";
+import { BarChart3, Map, Play, Settings, Shirt, Sparkles, Target, Trophy, Gem, Flag } from "lucide-react";
 import { CHARACTER_BY_ID } from "../data/characters";
 import { MAP_BY_ID } from "../data/maps";
 import { startRun } from "../runtime";
@@ -63,6 +63,9 @@ export function Menu() {
           <ArcadeButton onClick={() => setScreen("records")}>
             <BarChart3 className="h-4 w-4" /> Recordes
           </ArcadeButton>
+          <ArcadeButton variant="primary" onClick={() => startRun("race")}>
+            <Flag className="h-4 w-4" /> Corrida contra bots
+          </ArcadeButton>
           <ArcadeButton onClick={() => setScreen("training")}>
             <Target className="h-4 w-4" /> Treino 3 fileiras
           </ArcadeButton>
@@ -79,6 +82,7 @@ export function Menu() {
         <p className="text-center text-xs text-muted-foreground">
           Corra sem pegar <span className="font-semibold text-coin">nenhuma moeda</span>. W pula · A/D troca de faixa · S desliza
         </p>
+        <p className="text-center text-[11px] text-muted-foreground">Na Corrida contra bots, cada rival pega sua moeda entre 30 segundos e 7 minutos. Sobreviva até todos terminarem!</p>
       </div>
     </div>
   );

@@ -3,8 +3,10 @@ import { audio } from "./audio";
 import { MAP_BY_ID } from "./data/maps";
 import { ParticlePool } from "./particles";
 import { Sim } from "./sim/sim";
+import type { ChallengeMode } from "./sim/generator";
 import { useSettings, useStats, useUI } from "./store";
 
+export type RunChallenge = ChallengeMode | "race";
 export type Mode = "menu" | "playing" | "paused" | "dead" | "over";
 
 export const runtime = {
@@ -20,26 +22,34 @@ export const runtime = {
   particles: new ParticlePool(420),
   runId: 0,
   training: false,
+  challenge: "standard" as RunChallenge,
+  raceBots: [] as { id: number; name: string; finishAt: number; finished: boolean }[],
   timeScale: 1,
   keyMilestone: 0,
 };
 
-export function startRun(training = false) {
+export function startRun(mode: boolean | RunChallenge = false) {
+  const challenge: RunChallenge = mode === true ? "three-rows" : mode === false ? "standard" : mode;
+  const training = challenge === "three-rows" || challenge === "nerdola";
   const s = useSettings.getState();
   const map = MAP_BY_ID[s.map] ?? MAP_BY_ID.city;
   runtime.sim = new Sim({
     difficulty: s.difficulty,
     speedMult: s.speedMult,
     coinSize: s.coinSize,
-    noCoin: s.noCoinMode,
+    noCoin: challenge === "race" ? false : s.noCoinMode,
     autoDodge: s.autoDodge,
     laneGrip: map.laneGrip,
     weights: map.weights,
     seed: (Math.random() * 1e9) | 0,
-    challenge: training ? "three-rows" : "standard",
+    challenge: challenge === "three-rows" || challenge === "nerdola" ? challenge : "standard",
   });
   runtime.mode = "playing";
   runtime.training = training;
+  runtime.challenge = challenge;
+  runtime.raceBots = challenge === "race"
+    ? ["Rafa", "Luna", "Theo", "Mika"].map((name, id) => ({ id, name, finishAt: 30 + Math.random() * 390, finished: false }))
+    : [];
   runtime.timeScale = training ? s.trainingTimescale : 1;
   runtime.keyMilestone = 0;
   runtime.deathT = 0;
@@ -88,6 +98,8 @@ export function resumeRun() {
 export function toMenu() {
   runtime.mode = "menu";
   runtime.training = false;
+  runtime.challenge = "standard";
+  runtime.raceBots = [];
   runtime.timeScale = 1;
   runtime.sim = null;
   runtime.particles.clear();

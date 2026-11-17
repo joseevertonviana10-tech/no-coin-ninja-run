@@ -18,6 +18,8 @@ export function HUD() {
   const charId = useSettings((s) => s.character);
   const [dead, setDead] = useState<string | null>(null);
   const [beating, setBeating] = useState(false);
+  const [raceTime, setRaceTime] = useState(0);
+  const raceClock = useRef(0);
 
   useEffect(() => {
     let raf = 0;
@@ -27,6 +29,10 @@ export function HUD() {
       const sim = runtime.sim;
       if (sim && timer.current) {
         timer.current.textContent = formatTime(sim.time);
+        if (runtime.challenge === "race" && sim.time - raceClock.current >= 0.25) {
+          raceClock.current = sim.time;
+          setRaceTime(sim.time);
+        }
         if (speed.current) speed.current.textContent = `${Math.round(sim.speed * 3.6)} km/h`;
         const d = sim.status === "dead" ? sim.reason : null;
         if (d !== lastDead) {
@@ -55,7 +61,7 @@ export function HUD() {
         <div className="flex flex-col items-center">
           <div className={cn("glass px-4 py-1.5 text-center", dead && "border-primary")}>
             <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold tracking-[0.2em] text-muted-foreground">
-              <Ban className="h-3 w-3 text-primary" /> {runtime.training ? "TREINO 3 FILEIRAS" : "NO COIN TIME"}
+              <Ban className="h-3 w-3 text-primary" /> {runtime.challenge === "race" ? "CORRIDA CONTRA BOTS" : runtime.challenge === "nerdola" ? "TREINO NERDOLA" : runtime.training ? "TREINO 3 FILEIRAS" : "NO COIN TIME"}
             </div>
             <span ref={timer} className={cn("timer-text block text-3xl sm:text-4xl", beating ? "text-success" : "text-foreground")}>
               00:00.00
@@ -68,7 +74,7 @@ export function HUD() {
             </span>
             <span className="chip">
               <span className={cn("h-2 w-2 rounded-full", dead ? "bg-primary" : "animate-pulse-dot bg-success")} />
-              {dead ? "ENCERRADO" : runtime.training ? runtime.timeScale.toFixed(2) + "× TREINO" : "DESAFIO ATIVO"}
+              {dead ? "ENCERRADO" : runtime.training ? runtime.timeScale.toFixed(2) + "× TREINO" : runtime.challenge === "race" ? `${runtime.raceBots.filter((b) => b.finished).length}/${runtime.raceBots.length} BOTS FORA` : "DESAFIO ATIVO"}
             </span>
             <span className="chip text-sky-300">🔑 {keys}</span>
           </div>
@@ -86,6 +92,16 @@ export function HUD() {
           <Pause className="h-5 w-5" />
         </button>
       </div>
+      {runtime.challenge === "race" && (
+        <div className="glass mx-auto mt-2 grid w-[min(92vw,26rem)] grid-cols-2 gap-2 p-2 text-xs">
+          {runtime.raceBots.map((bot) => (
+            <div key={bot.id} className="rounded-lg bg-muted/60 p-2">
+              <div className="flex items-center justify-between gap-2"><span className="font-bold">{bot.name}</span><span className={bot.finished ? "text-success" : "text-coin"}>{bot.finished ? "MOEDA PEGADA" : formatTime(Math.max(0, bot.finishAt - raceTime))}</span></div>
+              <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-background"><div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${Math.min(100, raceTime / bot.finishAt * 100)}%` }} /></div>
+            </div>
+          ))}
+        </div>
+      )}
       {dead && (
         <>
           <div className={cn("animate-flash-out absolute inset-0", dead === "coin" ? "bg-coin" : "bg-primary")} />

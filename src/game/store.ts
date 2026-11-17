@@ -8,7 +8,7 @@ import type { DeathReason } from "./sim/types";
 export type Quality = "low" | "medium" | "high" | "ultra";
 export type ControlsPos = "left" | "center" | "right";
 export type CameraMode = "near" | "normal" | "far";
-export type TrainingSpeed = 0.75 | 0.5 | 0.25;
+export type TrainingSpeed = 1 | 0.75 | 0.5 | 0.25;
 export type TimeOfDay = "day" | "afternoon" | "night";
 
 export interface Settings {
@@ -104,6 +104,7 @@ export interface RunResult {
   character: string;
   newRecord: boolean;
   newMapRecord: boolean;
+  won?: boolean;
   previousBest: number;
   distance: number;
 }

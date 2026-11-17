@@ -207,6 +207,23 @@ function Stepper({ map }: { map: MapDef }) {
         }
       }
       sim.events.length = 0;
+      if (runtime.mode === "playing" && runtime.challenge === "race") {
+        for (const bot of runtime.raceBots) {
+          if (!bot.finished && sim.time >= bot.finishAt) bot.finished = true;
+        }
+        if (runtime.raceBots.length > 0 && runtime.raceBots.every((bot) => bot.finished)) {
+          const st = useStats.getState();
+          const prevBest = st.bestTime;
+          const prevMap = st.bestByMap[set.map] ?? 0;
+          st.record({ time: sim.time, reason: "victory", map: set.map, character: set.character, distance: sim.dist });
+          useUI.getState().setLastRun({ time: sim.time, reason: "victory", map: set.map, character: set.character, newRecord: sim.time > prevBest, newMapRecord: sim.time > prevMap, won: true, previousBest: prevBest, distance: sim.dist });
+          runtime.mode = "over";
+          runtime.outcome = "victory";
+          audio.stopMusic();
+          audio.record();
+          useUI.getState().setScreen("gameover");
+        }
+      }
       // Equipped character trail effect, independently saved for each character.
       const p = sim.player;
       const equipped = set.equippedEffects[set.character];

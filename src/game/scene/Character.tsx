@@ -7,7 +7,7 @@ import { LANE_W } from "../sim/constants";
 import { useSettings, useUI } from "../store";
 import { Cape } from "./Cape";
 import { Accessories } from "./Accessories";
-import { BackGear, Forearm, Head, Shin, Thigh, Torso, UpperArm, useCharacterMats } from "./CharacterModel";
+import { BackGear, CharacterDetails, Forearm, Head, Shin, Thigh, Torso, UpperArm, useCharacterMats } from "./CharacterModel";
 
 const HIP_Y = 0.92;
 const JOINTS = ["vx", "vz", "hipY", "tx", "tz", "hx", "hy", "slx", "slz", "el", "srx", "srz", "er", "tl", "kl", "tr", "kr", "z"] as const;
@@ -258,6 +258,7 @@ export function CharacterRig({ def }: { def: CharacterDef }) {
           <group ref={hips} position={[0, HIP_Y, 0]}>
             <group ref={torso}>
               <Torso def={def} m={m} />
+              <CharacterDetails def={def} m={m} />
               <BackGear def={def} m={m} />
               <Accessories accessoryId={accessory} />
               <group ref={head} position={[0, 0.62, 0]}>

@@ -1,4 +1,5 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { CharacterDef } from "../data/characters";
 import { patternTexture } from "./textures";
@@ -60,6 +61,42 @@ const Ball = ({ r, m, pos = [0, 0, 0], scale = [1, 1, 1] }: { r: number; m: THRE
   </mesh>
 );
 
+function MonkeyTail({ material }: { material: THREE.Material }) {
+  const tail = useRef<THREE.Group>(null!);
+  useFrame((state, delta) => {
+    if (!tail.current) return;
+    const t = state.clock.elapsedTime;
+    tail.current.rotation.z = THREE.MathUtils.damp(tail.current.rotation.z, Math.sin(t * 6.2) * 0.32, 7, delta);
+    tail.current.rotation.x = THREE.MathUtils.damp(tail.current.rotation.x, 0.22 + Math.sin(t * 4.1) * 0.18, 5, delta);
+  });
+  return (
+    <group ref={tail} position={[0.16, -0.08, 0.22]}>
+      <mesh position={[0, 0.12, 0]} rotation={[0.5, 0, 0]} material={material} castShadow><capsuleGeometry args={[0.052, 0.22, 5, 10]} /></mesh>
+      <mesh position={[0, 0.29, 0.04]} rotation={[0.9, 0, 0]} material={material} castShadow><capsuleGeometry args={[0.046, 0.2, 5, 10]} /></mesh>
+      <mesh position={[0, 0.43, 0.09]} rotation={[1.2, 0, 0]} material={material} castShadow><capsuleGeometry args={[0.04, 0.16, 5, 10]} /></mesh>
+      <Ball r={0.055} m={material} pos={[0, 0.54, 0.14]} />
+    </group>
+  );
+}
+
+export function CharacterDetails({ def, m }: { def: CharacterDef; m: Mats }) {
+  if (def.style === "skeleton" || def.style === "stick" || def.style === "monkey") return null;
+  return (
+    <group>
+      <Box s={[0.43, 0.065, 0.34]} m={m.second} pos={[0, 0.045, 0]} />
+      <Box s={[0.09, 0.09, 0.035]} m={m.accent} pos={[0, 0.05, -0.19]} />
+      <Ball r={0.025} m={m.glow} pos={[0, 0.37, -0.19]} />
+      {(def.style === "knight" || def.style === "samurai" || def.style === "soldier" || def.style === "robot") && (
+        <>
+          <Ball r={0.105} m={def.style === "knight" ? m.steel : m.accent} pos={[-0.28, 0.52, 0]} scale={[1.2, 0.7, 1]} />
+          <Ball r={0.105} m={def.style === "knight" ? m.steel : m.accent} pos={[0.28, 0.52, 0]} scale={[1.2, 0.7, 1]} />
+        </>
+      )}
+    </group>
+  );
+}
+
+
 /* ---------- Torso ---------- */
 export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
   switch (def.style) {
@@ -88,15 +125,15 @@ export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
     case "monkey":
       return (
         <group>
-          <Cap r={0.23} len={0.38} m={m.main} pos={[0, 0.3, 0]} scale={[1.18, 1, 1]} />
-          <Ball r={0.17} m={m.second} pos={[0, 0.12, -0.17]} scale={[1.18, 1, 0.5]} />
-          <Ball r={0.11} m={m.second} pos={[0, 0.34, -0.18]} scale={[1.2, 1.1, 0.42]} />
-          <Box s={[0.38, 0.07, 0.08]} m={m.accent} pos={[0, 0.48, -0.14]} />
-          <mesh position={[0.16, -0.08, 0.22]} rotation={[0.2, 0, 0.35]} material={m.main}>
-            <torusGeometry args={[0.16, 0.04, 8, 20, Math.PI * 1.7]} />
-          </mesh>
-          <Ball r={0.065} m={m.second} pos={[-0.29, 0.48, 0]} />
-          <Ball r={0.065} m={m.second} pos={[0.29, 0.48, 0]} />
+          <Cap r={0.235} len={0.4} m={m.main} pos={[0, 0.3, 0]} scale={[1.2, 1.02, 1.04]} />
+          <Ball r={0.17} m={m.second} pos={[0, 0.16, -0.18]} scale={[1.18, 1.08, 0.55]} />
+          <Ball r={0.13} m={m.second} pos={[0, 0.39, -0.17]} scale={[1.12, 0.88, 0.48]} />
+          <Ball r={0.1} m={m.main} pos={[-0.25, 0.48, 0]} scale={[1, 1.2, 1]} />
+          <Ball r={0.1} m={m.main} pos={[0.25, 0.48, 0]} scale={[1, 1.2, 1]} />
+          <Box s={[0.32, 0.055, 0.035]} m={m.accent} pos={[0, 0.49, -0.18]} />
+          <Ball r={0.055} m={m.accent} pos={[0, 0.29, -0.235]} />
+          <Box s={[0.08, 0.06, 0.035]} m={m.second} pos={[0, 0.035, -0.18]} />
+          <MonkeyTail material={m.main} />
         </group>
       );
     case "lizard":
@@ -379,14 +416,22 @@ export function Head({ def, m }: { def: CharacterDef; m: Mats }) {
     case "monkey":
       return (
         <group>
-          <Ball r={0.23} m={m.main} pos={[0, 0.23, 0]} scale={[1.08, 1.18, 0.98]} />
-          <Ball r={0.12} m={m.second} pos={[0, 0.12, -0.18]} scale={[1.3, 0.82, 0.65]} />
-          <Ball r={0.075} m={m.second} pos={[-0.205, 0.35, -0.015]} />
-          <Ball r={0.075} m={m.second} pos={[0.205, 0.35, -0.015]} />
-          <Ball r={0.04} m={m.white} pos={[-0.078, 0.28, -0.19]} />
-          <Ball r={0.04} m={m.white} pos={[0.078, 0.28, -0.19]} />
-          {eyes(m.dark, 0.024, 0.28, -0.222)}
-          <Ball r={0.025} m={m.dark} pos={[0, 0.16, -0.25]} />
+          <Ball r={0.235} m={m.main} pos={[0, 0.23, 0]} scale={[1.08, 1.14, 0.98]} />
+          <Ball r={0.085} m={m.main} pos={[-0.215, 0.35, -0.005]} scale={[1, 1.08, 0.62]} />
+          <Ball r={0.085} m={m.main} pos={[0.215, 0.35, -0.005]} scale={[1, 1.08, 0.62]} />
+          <Ball r={0.052} m={m.accent} pos={[-0.22, 0.35, -0.055]} />
+          <Ball r={0.052} m={m.accent} pos={[0.22, 0.35, -0.055]} />
+          <Ball r={0.125} m={m.second} pos={[0, 0.105, -0.175]} scale={[1.28, 0.8, 0.68]} />
+          <Ball r={0.085} m={m.second} pos={[-0.07, 0.145, -0.225]} scale={[1, 0.9, 0.75]} />
+          <Ball r={0.085} m={m.second} pos={[0.07, 0.145, -0.225]} scale={[1, 0.9, 0.75]} />
+          <Ball r={0.035} m={m.dark} pos={[0, 0.19, -0.285]} />
+          <Ball r={0.042} m={m.white} pos={[-0.078, 0.29, -0.19]} />
+          <Ball r={0.042} m={m.white} pos={[0.078, 0.29, -0.19]} />
+          <Ball r={0.022} m={m.dark} pos={[-0.078, 0.29, -0.229]} />
+          <Ball r={0.022} m={m.dark} pos={[0.078, 0.29, -0.229]} />
+          <Box s={[0.11, 0.018, 0.018]} m={m.dark} pos={[0, 0.065, -0.25]} />
+          <Ball r={0.035} m={m.main} pos={[-0.12, 0.43, -0.09]} />
+          <Ball r={0.035} m={m.main} pos={[0.12, 0.43, -0.09]} />
         </group>
       );
     case "lizard":
@@ -527,6 +572,7 @@ export function Head({ def, m }: { def: CharacterDef; m: Mats }) {
 
 /* ---------- Limbs ---------- */
 export function UpperArm({ def, m }: { def: CharacterDef; m: Mats }) {
+  if (def.style === "monkey") return <group><Ball r={0.095} m={m.main} pos={[0, -0.03, 0]} /><Cap r={0.078} len={0.2} m={m.main} pos={[0, -0.15, 0]} /></group>;
   if (def.style === "robot")
     return <Box s={[0.12, 0.26, 0.12]} m={m.second} pos={[0, -0.13, 0]} />;
   if (def.style === "skeleton" || def.style === "stick") return <Cap r={0.03} len={0.24} m={m.main} pos={[0, -0.14, 0]} />;
@@ -534,6 +580,7 @@ export function UpperArm({ def, m }: { def: CharacterDef; m: Mats }) {
   return <Cap r={def.style === "alien" ? 0.045 : 0.065} len={0.17} m={mat} pos={[0, -0.13, 0]} />;
 }
 export function Forearm({ def, m }: { def: CharacterDef; m: Mats }) {
+  if (def.style === "monkey") return <group><Cap r={0.07} len={0.23} m={m.main} pos={[0, -0.12, 0]} /><Ball r={0.075} m={m.second} pos={[0, -0.28, -0.01]} />{[-1, 0, 1].map((i) => <Cap key={i} r={0.018} len={0.08} m={m.second} pos={[i * 0.035, -0.32, -0.055]} />)}</group>;
   if (def.style === "robot")
     return (
       <group>
@@ -560,12 +607,14 @@ export function Forearm({ def, m }: { def: CharacterDef; m: Mats }) {
   );
 }
 export function Thigh({ def, m }: { def: CharacterDef; m: Mats }) {
+  if (def.style === "monkey") return <group><Ball r={0.09} m={m.main} pos={[0, -0.04, 0]} /><Cap r={0.09} len={0.31} m={m.main} pos={[0, -0.22, 0]} /></group>;
   if (def.style === "robot") return <Box s={[0.15, 0.36, 0.15]} m={m.second} pos={[0, -0.2, 0]} />;
   if (def.style === "skeleton" || def.style === "stick") return <Cap r={0.035} len={0.36} m={m.main} pos={[0, -0.22, 0]} />;
   const mat = def.style === "ninja" || def.style === "scientist" || def.style === "alien" ? m.second : def.style === "knight" ? m.steel : m.second;
   return <Cap r={0.085} len={0.26} m={mat} pos={[0, -0.22, 0]} />;
 }
 export function Shin({ def, m }: { def: CharacterDef; m: Mats }) {
+  if (def.style === "monkey") return <group><Cap r={0.07} len={0.25} m={m.main} pos={[0, -0.2, 0]} /><Ball r={0.09} m={m.second} pos={[0, -0.4, -0.08]} scale={[1.2, 0.65, 1.5]} /></group>;
   if (def.style === "robot")
     return (
       <group>
