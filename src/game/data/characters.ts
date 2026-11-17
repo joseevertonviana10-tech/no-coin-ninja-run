@@ -1,5 +1,6 @@
 export type CharStyle =
   | "ninja"
+  | "monk"
   | "samurai"
   | "robot"
   | "zombie"
@@ -45,6 +46,12 @@ export const CHARACTERS: CharacterDef[] = [
   { id: "ninja-red", name: "Ninja Vermelho", category: "Ninjas", style: "ninja", main: "#c41e2a", second: "#5c0a10", accent: "#ffd166", skin: NINJA_SKIN, pattern: "fabric", weapon: "katana", desc: "Fúria em cada passo." },
   { id: "ninja-cape-black", name: "Ninja Capa Negra", category: "Ninjas", style: "ninja", main: "#2a2a33", second: "#111116", accent: "#8a8aa0", skin: NINJA_SKIN, pattern: "fabric", cape: "#0d0d12", weapon: "katana", desc: "Capa com física dinâmica." },
   { id: "ninja-cape-red", name: "Ninja Capa Vermelha", category: "Ninjas", style: "ninja", main: "#26262c", second: "#121216", accent: "#e63946", skin: NINJA_SKIN, pattern: "fabric", cape: "#b5121b", weapon: "katana", desc: "A capa escarlate tremula ao vento." },
+  { id: "sniper-elite", name: "Atirador de Elite", category: "Ninjas", style: "ninja", main: "#43513b", second: "#20291e", accent: "#d2b879", skin: NINJA_SKIN, pattern: "camo", weapon: "rifle", desc: "Ninja de camuflagem com rifle de precisão e mira." },
+  { id: "monk-shaolin", name: "Monge Shaolin", category: "Ninjas", style: "monk", main: "#c66b24", second: "#702d19", accent: "#f1c66b", skin: "#e5b58e", pattern: "fabric", desc: "Monge de túnica tradicional e faixa dourada." },
+  { id: "ninja-purple", name: "Ninja Violeta", category: "Ninjas", style: "ninja", main: "#5d2a91", second: "#241039", accent: "#e2a7ff", skin: NINJA_SKIN, pattern: "fabric", cape: "#35134e", weapon: "katana", desc: "Ninja de capa violeta e katana." },
+  { id: "ninja-green", name: "Ninja Esmeralda", category: "Ninjas", style: "ninja", main: "#237a4a", second: "#123e2b", accent: "#b4f58a", skin: NINJA_SKIN, pattern: "fabric", weapon: "katana", desc: "Ninja verde sem capa, leve e veloz." },
+  { id: "ninja-cyan", name: "Ninja Ciano", category: "Ninjas", style: "ninja", main: "#168caa", second: "#06445b", accent: "#8df4ff", skin: NINJA_SKIN, pattern: "fabric", weapon: "katana", desc: "Ninja azul-ciano sem capa." },
+  { id: "ninja-ronin", name: "Ninja Ronin", category: "Ninjas", style: "ninja", main: "#77736a", second: "#292823", accent: "#d5b46a", skin: NINJA_SKIN, pattern: "fabric", cape: "#4a3428", weapon: "katana", desc: "Ronin errante com capa curta e katana." },
 
   { id: "coat-detective", name: "Detetive de Sobretudo", category: "Outros", style: "coat", main: "#20232b", second: "#b7b2a8", accent: "#8b5a2b", skin: "#e4b995", pattern: "fabric", desc: "Sobretudo longo, gola alta e chapéu." },
   { id: "coat-noir", name: "Detetive Noir", category: "Outros", style: "coat", main: "#111722", second: "#343d4b", accent: "#c7a56b", skin: "#d6ae91", pattern: "fabric", cape: "#171d28", desc: "Sobretudo escuro, lapelas e visual de investigador." },

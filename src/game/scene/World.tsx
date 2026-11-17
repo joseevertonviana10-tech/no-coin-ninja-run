@@ -350,6 +350,10 @@ export function World() {
       <Obstacles map={map} />
       <Coins />
       <CharacterRig key={def.id} def={def} />
+      {runtime.challenge === "race" && runtime.raceBots.map((bot) => {
+        const botDef = CHARACTER_BY_ID[bot.characterId];
+        return botDef ? <CharacterRig key={`race-bot-${bot.id}`} def={botDef} bot={bot} /> : null;
+      })}
       <Particles />
       <Weather key={map.id + weather} map={map} count={weather} />
     </>

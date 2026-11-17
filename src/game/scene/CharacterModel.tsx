@@ -130,6 +130,16 @@ export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
           )}
         </group>
       );
+    case "monk":
+      return (
+        <group>
+          <Cap r={0.21} len={0.38} m={m.main} pos={[0, 0.3, 0]} scale={[1.15, 1, 0.95]} />
+          <Box s={[0.38, 0.07, 0.34]} m={m.second} pos={[0, 0.09, 0]} />
+          <Box s={[0.08, 0.34, 0.025]} m={m.accent} pos={[0, 0.3, -0.19]} />
+          <Box s={[0.3, 0.035, 0.025]} m={m.accent} pos={[0, 0.46, -0.19]} />
+          <Ball r={0.06} m={m.glow} pos={[0, 0.28, -0.22]} />
+        </group>
+      );
     case "monkey":
       return (
         <group>
@@ -321,8 +331,11 @@ export function BackGear({ def, m }: { def: CharacterDef; m: Mats }) {
   if (def.weapon === "rifle")
     return (
       <group position={[0, 0.3, 0.33]} rotation={[0, 0, -0.8]}>
-        <Box s={[0.06, 0.7, 0.07]} m={m.dark} />
-        <Box s={[0.07, 0.2, 0.08]} m={m.accent} pos={[0, -0.25, 0]} />
+        <Box s={[0.065, 0.78, 0.075]} m={m.dark} />
+        <Box s={[0.075, 0.2, 0.08]} m={m.accent} pos={[0, -0.28, 0]} />
+        <Box s={[0.12, 0.13, 0.1]} m={m.second} pos={[0, 0.16, 0]} />
+        <Box s={[0.045, 0.19, 0.045]} m={m.steel} pos={[0, 0.39, 0]} />
+        <Box s={[0.1, 0.045, 0.045]} m={m.accent} pos={[0, 0.39, 0]} />
       </group>
     );
   return null;
@@ -337,6 +350,17 @@ export function Head({ def, m }: { def: CharacterDef; m: Mats }) {
     </>
   );
   switch (def.style) {
+    case "monk":
+      return (
+        <group>
+          <Ball r={0.205} m={m.skin} pos={[0, 0.2, 0]} />
+          <Ball r={0.035} m={m.dark} pos={[-0.075, 0.23, -0.18]} />
+          <Ball r={0.035} m={m.dark} pos={[0.075, 0.23, -0.18]} />
+          <Box s={[0.25, 0.045, 0.025]} m={m.main} pos={[0, 0.38, -0.02]} />
+          <Ball r={0.045} m={m.accent} pos={[0, 0.41, -0.035]} />
+          <Box s={[0.16, 0.025, 0.025]} m={m.dark} pos={[0, 0.12, -0.18]} />
+        </group>
+      );
     case "ninja":
       return (
         <group>
@@ -581,6 +605,7 @@ export function Head({ def, m }: { def: CharacterDef; m: Mats }) {
 /* ---------- Limbs ---------- */
 export function UpperArm({ def, m }: { def: CharacterDef; m: Mats }) {
   if (def.style === "monkey") return <group><Ball r={0.095} m={m.main} pos={[0, -0.03, 0]} /><Cap r={0.078} len={0.2} m={m.main} pos={[0, -0.15, 0]} /></group>;
+  if (def.style === "monk") return <Cap r={0.085} len={0.22} m={m.main} pos={[0, -0.14, 0]} />;
   if (def.style === "robot")
     return <Box s={[0.12, 0.26, 0.12]} m={m.second} pos={[0, -0.13, 0]} />;
   if (def.style === "skeleton" || def.style === "stick") return <Cap r={0.03} len={0.24} m={m.main} pos={[0, -0.14, 0]} />;
@@ -589,6 +614,7 @@ export function UpperArm({ def, m }: { def: CharacterDef; m: Mats }) {
 }
 export function Forearm({ def, m }: { def: CharacterDef; m: Mats }) {
   if (def.style === "monkey") return <group><Cap r={0.07} len={0.23} m={m.main} pos={[0, -0.12, 0]} /><Ball r={0.075} m={m.second} pos={[0, -0.28, -0.01]} />{[-1, 0, 1].map((i) => <Cap key={i} r={0.018} len={0.08} m={m.second} pos={[i * 0.035, -0.32, -0.055]} />)}</group>;
+  if (def.style === "monk") return <group><Cap r={0.07} len={0.18} m={m.main} pos={[0, -0.12, 0]} /><Ball r={0.065} m={m.skin} pos={[0, -0.27, -0.015]} /></group>;
   if (def.style === "robot")
     return (
       <group>
@@ -616,6 +642,7 @@ export function Forearm({ def, m }: { def: CharacterDef; m: Mats }) {
 }
 export function Thigh({ def, m }: { def: CharacterDef; m: Mats }) {
   if (def.style === "monkey") return <group><Ball r={0.09} m={m.main} pos={[0, -0.04, 0]} /><Cap r={0.09} len={0.31} m={m.main} pos={[0, -0.22, 0]} /></group>;
+  if (def.style === "monk") return <Cap r={0.085} len={0.3} m={m.main} pos={[0, -0.22, 0]} />;
   if (def.style === "robot") return <Box s={[0.15, 0.36, 0.15]} m={m.second} pos={[0, -0.2, 0]} />;
   if (def.style === "skeleton" || def.style === "stick") return <Cap r={0.035} len={0.36} m={m.main} pos={[0, -0.22, 0]} />;
   const mat = def.style === "ninja" || def.style === "scientist" || def.style === "alien" ? m.second : def.style === "knight" ? m.steel : m.second;
@@ -623,6 +650,7 @@ export function Thigh({ def, m }: { def: CharacterDef; m: Mats }) {
 }
 export function Shin({ def, m }: { def: CharacterDef; m: Mats }) {
   if (def.style === "monkey") return <group><Cap r={0.07} len={0.25} m={m.main} pos={[0, -0.2, 0]} /><Ball r={0.09} m={m.second} pos={[0, -0.4, -0.08]} scale={[1.2, 0.65, 1.5]} /></group>;
+  if (def.style === "monk") return <group><Cap r={0.07} len={0.27} m={m.main} pos={[0, -0.2, 0]} /><Box s={[0.15, 0.08, 0.23]} m={m.second} pos={[0, -0.4, -0.04]} /></group>;
   if (def.style === "robot")
     return (
       <group>

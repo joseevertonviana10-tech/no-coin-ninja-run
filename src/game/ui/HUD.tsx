@@ -29,6 +29,7 @@ export function HUD() {
       const sim = runtime.sim;
       if (sim && timer.current) {
         timer.current.textContent = formatTime(sim.time);
+        if (sim.time < raceClock.current) { raceClock.current = 0; setRaceTime(0); }
         if (runtime.challenge === "race" && sim.time - raceClock.current >= 0.25) {
           raceClock.current = sim.time;
           setRaceTime(sim.time);
@@ -93,10 +94,10 @@ export function HUD() {
         </button>
       </div>
       {runtime.challenge === "race" && (
-        <div className="glass mx-auto mt-2 grid w-[min(92vw,26rem)] grid-cols-2 gap-2 p-2 text-xs">
+        <div className="glass absolute right-2 top-20 z-20 flex w-36 flex-col gap-2 p-2 text-[10px] sm:right-4 sm:top-24 sm:w-48 sm:p-3 sm:text-xs">
           {runtime.raceBots.map((bot) => (
             <div key={bot.id} className="rounded-lg bg-muted/60 p-2">
-              <div className="flex items-center justify-between gap-2"><span className="font-bold">{bot.name}</span><span className={bot.finished ? "text-success" : "text-coin"}>{bot.finished ? "MOEDA PEGADA" : formatTime(Math.max(0, bot.finishAt - raceTime))}</span></div>
+              <div className="flex items-center justify-between gap-2"><span className="font-bold">{bot.name}</span><span className={bot.finished ? "text-success" : "text-coin"}>{bot.finished ? "PRONTO" : formatTime(Math.max(0, bot.finishAt - raceTime))}</span></div>
               <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-background"><div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${Math.min(100, raceTime / bot.finishAt * 100)}%` }} /></div>
             </div>
           ))}

@@ -23,7 +23,7 @@ export const runtime = {
   runId: 0,
   training: false,
   challenge: "standard" as RunChallenge,
-  raceBots: [] as { id: number; name: string; finishAt: number; finished: boolean }[],
+  raceBots: [] as { id: number; name: string; lane: number; characterId: string; finishAt: number; finished: boolean }[],
   timeScale: 1,
   keyMilestone: 0,
 };
@@ -48,7 +48,12 @@ export function startRun(mode: boolean | RunChallenge = false) {
   runtime.training = training;
   runtime.challenge = challenge;
   runtime.raceBots = challenge === "race"
-    ? ["Rafa", "Luna", "Theo", "Mika"].map((name, id) => ({ id, name, finishAt: 30 + Math.random() * 390, finished: false }))
+    ? [
+        { name: "Rafa", lane: -1, characterId: "ninja-blue" },
+        { name: "Luna", lane: 0, characterId: "ninja-purple" },
+        { name: "Theo", lane: 1, characterId: "monk-shaolin" },
+        { name: "Mika", lane: 0, characterId: "sniper-elite" },
+      ].map((bot, id) => ({ ...bot, id, finishAt: 30 + Math.random() * 390, finished: false }))
     : [];
   runtime.timeScale = training ? s.trainingTimescale : 1;
   runtime.keyMilestone = 0;

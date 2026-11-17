@@ -14,7 +14,7 @@ const JOINTS = ["vx", "vz", "hipY", "tx", "tz", "hx", "hy", "slx", "slz", "el", 
 type Pose = Record<(typeof JOINTS)[number], number>;
 const zero = (): Pose => Object.fromEntries(JOINTS.map((j) => [j, 0])) as Pose;
 
-export function CharacterRig({ def }: { def: CharacterDef }) {
+export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: number; lane: number; finishAt: number; finished: boolean } }) {
   const m = useCharacterMats(def);
   const allRgb = useSettings((s) => s.allCharactersRgb);
   const accessory = useSettings((s) => s.equippedAccessories[def.id]);
@@ -57,6 +57,28 @@ export function CharacterRig({ def }: { def: CharacterDef }) {
     const sim = runtime.sim;
     const mode = runtime.mode;
     const screen = useUI.getState().screen;
+    if (bot && sim) {
+      const progress = THREE.MathUtils.clamp(sim.time / bot.finishAt, 0, 1);
+      const phase = sim.time * 9 + bot.id * 1.7;
+      const stride = Math.sin(phase);
+      root.current.visible = !bot.finished;
+      root.current.position.set(bot.lane * LANE_W, 0, -25 + progress * 19);
+      visual.current.rotation.set(0.02, 0, Math.sin(phase * 0.5) * 0.045);
+      hips.current.position.y = HIP_Y + Math.abs(Math.cos(phase)) * 0.055;
+      torso.current.rotation.set(-0.18, 0, 0);
+      head.current.rotation.set(0.04, 0, 0);
+      shL.current.rotation.set(-stride * 0.85, 0, -0.12);
+      shR.current.rotation.set(stride * 0.85, 0, 0.12);
+      elL.current.rotation.x = 1.05;
+      elR.current.rotation.x = 1.05;
+      thL.current.rotation.x = stride * 0.92;
+      thR.current.rotation.x = -stride * 0.92;
+      knL.current.rotation.x = -Math.max(0, -Math.cos(phase)) * 1.1;
+      knR.current.rotation.x = -Math.max(0, Math.cos(phase)) * 1.1;
+      st.current.wind = 8;
+      st.current.floor = 0;
+      return;
+    }
     const tg = zero();
     tg.hipY = HIP_Y;
     let x = 0;
