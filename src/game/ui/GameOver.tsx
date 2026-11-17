@@ -53,7 +53,7 @@ export function GameOver() {
             {r.text} · {MAP_BY_ID[run.map]?.name} · {CHARACTER_BY_ID[run.character]?.name}
           </div>
         </div>
-        {!run.won && keys > 0 && (
+        {!run.won && !(runtime.challenge === "race" && run.reason === "coin") && keys > 0 && (
           <ArcadeButton variant="primary" className="w-full py-3.5 text-lg" onClick={reviveRun}>
             <span className="text-sky-300">✦</span> REVIVER · 1 CHAVE ({keys} DISPONÍVEIS)
           </ArcadeButton>
