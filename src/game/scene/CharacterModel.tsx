@@ -80,7 +80,15 @@ function MonkeyTail({ material }: { material: THREE.Material }) {
 }
 
 export function CharacterDetails({ def, m }: { def: CharacterDef; m: Mats }) {
-  if (def.style === "skeleton" || def.style === "stick" || def.style === "monkey") return null;
+  if (def.style === "monkey") return null;
+  if (def.style === "skeleton") return (
+    <group>
+      <Box s={[0.28, 0.035, 0.035]} m={m.main} pos={[0, 0.56, -0.015]} />
+      <Ball r={0.035} m={m.glow} pos={[-0.16, 0.52, 0]} />
+      <Ball r={0.035} m={m.glow} pos={[0.16, 0.52, 0]} />
+    </group>
+  );
+  if (def.style === "stick") return <Box s={[0.12, 0.08, 0.035]} m={m.accent} pos={[0, 0.34, -0.035]} />;
   return (
     <group>
       <Box s={[0.43, 0.065, 0.34]} m={m.second} pos={[0, 0.045, 0]} />

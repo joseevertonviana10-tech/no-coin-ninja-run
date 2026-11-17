@@ -80,7 +80,7 @@ export function PauseMenu() {
         <ArcadeButton variant="primary" className="w-full py-3 text-lg" onClick={resumeRun}>
           <Play className="h-5 w-5 fill-current" /> CONTINUAR
         </ArcadeButton>
-        <ArcadeButton className="w-full" onClick={startRun}>
+        <ArcadeButton className="w-full" onClick={() => startRun(runtime.challenge)}>
           <RotateCcw className="h-4 w-4" /> Reiniciar
         </ArcadeButton>
         <ArcadeButton className="w-full" onClick={() => setSettings(true)}>
