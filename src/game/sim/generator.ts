@@ -104,8 +104,14 @@ export class TrackGenerator {
     const margin = speed * 0.35 + 2;
     const free = [-1, 0, 1].filter((l) => this.blocked(l) < s - margin);
     let candidates = free.filter((l) => Math.abs(l - this.safeLane) <= 1);
-    if (candidates.length === 0) candidates = [this.safeLane];
-    // Prefer keeping lane sometimes, moving other times.
+    // If a long train temporarily closes the adjacent route, prefer another
+    // genuinely free lane instead of pretending the previous lane is safe.
+    if (candidates.length === 0) candidates = free;
+    if (candidates.length === 0) {
+      const leastBlocked = [-1, 0, 1].sort((a, b) => this.blocked(a) - this.blocked(b));
+      candidates = [leastBlocked[0] ?? this.safeLane];
+    }
+    // Prefer keeping lane sometimes, moving other times, while preserving a clear route.
     const safe = this.rng.chance(0.45) && candidates.includes(this.safeLane) ? this.safeLane : (this.rng.pick(candidates) ?? this.safeLane);
     this.safeLane = safe;
     this.rows.push({ s, safe });
@@ -143,10 +149,7 @@ export class TrackGenerator {
 
     for (const lane of [-1, 0, 1]) {
       if (lane === safe) {
-        if (this.rng.chance(this.diff.density * 0.35)) {
-          const k = this.rng.pick(["low", "high", "hole"] as const) ?? "low";
-          if (this.weights[k] > 0) this.add(obstacles, k, lane, s);
-        }
+        // Keep the planned escape lane completely clear: no obstacle and no coin bait.
         continue;
       }
       if (this.blocked(lane) >= s - 1) {
