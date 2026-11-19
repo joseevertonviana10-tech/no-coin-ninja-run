@@ -29,7 +29,8 @@ export function Coins() {
         color: "#ffffff",
         map: map ?? null,
         metalness: coinColor === "black" ? 0.6 : 0.85,
-        roughness: 0.25,
+        roughness: 0.22,
+        flatShading: true,
         emissive,
         emissiveIntensity: (rainbow ? 0.95 : 0.35) * coinGlow,
         toneMapped: false,
@@ -60,9 +61,11 @@ export function Coins() {
         const z = -(c.s - sim.dist);
         if (z > 10 || z < -180) continue;
         if (n >= MAX) break;
-        tmp.o.position.set(c.lane * LANE_W, c.y, z);
-        tmp.o.rotation.set(0, t * 3.2 + c.id * 0.35, 0);
-        tmp.o.scale.setScalar(coinSize);
+        const bob = Math.sin(t * 4.2 + c.id * 0.8) * 0.075;
+        const pulse = 1 + Math.sin(t * 5 + c.id) * 0.045;
+        tmp.o.position.set(c.lane * LANE_W, c.y + bob, z);
+        tmp.o.rotation.set(Math.sin(t * 1.7 + c.id) * 0.035, t * 3.8 + c.id * 0.35, Math.sin(t * 2 + c.id) * 0.025);
+        tmp.o.scale.setScalar(coinSize * pulse);
         tmp.o.updateMatrix();
         im.setMatrixAt(n, tmp.o.matrix);
         if (rainbow) im.setColorAt(n, tmp.c.setHSL((t * 0.42 + c.id * 0.11) % 1, 1, 0.58));

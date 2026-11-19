@@ -9,7 +9,7 @@ type Prop = { kind: string; side: number; x: number; s: number; v: number; h: nu
 
 function mats(map: MapDef) {
   const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-    new THREE.MeshStandardMaterial({ color, roughness: 0.85, ...o });
+    new THREE.MeshStandardMaterial({ color, roughness: 0.85, flatShading: true, ...o });
   const glow = (c: string, i = 2) => std(c, { emissive: new THREE.Color(c), emissiveIntensity: i });
   return {
     b1: std("#ffffff", { map: windowsTexture("#ffe9a8", "#5a6b80"), roughness: 0.5 }),
@@ -42,18 +42,28 @@ function mats(map: MapDef) {
     sign: std("#2a6a3a"),
     ice: std("#bfe6ff", { transparent: true, opacity: 0.8, roughness: 0.05 }),
     sky: std("#ffffff"),
+    factory: std("#66717c"),
+    factoryTrim: std("#d97732"),
+    roofRed: std("#b94e3d"),
+    houseWall: std(map.id === "snow" ? "#d6e5f0" : map.id === "jungle" ? "#a98a5a" : map.id === "desert" ? "#e0bd7c" : "#f0d7a7"),
+    houseBlue: std(map.id === "snow" ? "#7b9db7" : map.id === "jungle" ? "#6d8b52" : "#8dbbd2"),
+    parkWood: std("#795438"),
+    parkGreen: std("#5b9b46"),
+    fence: std("#e6dfc8"),
+    pipe: std("#8b9ba6", { metalness: 0.55, roughness: 0.4 }),
+    smoke: std("#cbd2d8", { transparent: true, opacity: 0.42 }),
   };
 }
 type SM = ReturnType<typeof mats>;
 
-const KINDS: Record<MapId, string[]> = {
-  city: ["building", "building", "building", "lamp", "sign"],
-  snow: ["pine", "pine", "pine", "snowrock", "ice"],
-  volcano: ["spire", "spire", "lavarock", "spire"],
-  jungle: ["bigtree", "bigtree", "bush", "bigtree", "parrot"],
-  race: ["stand", "stand", "billboard", "tires", "flag"],
-  desert: ["dune", "cactus", "ruin", "dune", "cactus"],
-  future: ["tower", "tower", "holo", "tower", "flyer"],
+const DISTRICT_KINDS: Record<MapId, string[][]> = {
+  city: [["building", "building", "lamp", "sign"], ["factory", "silo", "factory", "building"], ["house", "house", "fence", "pine"], ["parkTree", "bench", "bush", "parkTree"]],
+  snow: [["pine", "pine", "snowrock"], ["house", "pine", "ice"], ["ice", "snowrock", "pine"], ["pine", "ice", "snowrock"]],
+  volcano: [["spire", "lavarock"], ["silo", "spire", "lavarock"], ["house", "spire", "lavarock"], ["spire", "lavarock"]],
+  jungle: [["bigtree", "bush", "parrot"], ["house", "bigtree", "bush"], ["ruin", "bigtree"], ["bigtree", "parrot", "bush"]],
+  race: [["stand", "billboard"], ["tires", "flag", "stand"], ["building", "tires"], ["stand", "flag", "billboard"]],
+  desert: [["dune", "cactus"], ["house", "dune", "cactus"], ["ruin", "cactus"], ["dune", "cactus", "ruin"]],
+  future: [["tower", "holo"], ["building", "tower", "flyer"], ["holo", "flyer", "tower"], ["tower", "holo", "flyer"]],
 };
 
 function PropView({ p, m }: { p: Prop; m: SM }) {
@@ -73,6 +83,24 @@ function PropView({ p, m }: { p: Prop; m: SM }) {
         </group>
       );
     }
+    case "factory":
+      return <group position={[s * (9 + p.v * 2), 0, 0]}>
+        <mesh position={[0, p.h * 0.38, 0]} material={m.factory} castShadow receiveShadow><boxGeometry args={[7 + p.v * 3, p.h * 0.76, 11]} /></mesh>
+        <mesh position={[0, p.h * 0.78, 0]} material={m.factoryTrim}><boxGeometry args={[7.2 + p.v * 3, 0.35, 11.2]} /></mesh>
+        {[-2.2, 2.2].map((x) => <mesh key={x} position={[x, p.h + 2.2, -2]} material={m.pipe} castShadow><cylinderGeometry args={[0.48, 0.58, 4.4, 8]} /></mesh>)}
+        <FactorySmoke material={m.smoke} y={p.h + 4.6} />
+        <mesh position={[0, p.h * 0.38, 5.58]} material={m.factoryTrim}><boxGeometry args={[1.4, 1.6, 0.08]} /></mesh>
+      </group>;
+    case "silo":
+      return <group position={[s * (8 + p.v * 4), 0, 0]}><mesh position={[0, 3.8, 0]} material={m.pipe} castShadow><cylinderGeometry args={[2.1, 2.1, 7.6, 12]} /></mesh><mesh position={[0, 7.7, 0]} material={m.factoryTrim}><coneGeometry args={[2.15, 1.5, 12]} /></mesh><mesh position={[0, 0.8, 0]} material={m.factory}><boxGeometry args={[4.6, 1.6, 4.6]} /></mesh></group>;
+    case "house":
+      return <group position={[s * (8 + p.v * 3), 0, 0]}><mesh position={[0, 2, 0]} material={p.v > 0.5 ? m.houseBlue : m.houseWall} castShadow receiveShadow><boxGeometry args={[5.4, 4, 5]} /></mesh><mesh position={[0, 4.5, 0]} rotation={[0, Math.PI / 4, 0]} material={m.roofRed} castShadow><coneGeometry args={[4.2, 2.1, 4]} /></mesh><mesh position={[0, 1.15, 2.54]} material={m.parkWood}><boxGeometry args={[0.95, 2.3, 0.12]} /></mesh><mesh position={[-1.35, 2.7, 2.56]} material={m.b3}><boxGeometry args={[0.95, 0.9, 0.1]} /></mesh></group>;
+    case "fence":
+      return <group position={[s * 6.2, 0, 0]}>{[-2, 0, 2].map((x) => <mesh key={x} position={[x, 0.65, 0]} material={m.fence}><boxGeometry args={[0.14, 1.3, 0.14]} /></mesh>)}{[0.35, 0.9].map((y) => <mesh key={y} position={[0, y, 0]} material={m.fence}><boxGeometry args={[4.2, 0.12, 0.12]} /></mesh>)}</group>;
+    case "parkTree":
+      return <group position={[s * (7 + p.v * 5), 0, 0]}><mesh position={[0, 1.5, 0]} material={m.trunk}><cylinderGeometry args={[0.3, 0.42, 3, 7]} /></mesh><mesh position={[0, 3.4, 0]} material={m.parkGreen} castShadow><icosahedronGeometry args={[2.1, 1]} /></mesh><mesh position={[-1.1, 3, 0.5]} material={m.leaf2}><sphereGeometry args={[1.1, 8, 6]} /></mesh></group>;
+    case "bench":
+      return <group position={[s * 5.8, 0, 0]}><mesh position={[0, 0.7, 0]} material={m.parkWood}><boxGeometry args={[2.2, 0.16, 0.55]} /></mesh><mesh position={[0, 1.15, -0.22]} material={m.parkWood}><boxGeometry args={[2.2, 0.8, 0.12]} /></mesh>{[-0.8, 0.8].map((x) => <mesh key={x} position={[x, 0.35, 0]} material={m.pipe}><boxGeometry args={[0.12, 0.7, 0.45]} /></mesh>)}</group>;
     case "lamp":
       return (
         <group position={[s * 5, 0, 0]}>
@@ -352,16 +380,19 @@ export function Scenery({ map, perSide }: { map: MapDef; perSide: number }) {
   useEffect(() => () => Object.values(m).forEach((x) => x.dispose()), [m]);
   const props = useMemo(() => {
     const list: Prop[] = [];
-    const kinds = KINDS[map.id];
+    const districtKinds = DISTRICT_KINDS[map.id];
     const step = SPAN / perSide;
     for (const side of [-1, 1])
       for (let i = 0; i < perSide; i++) {
         const v = Math.random();
+        const worldS = -70 + i * step + Math.random() * step * 0.6;
+        const segment = Math.floor((((worldS % SPAN) + SPAN) % SPAN) / 65);
+        const kinds = districtKinds[segment] ?? districtKinds[0] ?? ["building"];
         list.push({
           kind: kinds[Math.floor(Math.random() * kinds.length)] ?? "building",
           side,
           x: 0,
-          s: -70 + i * step + Math.random() * step * 0.6,
+          s: worldS,
           v,
           h: map.id === "city" ? 12 + v * 26 : map.id === "future" ? 18 + v * 40 : map.id === "volcano" ? 6 + v * 12 : 0,
         });
@@ -385,6 +416,7 @@ export function Scenery({ map, perSide }: { map: MapDef; perSide: number }) {
           <PropView p={p} m={m} />
         </group>
       ))}
+      <AmbientPeople map={map} />
       <Overheads map={map} m={m} />
       <Backdrop map={map} m={m} />
     </group>
@@ -552,4 +584,66 @@ function Backdrop({ map, m }: { map: MapDef; m: SM }) {
     default:
       return null;
   }
+}
+
+
+/** Stylized pedestrians, workers and locals, kept on the sidewalks. */
+function AmbientPeople({ map }: { map: MapDef }) {
+  const people = useMemo(() => Array.from({ length: 8 }, (_, i) => {
+    const district = Math.floor(i / 2);
+    const side = i % 2 === 0 ? -1 : 1;
+    const palette: Record<MapId, string[]> = {
+      city: ["#3b6da8", "#d97732", "#d6a66d", "#4c9a58"], snow: ["#3978bd", "#d34c4c", "#6a8a9c", "#e2a84a"],
+      volcano: ["#c65a2e", "#6b5142", "#d28a38", "#8b3b2d"], jungle: ["#477a3e", "#b58a42", "#2f8b70", "#c65b37"],
+      race: ["#e63946", "#f1f1f1", "#2878b8", "#f0b429"], desert: ["#c99b5b", "#6c8b54", "#b86c42", "#e1c58b"],
+      future: ["#2be0ff", "#ff3df2", "#9b7bff", "#52e0a0"],
+    };
+    return { id: i, district, side, s: 12 + district * 65 + (side > 0 ? 25 : 0), color: palette[map.id][district] ?? "#4c83a8", phase: i * 1.7, helmet: (map.id === "city" && district === 1) || (map.id === "volcano" && district === 1), talk: (map.id === "city" && (district === 2 || district === 3)) || (map.id === "race" && district === 1) };
+  }), [map]);
+  const refs = useRef<(THREE.Group | null)[]>([]);
+  const arms = useRef<(THREE.Group | null)[]>([]);
+  const legs = useRef<(THREE.Group | null)[]>([]);
+  useFrame((state) => {
+    const d = runtime.sim?.dist ?? 0;
+    people.forEach((person, i) => {
+      const g = refs.current[i];
+      if (!g) return;
+      let z = person.s;
+      while (z < d - 70) z += SPAN;
+      while (z > d + SPAN - 70) z -= SPAN;
+      g.position.set(person.side * (5.8 + (person.id % 3) * 0.45), 0, -(z - d));
+      const t = state.clock.elapsedTime * (person.talk ? 1.4 : 3.1) + person.phase;
+      if (arms.current[i]) arms.current[i]!.rotation.z = person.talk ? Math.sin(t) * 0.45 : Math.sin(t) * 0.62;
+      if (legs.current[i]) legs.current[i]!.rotation.x = person.talk ? 0 : Math.sin(t) * 0.42;
+      g.rotation.y = person.side < 0 ? 0.28 : -0.28;
+    });
+  });
+  return <group>{people.map((p, i) => <group key={p.id} ref={(el) => void (refs.current[i] = el)}>
+    <mesh position={[0, 1.02, 0]} castShadow><capsuleGeometry args={[0.22, 0.58, 4, 8]} /><meshToonMaterial color={p.color} /></mesh>
+    <mesh position={[0, 1.82, 0]} castShadow><sphereGeometry args={[0.23, 12, 10]} /><meshToonMaterial color="#d9a47d" /></mesh>
+    <mesh position={[0, 1.9, -0.03]}><sphereGeometry args={[0.235, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2]} /><meshToonMaterial color={p.helmet ? "#f0b52e" : "#34313b"} /></mesh>
+    {p.helmet && <mesh position={[0, 2.02, 0]}><cylinderGeometry args={[0.26, 0.25, 0.12, 10]} /><meshToonMaterial color="#e5a52b" /></mesh>}
+    <group ref={(el) => void (arms.current[i] = el)} position={[0, 1.34, 0]}>
+      <mesh position={[-0.28, -0.22, 0]} rotation={[0, 0, -0.18]}><capsuleGeometry args={[0.075, 0.42, 3, 6]} /><meshToonMaterial color={p.color} /></mesh>
+      <mesh position={[0.28, -0.22, 0]} rotation={[0, 0, 0.18]}><capsuleGeometry args={[0.075, 0.42, 3, 6]} /><meshToonMaterial color={p.color} /></mesh>
+    </group>
+    <group ref={(el) => void (legs.current[i] = el)} position={[0, 0.66, 0]}>
+      <mesh position={[-0.12, -0.24, 0]}><capsuleGeometry args={[0.085, 0.42, 3, 6]} /><meshToonMaterial color="#303440" /></mesh>
+      <mesh position={[0.12, -0.24, 0]}><capsuleGeometry args={[0.085, 0.42, 3, 6]} /><meshToonMaterial color="#303440" /></mesh>
+    </group>
+  </group>)}</group>;
+}
+
+
+function FactorySmoke({ material, y }: { material: THREE.Material; y: number }) {
+  const puff = useRef<THREE.Group>(null!);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime * 0.55;
+    if (!puff.current) return;
+    puff.current.position.y = y + (t % 1.8) * 0.7;
+    const scale = 0.72 + ((t % 1.8) / 1.8) * 0.55;
+    puff.current.scale.setScalar(scale);
+    puff.current.rotation.y = t * 0.3;
+  });
+  return <group ref={puff} position={[0, y, -2]}><mesh material={material}><sphereGeometry args={[1.05, 8, 6]} /></mesh><mesh position={[0.7, 0.35, 0]} material={material}><sphereGeometry args={[0.72, 8, 6]} /></mesh></group>;
 }

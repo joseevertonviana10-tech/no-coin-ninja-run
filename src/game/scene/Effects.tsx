@@ -80,6 +80,7 @@ export function Weather({ map, count }: { map: MapDef; count: number }) {
       neon: ["#2be0ff", "#ff3df2", "#9d7bff"],
       confetti: ["#e63946", "#ffd166", "#06d6a0", "#118ab2", "#ffffff"],
       none: ["#ffffff"],
+      dust: ["#d8c5a5", "#f2dfbd", "#bba88e"],
     };
     const pal = palette[map.weather] ?? ["#ffffff"];
     const c = new THREE.Color();
@@ -104,7 +105,7 @@ export function Weather({ map, count }: { map: MapDef; count: number }) {
         vertexColors: true,
         transparent: true,
         depthWrite: false,
-        opacity: map.weather === "sand" ? 0.55 : 0.9,
+        opacity: map.weather === "sand" || map.weather === "dust" ? 0.45 : 0.9,
         blending: map.weather === "embers" || map.weather === "neon" ? THREE.AdditiveBlending : THREE.NormalBlending,
       }),
     [map],
@@ -143,6 +144,9 @@ export function Weather({ map, count }: { map: MapDef; count: number }) {
       } else if (w === "confetti") {
         vy = -1.2 - sd;
         vx = Math.sin(t * 4 + sd * 10) * 1.5;
+      } else if (w === "dust") {
+        vy = 0.08 + sd * 0.12;
+        vx = 0.22 + Math.sin(t * 0.7 + sd * 10) * 0.22;
       }
       pos[j] = pos[j]! + vx * dt;
       pos[j + 1] = pos[j + 1]! + vy * dt;

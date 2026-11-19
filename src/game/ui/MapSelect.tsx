@@ -16,7 +16,7 @@ export function MapSelect() {
         <ScreenHeader title="Mapas" onBack={() => setScreen("menu")} />
       </div>
       <div className="mx-auto w-full max-w-2xl animate-pop-in space-y-3">
-        <div className="glass grid max-h-[38vh] grid-cols-1 gap-2 overflow-y-auto p-3 sm:grid-cols-2">
+        <div className="glass map-grid grid max-h-[42vh] grid-cols-1 gap-2 overflow-y-auto p-3 sm:grid-cols-2">
           {MAPS.map((m) => (
             <button
               key={m.id}
@@ -27,17 +27,18 @@ export function MapSelect() {
                 audio.startMusic(m.id);
               }}
               className={cn(
-                "relative flex items-center gap-3 rounded-xl border p-2.5 text-left transition-colors",
-                m.id === s.map ? "border-accent bg-secondary" : "border-border bg-muted/60 hover:bg-secondary",
+                "map-card relative flex items-center gap-3 rounded-xl border p-2.5 text-left transition-all duration-300",
+                m.id === s.map ? "map-card-selected border-accent bg-secondary" : "border-border bg-muted/60 hover:-translate-y-0.5 hover:bg-secondary",
               )}
             >
               <span
-                className="h-12 w-12 shrink-0 rounded-lg border border-border"
+                className="map-swatch h-14 w-14 shrink-0 rounded-xl border border-border shadow-inner"
                 style={{ background: `linear-gradient(160deg, ${m.swatch[0]}, ${m.swatch[1]})` }}
               />
               <span className="min-w-0 flex-1">
                 <span className="block font-semibold">{m.name}</span>
                 <span className="block truncate text-xs text-muted-foreground">{m.tagline}</span>
+                <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-accent">{m.id === "city" ? "4 distritos urbanos" : "4 áreas temáticas"}</span>
                 <span className="timer-text text-xs text-coin">{formatTime(bestBy[m.id] ?? 0)}</span>
               </span>
               {m.id === s.map && <Check className="h-4 w-4 shrink-0 text-accent" />}

@@ -278,3 +278,18 @@
 @utility animate-flash-out {
   animation: flash-out 700ms ease-out both;
 }
+
+
+/* Arcade polish: scene changes, map cards and readable glass HUD. */
+@keyframes screen-wipe-in { 0% { opacity: 0; transform: scaleX(0.12); filter: blur(10px); } 45% { opacity: 0.65; transform: scaleX(1); filter: blur(2px); } 100% { opacity: 0; transform: scaleX(1); filter: blur(0); } }
+.screen-wipe { position: absolute; inset: 0; z-index: 80; pointer-events: none; transform-origin: center; background: linear-gradient(90deg, transparent, oklch(0.82 0.16 190 / 28%), oklch(0.72 0.2 35 / 22%), transparent); animation: screen-wipe-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.district-chip { display: inline-flex; align-items: center; width: fit-content; border: 1px solid oklch(0.85 0.14 190 / 28%); border-radius: 999px; background: linear-gradient(120deg, oklch(0.35 0.08 205 / 88%), oklch(0.24 0.05 265 / 90%)); padding: 0.24rem 0.65rem; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em; animation: district-arrive 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+@keyframes district-arrive { from { opacity: 0; transform: translateX(-12px) scale(0.94); } to { opacity: 1; transform: translateX(0) scale(1); } }
+.hud-main-panel { box-shadow: 0 12px 32px oklch(0.08 0.02 265 / 35%), inset 0 1px 0 oklch(1 0 0 / 10%); border-color: oklch(1 0 0 / 20%); }
+.map-card { overflow: hidden; background-image: linear-gradient(135deg, oklch(1 0 0 / 4%), transparent 55%); }
+.map-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.map-swatch { position: relative; isolation: isolate; }
+.map-swatch::after { content: ""; position: absolute; inset: 5px; border-radius: 0.55rem; border: 1px solid oklch(1 0 0 / 32%); background: linear-gradient(145deg, oklch(1 0 0 / 24%), transparent 58%); }
+@media (prefers-reduced-motion: reduce) { .screen-wipe, .district-chip { animation-duration: 1ms; } }
+
+.map-card-selected { box-shadow: 0 0 0 2px oklch(0.85 0.14 190 / 25%), 0 8px 24px oklch(0.85 0.14 190 / 12%); }

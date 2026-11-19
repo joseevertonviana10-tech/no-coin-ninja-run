@@ -1,7 +1,7 @@
 import type { KindWeights, ObstacleKind } from "../sim/types";
 
 export type MapId = "city" | "snow" | "volcano" | "jungle" | "race" | "desert" | "future";
-export type Weather = "none" | "snow" | "embers" | "sand" | "leaves" | "neon" | "confetti";
+export type Weather = "none" | "dust" | "snow" | "embers" | "sand" | "leaves" | "neon" | "confetti";
 
 export interface MapDef {
   id: MapId;
@@ -45,7 +45,7 @@ export const MAPS: MapDef[] = [
     hemiGround: "#6b5f55",
     hemiIntensity: 1.1,
     laneGrip: 1,
-    weather: "none",
+    weather: "dust",
     weights: { low: 3, high: 2, crate: 2, car: 1, train: 3.5, hole: 0.8 },
     names: { low: "Barricada", high: "Placa suspensa", crate: "Caixas", car: "Táxi", train: "Metrô", hole: "Trilho quebrado" },
     swatch: ["#ffb347", "#4a90d9"],
@@ -187,3 +187,19 @@ export const MAPS: MapDef[] = [
 ];
 
 export const MAP_BY_ID = Object.fromEntries(MAPS.map((m) => [m.id, m])) as Record<MapId, MapDef>;
+
+
+/** Each map is a looping route made of four themed districts. */
+export const MAP_DISTRICTS: Record<MapId, [string, string, string, string]> = {
+  city: ["Centro da Cidade", "Zona Industrial", "Bairro Residencial", "Parque Urbano"],
+  snow: ["Floresta Nevada", "Vila da Montanha", "Lago Congelado", "Passagem Alpina"],
+  volcano: ["Campo de Cinzas", "Mina Vulcânica", "Aldeia da Montanha", "Ponte de Obsidiana"],
+  jungle: ["Margem do Rio", "Vila da Floresta", "Templo Antigo", "Selva Fechada"],
+  race: ["Entrada dos Boxes", "Arquibancadas", "Área de Serviço", "Reta de Chegada"],
+  desert: ["Mar de Dunas", "Oásis", "Ruínas Antigas", "Acampamento Nômade"],
+  future: ["Distrito Neon", "Mercado Cibernético", "Reator Central", "Via Elevada"],
+};
+export function getDistrict(mapId: MapId, distance: number) {
+  const index = Math.floor(Math.max(0, distance) / 65) % 4;
+  return MAP_DISTRICTS[mapId][index] ?? MAP_DISTRICTS[mapId][0];
+}

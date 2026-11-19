@@ -12,7 +12,7 @@ type M = ReturnType<typeof makeMats>;
 
 function makeMats(map: MapDef) {
   const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-    new THREE.MeshStandardMaterial({ color, roughness: 0.7, ...o });
+    new THREE.MeshStandardMaterial({ color, roughness: 0.72, flatShading: true, ...o });
   const glow = (color: string, i = 2) => std(color, { emissive: new THREE.Color(color), emissiveIntensity: i, roughness: 0.3 });
   const id = map.id;
   const trainColor: Record<MapId, string> = { city: "#d9dde3", snow: "#c8202a", volcano: "#3a3330", jungle: "#6b4a2b", race: "#f4f4f4", desert: "#8a5a32", future: "#eef2ff" };

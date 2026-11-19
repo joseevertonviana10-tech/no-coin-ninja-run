@@ -168,6 +168,7 @@ export function GameApp() {
       {screen === "playing" && <VirtualControls />}
       {screen === "paused" && <PauseMenu />}
       {screen === "gameover" && <GameOver />}
+      <div key={`${screen}-${s.map}`} className="screen-wipe" aria-hidden="true" />
     </div>
   );
 }

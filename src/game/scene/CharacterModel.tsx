@@ -20,7 +20,7 @@ export function useCharacterMats(def: CharacterDef): Mats {
     const tex = patternTexture(def.pattern);
     const metal = def.metal ?? 0;
     const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-      new THREE.MeshStandardMaterial({ color, roughness: 0.7, ...o });
+      new THREE.MeshStandardMaterial({ color, roughness: 0.72, flatShading: true, ...o });
     return {
       main: std(def.main, { map: tex, metalness: metal, roughness: metal > 0.3 ? 0.35 : 0.75 }),
       second: std(def.second, { map: tex, metalness: metal * 0.6, roughness: 0.7 }),

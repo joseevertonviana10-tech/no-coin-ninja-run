@@ -2,7 +2,7 @@ import { Ban, Pause, Trophy } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { CHARACTER_BY_ID } from "../data/characters";
-import { MAP_BY_ID } from "../data/maps";
+import { getDistrict, MAP_BY_ID } from "../data/maps";
 import { pauseRun, runtime } from "../runtime";
 import { formatTime, useSettings, useStats } from "../store";
 import { clickSfx } from "./kit";
@@ -19,6 +19,7 @@ export function HUD() {
   const [dead, setDead] = useState<string | null>(null);
   const [beating, setBeating] = useState(false);
   const [raceTime, setRaceTime] = useState(0);
+  const [district, setDistrict] = useState(() => getDistrict(mapId, 0));
   const raceClock = useRef(0);
 
   useEffect(() => {
@@ -29,6 +30,8 @@ export function HUD() {
       const sim = runtime.sim;
       if (sim && timer.current) {
         timer.current.textContent = formatTime(sim.time);
+        const currentDistrict = getDistrict(mapId, sim.dist);
+        if (currentDistrict !== district) setDistrict(currentDistrict);
         if (sim.time < raceClock.current) { raceClock.current = 0; setRaceTime(0); }
         if (runtime.challenge === "race" && sim.time - raceClock.current >= 0.25) {
           raceClock.current = sim.time;
@@ -50,17 +53,18 @@ export function HUD() {
     };
     loop();
     return () => cancelAnimationFrame(raf);
-  }, [best]);
+  }, [best, mapId, district]);
 
   return (
     <div className="pointer-events-none absolute inset-0 select-none">
       <div className="flex items-start justify-between gap-2 p-3 sm:p-4">
         <div className="flex flex-col gap-1.5">
           <span className="chip max-w-[40vw] truncate">{MAP_BY_ID[mapId]?.name}</span>
+          <span key={district} className="district-chip max-w-[44vw] truncate">📍 {district}</span>
           <span className="chip max-w-[40vw] truncate">{CHARACTER_BY_ID[charId]?.name}</span>
         </div>
         <div className="flex flex-col items-center">
-          <div className={cn("glass px-4 py-1.5 text-center", dead && "border-primary")}>
+          <div className={cn("glass hud-main-panel px-4 py-1.5 text-center", dead && "border-primary")}>
             <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold tracking-[0.2em] text-muted-foreground">
               <Ban className="h-3 w-3 text-primary" /> {runtime.challenge === "race" ? "CORRIDA CONTRA BOTS" : runtime.challenge === "nerdola" ? "TREINO NERDOLA" : runtime.training ? "TREINO 3 FILEIRAS" : "NO COIN TIME"}
             </div>
