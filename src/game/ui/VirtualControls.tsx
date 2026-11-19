@@ -35,6 +35,7 @@ function Key({ a, label, Icon, hint, size }: KeyDef & { size: number }) {
         e.preventDefault();
         e.stopPropagation();
         (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+        if (pointers.current.has(e.pointerId)) return;
         pointers.current.add(e.pointerId);
         setDown(true);
         press(a);
