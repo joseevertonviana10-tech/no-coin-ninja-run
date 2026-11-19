@@ -1,4 +1,4 @@
-import { Ban, Pause, Trophy } from "lucide-react";
+import { Ban, ImagePlus, Pause, Trophy } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { CHARACTER_BY_ID } from "../data/characters";
@@ -20,7 +20,11 @@ export function HUD() {
   const [beating, setBeating] = useState(false);
   const [raceTime, setRaceTime] = useState(0);
   const [district, setDistrict] = useState(() => getDistrict(mapId, 0));
+  const [timerPhoto, setTimerPhoto] = useState<string | null>(null);
+  const photoInput = useRef<HTMLInputElement>(null);
   const raceClock = useRef(0);
+
+  useEffect(() => () => { if (timerPhoto) URL.revokeObjectURL(timerPhoto); }, [timerPhoto]);
 
   useEffect(() => {
     let raf = 0;
@@ -64,13 +68,13 @@ export function HUD() {
           <span className="chip max-w-[40vw] truncate">{CHARACTER_BY_ID[charId]?.name}</span>
         </div>
         <div className="flex flex-col items-center">
-          <div className={cn("glass hud-main-panel px-4 py-1.5 text-center", dead && "border-primary")}>
+          <div className={cn("glass hud-main-panel relative px-4 py-1.5 text-center", dead && "border-primary", timerPhoto && "bg-black/50")} style={timerPhoto ? { backgroundImage: `linear-gradient(#0006,#0006), url("${timerPhoto}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}>
+            <input ref={photoInput} type="file" accept="image/*" className="hidden" aria-label="Escolher foto para o cronômetro" onChange={(e) => { const file = e.currentTarget.files?.[0]; if (!file || !file.type.startsWith("image/")) return; setTimerPhoto((old) => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(file); }); e.currentTarget.value = ""; }} />
+            <button type="button" title="Colocar uma foto no cronômetro" aria-label="Colocar uma foto no cronômetro" onClick={() => photoInput.current?.click()} className="pointer-events-auto absolute right-1 top-1 rounded-md bg-black/35 p-1.5 text-white/90 hover:bg-black/60"><ImagePlus className="h-3.5 w-3.5" /></button>
             <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold tracking-[0.2em] text-muted-foreground">
-              <Ban className="h-3 w-3 text-primary" /> {runtime.challenge === "race" ? "CORRIDA CONTRA BOTS" : runtime.challenge === "nerdola" ? "TREINO NERDOLA" : runtime.training ? "TREINO 3 FILEIRAS" : "NO COIN TIME"}
+              <Ban className="h-3 w-3 text-primary" /> {runtime.challenge === "race" ? "CORRIDA CONTRA BOTS" : runtime.challenge === "nerdola" ? "TREINO NERDOLA" : runtime.challenge === "run-normal" ? "TREINO RUN NORMAL" : runtime.training ? "TREINO 3 FILEIRAS" : "NO COIN TIME"}
             </div>
-            <span ref={timer} className={cn("timer-text block text-3xl sm:text-4xl", beating ? "text-success" : "text-foreground")}>
-              00:00.00
-            </span>
+            <span ref={timer} className={cn("timer-text block text-3xl sm:text-4xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]", beating ? "text-success" : "text-foreground")}>00:00.00</span>
           </div>
           <div className="mt-1.5 flex items-center gap-2">
             <span className="chip">
@@ -79,7 +83,7 @@ export function HUD() {
             </span>
             <span className="chip">
               <span className={cn("h-2 w-2 rounded-full", dead ? "bg-primary" : "animate-pulse-dot bg-success")} />
-              {dead ? "ENCERRADO" : runtime.training ? runtime.timeScale.toFixed(2) + "× TREINO" : runtime.challenge === "race" ? `${runtime.raceBots.filter((b) => b.finished).length}/${runtime.raceBots.length} BOTS FORA` : "DESAFIO ATIVO"}
+              {dead ? "ENCERRADO" : runtime.training ? runtime.timeScale.toFixed(2).replace(".", ",") + "× TREINO" : runtime.challenge === "race" ? `${runtime.raceBots.filter((b) => b.finished).length}/${runtime.raceBots.length} BOTS FORA` : "DESAFIO ATIVO"}
             </span>
             <span className="chip text-sky-300">🔑 {keys}</span>
           </div>

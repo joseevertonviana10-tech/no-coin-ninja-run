@@ -1,7 +1,7 @@
 import type { KindWeights, ObstacleKind } from "../sim/types";
 
 export type MapId = "city" | "snow" | "volcano" | "jungle" | "race" | "desert" | "future";
-export type Weather = "none" | "dust" | "snow" | "embers" | "sand" | "leaves" | "neon" | "confetti";
+export type Weather = "none" | "dust" | "snow" | "embers" | "sand" | "leaves" | "neon" | "confetti" | "rain" | "blizzard" | "ash" | "tech-rain" | "sandstorm";
 
 export interface MapDef {
   id: MapId;
@@ -45,7 +45,7 @@ export const MAPS: MapDef[] = [
     hemiGround: "#6b5f55",
     hemiIntensity: 1.1,
     laneGrip: 1,
-    weather: "dust",
+    weather: "rain",
     weights: { low: 3, high: 2, crate: 2, car: 1, train: 3.5, hole: 0.8 },
     names: { low: "Barricada", high: "Placa suspensa", crate: "Caixas", car: "Táxi", train: "Metrô", hole: "Trilho quebrado" },
     swatch: ["#ffb347", "#4a90d9"],
@@ -67,7 +67,7 @@ export const MAPS: MapDef[] = [
     hemiGround: "#9fb6cc",
     hemiIntensity: 1.3,
     laneGrip: 0.55,
-    weather: "snow",
+    weather: "blizzard",
     weights: { low: 3, high: 2, crate: 2.5, car: 0.6, train: 2.5, hole: 1.2 },
     names: { low: "Tronco nevado", high: "Arco de gelo", crate: "Bloco de gelo", car: "Snowmobile", train: "Trem limpa-neve", hole: "Fenda no gelo" },
     swatch: ["#e8f4ff", "#5aa0d8"],
@@ -90,7 +90,7 @@ export const MAPS: MapDef[] = [
     hemiGround: "#2a1410",
     hemiIntensity: 1.0,
     laneGrip: 1,
-    weather: "embers",
+    weather: "ash",
     weights: { low: 3, high: 1.5, crate: 3, car: 1, train: 2, hole: 2 },
     names: { low: "Rochas vulcânicas", high: "Arco de rocha", crate: "Pedregulho", car: "Carrinho de mina", train: "Trem de minério", hole: "Fenda de lava" },
     swatch: ["#ff5a1f", "#2a0e06"],
@@ -156,7 +156,7 @@ export const MAPS: MapDef[] = [
     hemiGround: "#a07040",
     hemiIntensity: 1.1,
     laneGrip: 0.85,
-    weather: "sand",
+    weather: "sandstorm",
     weights: { low: 3, high: 2, crate: 2.5, car: 1, train: 2, hole: 1.5 },
     names: { low: "Sacos de areia", high: "Arco de ruína", crate: "Jarros antigos", car: "Jipe velho", train: "Caravana", hole: "Areia movediça" },
     swatch: ["#e9a23b", "#8a4b2a"],
@@ -179,7 +179,7 @@ export const MAPS: MapDef[] = [
     hemiGround: "#1a1030",
     hemiIntensity: 1.1,
     laneGrip: 1.15,
-    weather: "neon",
+    weather: "tech-rain",
     weights: { low: 3, high: 2.5, crate: 2, car: 1.5, train: 3, hole: 1.2 },
     names: { low: "Cerca laser", high: "Portal holográfico", crate: "Cubo de carga", car: "Carro flutuante", train: "Trem maglev", hole: "Vazio de energia" },
     swatch: ["#2be0ff", "#ff3df2"],

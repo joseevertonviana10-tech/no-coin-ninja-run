@@ -6,7 +6,7 @@ import { Sim } from "./sim/sim";
 import type { ChallengeMode } from "./sim/generator";
 import { useSettings, useStats, useUI } from "./store";
 
-export type RunChallenge = ChallengeMode | "race";
+export type RunChallenge = ChallengeMode | "race" | "run-normal";
 export type Mode = "menu" | "playing" | "paused" | "dead" | "over";
 
 export const runtime = {
@@ -30,7 +30,7 @@ export const runtime = {
 
 export function startRun(mode: boolean | RunChallenge = false) {
   const challenge: RunChallenge = mode === true ? "three-rows" : mode === false ? "standard" : mode;
-  const training = challenge === "three-rows" || challenge === "nerdola";
+  const training = challenge === "three-rows" || challenge === "nerdola" || challenge === "run-normal";
   const s = useSettings.getState();
   const map = MAP_BY_ID[s.map] ?? MAP_BY_ID.city;
   runtime.sim = new Sim({

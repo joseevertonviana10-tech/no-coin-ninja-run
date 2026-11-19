@@ -65,7 +65,7 @@ export function Particles() {
   return <points geometry={geom} material={mat} frustumCulled={false} />;
 }
 
-/** Ambient weather per map: snow, embers, sand, leaves, neon motes, confetti. */
+/** Ambient weather per map: rain, blizzards, ashfall, techno-rain and sandstorms. */
 export function Weather({ map, count }: { map: MapDef; count: number }) {
   const ref = useRef<THREE.Points>(null!);
   const data = useMemo(() => {
@@ -81,6 +81,11 @@ export function Weather({ map, count }: { map: MapDef; count: number }) {
       confetti: ["#e63946", "#ffd166", "#06d6a0", "#118ab2", "#ffffff"],
       none: ["#ffffff"],
       dust: ["#d8c5a5", "#f2dfbd", "#bba88e"],
+      rain: ["#8fb9df", "#c5e5ff", "#e5f4ff"],
+      blizzard: ["#ffffff", "#eaf4ff", "#b9dcf5"],
+      ash: ["#77716d", "#a69a8d", "#ff8a42"],
+      "tech-rain": ["#2be0ff", "#ff3df2", "#8e7bff"],
+      sandstorm: ["#e8c48a", "#d9a860", "#b98449"],
     };
     const pal = palette[map.weather] ?? ["#ffffff"];
     const c = new THREE.Color();
@@ -100,13 +105,13 @@ export function Weather({ map, count }: { map: MapDef; count: number }) {
   const mat = useMemo(
     () =>
       new THREE.PointsMaterial({
-        size: map.weather === "snow" ? 0.22 : map.weather === "sand" ? 0.12 : map.weather === "confetti" ? 0.18 : 0.15,
+        size: map.weather === "snow" || map.weather === "blizzard" ? 0.22 : map.weather === "sand" || map.weather === "sandstorm" ? 0.16 : map.weather === "confetti" ? 0.18 : map.weather === "rain" || map.weather === "tech-rain" ? 0.11 : 0.15,
         map: dotTexture(),
         vertexColors: true,
         transparent: true,
         depthWrite: false,
-        opacity: map.weather === "sand" || map.weather === "dust" ? 0.45 : 0.9,
-        blending: map.weather === "embers" || map.weather === "neon" ? THREE.AdditiveBlending : THREE.NormalBlending,
+        opacity: map.weather === "sand" || map.weather === "dust" || map.weather === "sandstorm" ? 0.48 : map.weather === "rain" ? 0.72 : 0.9,
+        blending: map.weather === "embers" || map.weather === "neon" || map.weather === "tech-rain" ? THREE.AdditiveBlending : THREE.NormalBlending,
       }),
     [map],
   );
@@ -147,6 +152,21 @@ export function Weather({ map, count }: { map: MapDef; count: number }) {
       } else if (w === "dust") {
         vy = 0.08 + sd * 0.12;
         vx = 0.22 + Math.sin(t * 0.7 + sd * 10) * 0.22;
+      } else if (w === "rain") {
+        vy = -18 - sd * 8;
+        vx = -2.8 - sd * 1.8;
+      } else if (w === "blizzard") {
+        vy = -3.8 - sd * 3.2;
+        vx = 2.5 + Math.sin(t * 2 + sd * 18) * 3.5;
+      } else if (w === "ash") {
+        vy = -1.4 - sd * 2.2;
+        vx = -1.1 + Math.sin(t * 0.8 + sd * 15) * 1.5;
+      } else if (w === "tech-rain") {
+        vy = -15 - sd * 9;
+        vx = Math.sin(t * 0.4 + sd * 8) * 0.8;
+      } else if (w === "sandstorm") {
+        vx = 10 + sd * 9;
+        vy = -0.2 + Math.sin(t * 2.5 + sd * 16) * 1.2;
       }
       pos[j] = pos[j]! + vx * dt;
       pos[j + 1] = pos[j + 1]! + vy * dt;
