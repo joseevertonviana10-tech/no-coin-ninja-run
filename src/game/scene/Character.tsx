@@ -238,8 +238,16 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
           tg.tx = -0.2;
           tg.hipY = HIP_Y - 0.03 + Math.abs(Math.cos(ph)) * 0.06;
           tg.hy = 0;
-          tg.hx = 0.08;
+          // Natural counter-motion: shoulders and head react against the leg swing.
+          tg.hx = 0.08 - sn * 0.035;
+          tg.hy = -sn * 0.045;
           tg.tz = sn * 0.06;
+          tg.tx = -0.2 + THREE.MathUtils.clamp(-p.vy * 0.025, -0.12, 0.18);
+          tg.el = zombie ? 0.2 : 1.08 + sn * 0.24;
+          tg.er = zombie ? 0.2 : 1.08 - sn * 0.24;
+          // A small shoulder lag makes the arms feel connected to the torso.
+          tg.slz = -0.12 - sn * 0.035;
+          tg.srz = 0.12 + sn * 0.035;
           k = 26;
         }
         // Lane-change lean and bump wobble
