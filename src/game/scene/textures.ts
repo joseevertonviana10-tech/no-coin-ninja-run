@@ -313,27 +313,47 @@ export function coinFaceTexture() {
   const key = "coinface";
   if (cache.has(key)) return cache.get(key)!;
   const [c, g] = canvas(128, 128);
-  g.fillStyle = "#d8d8d8";
+  const grd = g.createRadialGradient(42, 34, 5, 64, 64, 68);
+  grd.addColorStop(0, "#ffffff");
+  grd.addColorStop(0.42, "#d8d8d8");
+  grd.addColorStop(1, "#777777");
+  g.fillStyle = grd;
   g.fillRect(0, 0, 128, 128);
   g.strokeStyle = "#ffffff";
-  g.lineWidth = 8;
+  g.lineWidth = 5;
   g.beginPath();
-  g.arc(64, 64, 52, 0, Math.PI * 2);
+  g.arc(64, 64, 55, 0, Math.PI * 2);
   g.stroke();
-  g.strokeStyle = "#8a8a8a";
-  g.lineWidth = 3;
+  g.strokeStyle = "#777777";
+  g.lineWidth = 2;
   g.beginPath();
-  g.arc(64, 64, 44, 0, Math.PI * 2);
+  g.arc(64, 64, 47, 0, Math.PI * 2);
   g.stroke();
+  g.strokeStyle = "rgba(255,255,255,0.8)";
+  g.lineWidth = 2;
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2;
+    g.beginPath();
+    g.moveTo(64 + Math.cos(a) * 38, 64 + Math.sin(a) * 38);
+    g.lineTo(64 + Math.cos(a) * 43, 64 + Math.sin(a) * 43);
+    g.stroke();
+  }
   g.fillStyle = "#ffffff";
   g.beginPath();
   for (let i = 0; i < 10; i++) {
-    const r = i % 2 ? 14 : 32;
+    const r = i % 2 ? 13 : 30;
     const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
     g.lineTo(64 + Math.cos(a) * r, 64 + Math.sin(a) * r);
   }
   g.closePath();
   g.fill();
+  g.strokeStyle = "rgba(40,40,40,0.6)";
+  g.lineWidth = 1.5;
+  g.stroke();
+  g.font = "bold 12px Georgia";
+  g.textAlign = "center";
+  g.fillStyle = "#f8f8f8";
+  g.fillText("N", 64, 91);
   return finish(key, c);
 }
 

@@ -14,12 +14,15 @@ export function Coins() {
   const coinSize = useSettings((s) => s.coinSize);
   const coinGlow = useSettings((s) => s.coinGlow);
   const mesh = useRef<THREE.InstancedMesh>(null!);
+  const rim = useRef<THREE.InstancedMesh>(null!);
   const fx = useRef<THREE.Mesh>(null!);
   const geom = useMemo(() => {
-    const g = new THREE.CylinderGeometry(COIN_R, COIN_R, 0.09, 28);
+    const g = new THREE.CylinderGeometry(COIN_R, COIN_R, 0.105, 48, 1, false);
     g.rotateX(Math.PI / 2);
     return g;
   }, []);
+  const rimGeom = useMemo(() => new THREE.TorusGeometry(COIN_R * 0.82, 0.024, 8, 40), []);
+  const rimMat = useMemo(() => new THREE.MeshStandardMaterial({ color: COIN_BY_ID[coinColor].color, metalness: 0.95, roughness: 0.2, emissive: COIN_BY_ID[coinColor].emissive, emissiveIntensity: 0.5 * coinGlow, toneMapped: false }), [coinColor, coinGlow]);
   const mats = useMemo(() => {
     const def = COIN_BY_ID[coinColor];
     const rainbow = coinColor === "rainbow";
@@ -40,12 +43,13 @@ export function Coins() {
     return [side, face, face] as THREE.Material[];
   }, [coinColor, coinGlow]);
   useEffect(() => () => mats.forEach((m) => m.dispose()), [mats]);
+  useEffect(() => () => rimMat.dispose(), [rimMat]);
 
   const tmp = useMemo(() => ({ o: new THREE.Object3D(), c: new THREE.Color() }), []);
 
   useEffect(() => {
     const base = new THREE.Color(COIN_BY_ID[coinColor].color);
-    for (let i = 0; i < MAX; i++) mesh.current.setColorAt(i, base);
+    for (let i = 0; i < MAX; i++) { mesh.current.setColorAt(i, base); rim.current.setColorAt(i, base); }
     if (mesh.current.instanceColor) mesh.current.instanceColor.needsUpdate = true;
   }, [coinColor]);
 
@@ -68,13 +72,21 @@ export function Coins() {
         tmp.o.scale.setScalar(coinSize * pulse);
         tmp.o.updateMatrix();
         im.setMatrixAt(n, tmp.o.matrix);
-        if (rainbow) im.setColorAt(n, tmp.c.setHSL((t * 0.42 + c.id * 0.11) % 1, 1, 0.58));
+        rim.current.setMatrixAt(n, tmp.o.matrix);
+        if (rainbow) {
+          const hue = (t * 0.42 + c.id * 0.11) % 1;
+          im.setColorAt(n, tmp.c.setHSL(hue, 1, 0.58));
+          rim.current.setColorAt(n, tmp.c.setHSL(hue, 0.95, 0.68));
+        }
         n++;
       }
     }
     im.count = n;
+    rim.current.count = n;
     im.instanceMatrix.needsUpdate = true;
+    rim.current.instanceMatrix.needsUpdate = true;
     if (rainbow && im.instanceColor) im.instanceColor.needsUpdate = true;
+    if (rainbow && rim.current.instanceColor) rim.current.instanceColor.needsUpdate = true;
 
     // Collected coin flies up and fades.
     const f = runtime.coinFx;
@@ -90,6 +102,7 @@ export function Coins() {
   return (
     <>
       <instancedMesh ref={mesh} args={[geom, mats, MAX]} castShadow frustumCulled={false} />
+      <instancedMesh ref={rim} args={[rimGeom, rimMat, MAX]} castShadow frustumCulled={false} />
       <mesh ref={fx} geometry={geom} material={mats} visible={false} />
     </>
   );
