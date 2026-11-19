@@ -94,6 +94,49 @@ export function CharacterDetails({ def, m }: { def: CharacterDef; m: Mats }) {
       <Box s={[0.43, 0.065, 0.34]} m={m.second} pos={[0, 0.045, 0]} />
       <Box s={[0.09, 0.09, 0.035]} m={m.accent} pos={[0, 0.05, -0.19]} />
       <Ball r={0.025} m={m.glow} pos={[0, 0.37, -0.19]} />
+      {def.style === "ninja" && (
+        <>
+          <Box s={[0.36, 0.045, 0.035]} m={m.accent} pos={[0, 0.28, -0.2]} rot={[0, 0, -0.22]} />
+          <Box s={[0.36, 0.045, 0.035]} m={m.accent} pos={[0, 0.19, -0.2]} rot={[0, 0, 0.22]} />
+          <Ball r={0.045} m={m.glow} pos={[0, 0.27, -0.225]} />
+        </>
+      )}
+      {def.style === "coat" && (
+        <>
+          {[-0.08, 0.08, 0.24].map((y) => <Ball key={y} r={0.025} m={m.accent} pos={[0, y, -0.205]} />)}
+          <Box s={[0.08, 0.24, 0.025]} m={m.second} pos={[0.2, 0.25, -0.16]} rot={[0, 0, -0.18]} />
+        </>
+      )}
+      {def.style === "zombie" && (
+        <>
+          <Box s={[0.13, 0.08, 0.035]} m={m.accent} pos={[-0.18, 0.25, -0.18]} rot={[0, 0, 0.35]} />
+          <Box s={[0.1, 0.12, 0.035]} m={m.second} pos={[0.17, 0.12, -0.18]} rot={[0, 0, -0.28]} />
+          <Ball r={0.035} m={m.glow} pos={[0.1, 0.32, -0.2]} />
+        </>
+      )}
+      {def.style === "explorer" && (
+        <>
+          <Box s={[0.46, 0.075, 0.36]} m={m.accent} pos={[0, 0.12, 0]} />
+          <Box s={[0.1, 0.14, 0.045]} m={m.second} pos={[0.23, 0.12, -0.18]} />
+          <Ball r={0.035} m={m.glow} pos={[0.23, 0.14, -0.21]} />
+        </>
+      )}
+      {(def.style === "lizard" || def.style === "dinosaur") && (
+        <>
+          {[-0.18, -0.06, 0.06, 0.18].map((x, i) => (
+            <mesh key={x} position={[x, 0.43 + (i % 2) * 0.035, 0.04]} rotation={[0.12, 0, 0]} material={m.accent} castShadow>
+              <coneGeometry args={[0.045, 0.12, 5]} />
+            </mesh>
+          ))}
+          <Box s={[0.28, 0.06, 0.04]} m={m.second} pos={[0, 0.08, -0.19]} />
+        </>
+      )}
+      {def.style === "scientist" && (
+        <>
+          <Box s={[0.13, 0.18, 0.08]} m={m.second} pos={[0.24, 0.18, 0.04]} />
+          <Box s={[0.06, 0.12, 0.035]} m={m.glow} pos={[0.24, 0.2, -0.02]} />
+        </>
+      )}
       {(def.style === "knight" || def.style === "samurai" || def.style === "soldier" || def.style === "robot") && (
         <>
           <Ball r={0.105} m={def.style === "knight" ? m.steel : m.accent} pos={[-0.28, 0.52, 0]} scale={[1.2, 0.7, 1]} />
