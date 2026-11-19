@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { Component, useEffect, useRef, type ReactNode } from "react";
 import * as THREE from "three";
 import { audio } from "./audio";
-import { KEY_MAP, press, release, releaseAll, setSensitivity, tap } from "./input";
+import { KEY_MAP, press, release, releaseAll, setSensitivity, tap, type Action } from "./input";
 import { pauseRun, resumeRun, runtime, startRun } from "./runtime";
 import { World } from "./scene/World";
 import { useSettings, useUI } from "./store";
@@ -102,6 +102,37 @@ export function GameApp() {
       window.removeEventListener("keyup", up);
       window.removeEventListener("blur", blur);
       document.removeEventListener("visibilitychange", vis);
+    };
+  }, []);
+
+  // Gamepad support: face buttons, D-pad and analog stick share the same input layer.
+  useEffect(() => {
+    let frame = 0;
+    let previous = new Set<Action>();
+    const actions: Action[] = ["up", "left", "down", "right"];
+    const poll = () => {
+      const pads = typeof navigator.getGamepads === "function" ? Array.from(navigator.getGamepads()) : [];
+      const pad = pads.find((candidate) => candidate?.connected);
+      const next = new Set<Action>();
+      if (pad && runtime.mode === "playing" && !document.hidden) {
+        const pressed = (index: number) => Boolean(pad.buttons[index]?.pressed);
+        if (pressed(0) || pressed(12) || (pad.axes[1] ?? 0) < -0.55) next.add("up");
+        if (pressed(1) || pressed(13) || (pad.axes[1] ?? 0) > 0.55) next.add("down");
+        if (pressed(14) || (pad.axes[0] ?? 0) < -0.55) next.add("left");
+        if (pressed(15) || (pad.axes[0] ?? 0) > 0.55) next.add("right");
+      }
+      for (const action of actions) {
+        if (next.has(action) && !previous.has(action)) press(action);
+        else if (!next.has(action) && previous.has(action)) release(action);
+      }
+      previous = next;
+      frame = window.requestAnimationFrame(poll);
+    };
+    frame = window.requestAnimationFrame(poll);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      for (const action of previous) release(action);
+      previous.clear();
     };
   }, []);
 
