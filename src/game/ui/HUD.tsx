@@ -20,11 +20,9 @@ export function HUD() {
   const [beating, setBeating] = useState(false);
   const [raceTime, setRaceTime] = useState(0);
   const [district, setDistrict] = useState(() => getDistrict(mapId, 0));
-  const [timerPhoto, setTimerPhoto] = useState<string | null>(null);
+  const [timerPhoto, setTimerPhoto] = useState<string | null>(() => localStorage.getItem("nocoin-timer-photo"));
   const photoInput = useRef<HTMLInputElement>(null);
   const raceClock = useRef(0);
-
-  useEffect(() => () => { if (timerPhoto) URL.revokeObjectURL(timerPhoto); }, [timerPhoto]);
 
   useEffect(() => {
     let raf = 0;
@@ -69,7 +67,7 @@ export function HUD() {
         </div>
         <div className="flex flex-col items-center">
           <div className={cn("glass hud-main-panel relative px-4 py-1.5 text-center", dead && "border-primary", timerPhoto && "bg-black/50")} style={timerPhoto ? { backgroundImage: `linear-gradient(#0006,#0006), url("${timerPhoto}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}>
-            <input ref={photoInput} type="file" accept="image/*" className="hidden" aria-label="Escolher foto para o cronômetro" onChange={(e) => { const file = e.currentTarget.files?.[0]; if (!file || !file.type.startsWith("image/")) return; setTimerPhoto((old) => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(file); }); e.currentTarget.value = ""; }} />
+            <input ref={photoInput} type="file" accept="image/*" className="hidden" aria-label="Escolher foto para o cronômetro" onChange={(e) => { const file = e.currentTarget.files?.[0]; if (!file || !file.type.startsWith("image/")) return; const reader = new FileReader(); reader.onload = () => { const image = new Image(); image.onload = () => { const scale = Math.min(1, 640 / Math.max(image.width, image.height)); const canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(image.width * scale)); canvas.height = Math.max(1, Math.round(image.height * scale)); const context = canvas.getContext("2d"); if (!context) return; context.drawImage(image, 0, 0, canvas.width, canvas.height); const data = canvas.toDataURL("image/jpeg", 0.82); localStorage.setItem("nocoin-timer-photo", data); setTimerPhoto(data); }; image.src = String(reader.result); }; reader.readAsDataURL(file); e.currentTarget.value = ""; }} />
             <button type="button" title="Colocar uma foto no cronômetro" aria-label="Colocar uma foto no cronômetro" onClick={() => photoInput.current?.click()} className="pointer-events-auto absolute right-1 top-1 rounded-md bg-black/35 p-1.5 text-white/90 hover:bg-black/60"><ImagePlus className="h-3.5 w-3.5" /></button>
             <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold tracking-[0.2em] text-muted-foreground">
               <Ban className="h-3 w-3 text-primary" /> {runtime.challenge === "race" ? "CORRIDA CONTRA BOTS" : runtime.challenge === "nerdola" ? "TREINO NERDOLA" : runtime.challenge === "run-normal" ? "TREINO RUN NORMAL" : runtime.training ? "TREINO 3 FILEIRAS" : "NO COIN TIME"}
