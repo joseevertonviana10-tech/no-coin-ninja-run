@@ -53,7 +53,7 @@ export function startRun(mode: boolean | RunChallenge = false) {
         { name: "Luna", lane: 0, characterId: "ninja-purple" },
         { name: "Theo", lane: 1, characterId: "monk-shaolin" },
         { name: "Mika", lane: 0, characterId: "sniper-elite" },
-      ].map((bot, id) => ({ ...bot, id, finishAt: 30 + Math.random() * 390 * (s.hackBots ? 2.25 : 1), finished: false }))
+      ].map((bot, id) => ({ ...bot, id, finishAt: (30 + Math.random() * 390) * (s.hackBots ? 2.25 : 1), finished: false }))
     : [];
   runtime.timeScale = training ? s.trainingTimescale : 1;
   runtime.keyMilestone = 0;
