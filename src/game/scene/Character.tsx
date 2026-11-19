@@ -85,6 +85,7 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
     let y = 0;
     let k = 16;
     let wind = 1.5;
+    let squash = 1;
     const zombie = def.style === "zombie";
 
     const idle = () => {
@@ -140,6 +141,8 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
       const p = sim.player;
       x = p.x;
       y = p.y;
+      // Visual body compression on ground contact and a light stretch in the air.
+      squash = p.grounded ? 1 - Math.min(0.055, p.bumpT * 0.12) : 1.035;
       s.spin *= Math.exp(-6 * dt);
       if (mode === "over") {
         y = Math.max(0, y);
@@ -261,10 +264,14 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
     const c = s.cur;
     for (const j of JOINTS) c[j] += (tg[j] - c[j]) * a;
 
-    root.current.position.set(x, y, 0);
+    // A damped follow gives the model a little mass without changing hitboxes.
+    root.current.position.x = THREE.MathUtils.damp(root.current.position.x, x, 22, dt);
+    root.current.position.y = THREE.MathUtils.damp(root.current.position.y, y, 26, dt);
+    root.current.position.z = 0;
     root.current.rotation.y = s.spin;
     visual.current.rotation.set(c.vx, 0, c.vz);
     visual.current.position.z = c.z;
+    visual.current.scale.y = THREE.MathUtils.damp(visual.current.scale.y, squash, 18, dt);
     hips.current.position.y = c.hipY;
     torso.current.rotation.set(c.tx, 0, c.tz);
     head.current.rotation.set(c.hx, c.hy, 0);
