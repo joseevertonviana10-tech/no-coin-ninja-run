@@ -8,7 +8,7 @@ import { ArcadeButton } from "./kit";
 import { SettingsScreen } from "./SettingsScreen";
 
 const REASON: Record<string, { title: string; text: string }> = {
-  coin: { title: "Você pegou uma moeda!", text: "No NO COIN CHALLENGE qualquer moeda encerra o desafio." },
+  coin: { title: "Você pegou uma moeda!", text: "Derrota definitiva: moedas não permitem reviver, mesmo usando chaves." },
   collision: { title: "Colisão!", text: "Você bateu em um obstáculo." },
   fall: { title: "Caiu da pista!", text: "Você caiu em um buraco fora da pista." },
   victory: { title: "Você venceu a corrida!", text: "Todos os bots pegaram uma moeda antes de você. Vitória!" },
@@ -53,7 +53,7 @@ export function GameOver() {
             {r.text} · {MAP_BY_ID[run.map]?.name} · {CHARACTER_BY_ID[run.character]?.name}
           </div>
         </div>
-        {!run.won && !(runtime.challenge === "race" && run.reason === "coin") && keys > 0 && (
+        {!run.won && run.reason !== "coin" && keys > 0 && (
           <ArcadeButton variant="primary" className="w-full py-3.5 text-lg" onClick={reviveRun}>
             <span className="text-sky-300">✦</span> REVIVER · 1 CHAVE ({keys} DISPONÍVEIS)
           </ArcadeButton>

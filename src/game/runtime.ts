@@ -37,7 +37,7 @@ export function startRun(mode: boolean | RunChallenge = false) {
     difficulty: s.difficulty,
     speedMult: s.speedMult,
     coinSize: s.coinSize,
-    noCoin: challenge === "race" ? false : s.noCoinMode,
+    noCoin: s.noCoinMode,
     autoDodge: s.autoDodge,
     laneGrip: map.laneGrip,
     weights: map.weights,
@@ -53,7 +53,7 @@ export function startRun(mode: boolean | RunChallenge = false) {
         { name: "Luna", lane: 0, characterId: "ninja-purple" },
         { name: "Theo", lane: 1, characterId: "monk-shaolin" },
         { name: "Mika", lane: 0, characterId: "sniper-elite" },
-      ].map((bot, id) => ({ ...bot, id, finishAt: 30 + Math.random() * 390, finished: false }))
+      ].map((bot, id) => ({ ...bot, id, finishAt: 30 + Math.random() * 390 * (s.hackBots ? 2.25 : 1), finished: false }))
     : [];
   runtime.timeScale = training ? s.trainingTimescale : 1;
   runtime.keyMilestone = 0;
@@ -71,7 +71,7 @@ export function startRun(mode: boolean | RunChallenge = false) {
 
 export function reviveRun() {
   const sim = runtime.sim;
-  if (!sim || runtime.mode !== "over" || !useStats.getState().spendKey()) return false;
+  if (!sim || runtime.mode !== "over" || sim.reason === "coin" || !useStats.getState().spendKey()) return false;
   const p = sim.player;
   const d = sim.dist;
   runtime.particles.burst(150, p.x, Math.max(0.7, p.y + 0.7), -0.3, 8, [0.12, 0.62, 1], 1.8, 1.05, -0.7, 1.8);
