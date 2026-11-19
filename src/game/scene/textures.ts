@@ -272,6 +272,27 @@ export function sideTexture(map: MapDef) {
       g.lineTo(256, i);
       g.stroke();
     }
+  } else if (map.id === "city") {
+    speckle(g, 256, 256, 3200, 20, 220, 0.13, 4);
+    g.strokeStyle = "rgba(230,240,255,0.12)";
+    for (let x = 16; x < 256; x += 32) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x + 5, 256); g.stroke(); }
+  } else if (map.id === "snow") {
+    speckle(g, 256, 256, 1800, 180, 255, 0.2, 3);
+    g.strokeStyle = "rgba(255,255,255,0.3)";
+    for (let i = 0; i < 30; i++) { const x = Math.random() * 256; const y = Math.random() * 256; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 12, y + 24); g.stroke(); }
+  } else if (map.id === "jungle") {
+    speckle(g, 256, 256, 2200, 0, 180, 0.2, 5);
+    g.strokeStyle = "rgba(20,70,20,0.35)";
+    for (let i = 0; i < 35; i++) { const x = Math.random() * 256; g.beginPath(); g.moveTo(x, 0); g.quadraticCurveTo(x - 18, 120, x + 12, 256); g.stroke(); }
+  } else if (map.id === "race") {
+    g.strokeStyle = "rgba(30,30,35,0.22)";
+    g.lineWidth = 3;
+    for (let y = 12; y < 256; y += 24) { g.beginPath(); g.moveTo(0, y); g.lineTo(256, y + 5); g.stroke(); }
+    speckle(g, 256, 256, 1400, 50, 180, 0.14, 3);
+  } else if (map.id === "desert") {
+    g.strokeStyle = "rgba(120,75,25,0.22)";
+    for (let y = 8; y < 256; y += 18) { g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= 256; x += 16) g.lineTo(x, y + Math.sin(x * 0.035 + y) * 5); g.stroke(); }
+    speckle(g, 256, 256, 1800, 120, 220, 0.16, 3);
   } else {
     speckle(g, 256, 256, 2500, 0, 255, 0.12, 4);
   }
