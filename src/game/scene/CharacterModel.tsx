@@ -94,6 +94,45 @@ export function CharacterDetails({ def, m }: { def: CharacterDef; m: Mats }) {
       <Box s={[0.43, 0.065, 0.34]} m={m.second} pos={[0, 0.045, 0]} />
       <Box s={[0.09, 0.09, 0.035]} m={m.accent} pos={[0, 0.05, -0.19]} />
       <Ball r={0.025} m={m.glow} pos={[0, 0.37, -0.19]} />
+      {def.id === "ninja-oni" && (
+        <>
+          {[-1, 1].map((side) => <mesh key={side} position={[side * 0.15, 0.58, 0.02]} rotation={[0, 0, side * 0.22]} material={m.accent} castShadow><coneGeometry args={[0.055, 0.2, 6]} /></mesh>)}
+          <Box s={[0.28, 0.1, 0.035]} m={m.second} pos={[0, 0.36, -0.22]} />
+          <Ball r={0.035} m={m.glow} pos={[-0.08, 0.37, -0.245]} />
+          <Ball r={0.035} m={m.glow} pos={[0.08, 0.37, -0.245]} />
+        </>
+      )}
+      {def.id === "samurai-storm" && (
+        <>
+          {[-1, 1].map((side) => <Box key={side} s={[0.2, 0.18, 0.28]} m={m.accent} pos={[side * 0.3, 0.5, 0]} rot={[0, 0, side * 0.25]} />)}
+          <Box s={[0.1, 0.28, 0.035]} m={m.glow} pos={[0, 0.28, -0.21]} />
+        </>
+      )}
+      {def.id === "robot-titan" && (
+        <>
+          <Box s={[0.5, 0.18, 0.38]} m={m.second} pos={[0, 0.36, 0]} />
+          <Box s={[0.18, 0.16, 0.045]} m={m.glow} pos={[0, 0.35, -0.22]} />
+          {[-1, 1].map((side) => <Box key={side} s={[0.09, 0.3, 0.12]} m={m.accent} pos={[side * 0.28, 0.3, 0]} />)}
+        </>
+      )}
+      {def.id === "zombie-mummy" && (
+        <>
+          {[-0.12, 0, 0.12].map((x) => <Box key={x} s={[0.42, 0.045, 0.04]} m={m.accent} pos={[x, 0.28 + x * 0.35, -0.22]} rot={[0, 0, x * 1.4]} />)}
+          <Box s={[0.3, 0.045, 0.04]} m={m.second} pos={[0, 0.08, -0.22]} rot={[0, 0, -0.12]} />
+        </>
+      )}
+      {def.id === "monkey-cyber" && (
+        <>
+          <Box s={[0.34, 0.1, 0.035]} m={m.glow} pos={[0, 0.43, -0.22]} />
+          <Box s={[0.08, 0.32, 0.035]} m={m.accent} pos={[-0.2, 0.25, -0.2]} />
+          <Box s={[0.08, 0.32, 0.035]} m={m.accent} pos={[0.2, 0.25, -0.2]} />
+        </>
+      )}
+      {def.id === "alien-crystal" && (
+        <>
+          {[-0.18, 0, 0.18].map((x, i) => <mesh key={x} position={[x, 0.44 + (i % 2) * 0.06, -0.02]} rotation={[0.1, 0, x * 1.5]} material={m.glow} castShadow><octahedronGeometry args={[0.075, 0]} /></mesh>)}
+        </>
+      )}
       {def.style === "ninja" && (
         <>
           <Box s={[0.36, 0.045, 0.035]} m={m.accent} pos={[0, 0.28, -0.2]} rot={[0, 0, -0.22]} />
