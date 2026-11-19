@@ -176,6 +176,8 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
               <SwitchRow label="Celular RGB (bordas animadas)" checked={s.rgbPhone} onChange={(v) => s.set({ rgbPhone: v })} />
               <SwitchRow label="Auto Dodge de obstáculos" checked={s.autoDodge} onChange={(v) => s.set({ autoDodge: v })} />
               <SwitchRow label="Todos os personagens em RGB" checked={s.allCharactersRgb} onChange={(v) => s.set({ allCharactersRgb: v })} />
+              <SwitchRow label="Hack contra bots: rivais mais lentos" checked={s.hackBots} onChange={(v) => s.set({ hackBots: v })} />
+              <p className="text-xs text-muted-foreground">Na Corrida contra bots, a imunidade a moedas e o Auto Dodge também ficam ativos. O hack de lentidão aumenta o tempo dos rivais.</p>
             </>
           )}
           {tab === "Moedas" && (

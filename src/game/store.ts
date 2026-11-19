@@ -35,6 +35,7 @@ export interface Settings {
   map: MapId;
   trainingTimescale: TrainingSpeed;
   hackUnlocked: boolean;
+  hackBots: boolean;
   noCoinMode: boolean;
   rgbPhone: boolean;
   autoDodge: boolean;
@@ -70,6 +71,7 @@ export const DEFAULT_SETTINGS: Settings = {
   map: "city",
   trainingTimescale: 0.75,
   hackUnlocked: false,
+  hackBots: false,
   noCoinMode: false,
   rgbPhone: false,
   autoDodge: false,
