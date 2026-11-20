@@ -113,7 +113,7 @@ function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; ti
 }
 
 function CartoonSky({ map, timeOfDay }: { map: MapDef; timeOfDay: "day" | "afternoon" | "night" }) {
-  const sky = useRef<THREE.Mesh>(null!);
+  const sky = useRef<THREE.Group>(null!);
   const clouds = useRef<(THREE.Group | null)[]>([]);
   const camera = useThree((state) => state.camera);
   const palette = useMemo(() => {
@@ -146,16 +146,32 @@ function CartoonSky({ map, timeOfDay }: { map: MapDef; timeOfDay: "day" | "after
   const cloudMat = useMemo(() => new THREE.MeshBasicMaterial({ color: timeOfDay === "night" ? "#c5d7f5" : "#fffdf5", transparent: true, opacity: timeOfDay === "night" ? 0.3 : 0.84, depthWrite: false, fog: false }), [timeOfDay]);
   const sunMat = useMemo(() => new THREE.MeshBasicMaterial({ color: timeOfDay === "night" ? "#dceaff" : palette[2], fog: false, toneMapped: false }), [palette, timeOfDay]);
   const cloudGeo = useMemo(() => new THREE.SphereGeometry(1, 14, 10), []);
-  useEffect(() => () => { gradient.dispose(); skyMat.dispose(); cloudMat.dispose(); sunMat.dispose(); cloudGeo.dispose(); }, [gradient, skyMat, cloudMat, sunMat, cloudGeo]);
+  const stars = useMemo(() => {
+    const positions = new Float32Array(240 * 3);
+    for (let i = 0; i < 240; i++) {
+      const y = Math.random() * 2 - 1;
+      const angle = Math.random() * Math.PI * 2;
+      const ring = Math.sqrt(1 - y * y);
+      positions[i * 3] = Math.cos(angle) * ring * 285;
+      positions[i * 3 + 1] = y * 285;
+      positions[i * 3 + 2] = Math.sin(angle) * ring * 285;
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    return geometry;
+  }, []);
+  const starMat = useMemo(() => new THREE.PointsMaterial({ color: "#edf5ff", size: 1.1, transparent: true, opacity: 0.88, sizeAttenuation: false, depthWrite: false, fog: false }), []);
+  useEffect(() => () => { gradient.dispose(); skyMat.dispose(); cloudMat.dispose(); sunMat.dispose(); cloudGeo.dispose(); stars.dispose(); starMat.dispose(); }, [gradient, skyMat, cloudMat, sunMat, cloudGeo, stars, starMat]);
   useFrame((state) => {
     if (sky.current) sky.current.position.copy(camera.position);
     clouds.current.forEach((cloud, i) => { if (cloud) cloud.position.x = [-72, 42, 112, -125][i]! + Math.sin(state.clock.elapsedTime * 0.035 + i * 2) * 2.8; });
   });
   const cloudPositions: [number, number, number][] = [[-72, 27, -135], [42, 39, -178], [112, 24, -235], [-125, 44, -260]];
   return (
-    <group>
-      <mesh ref={sky} scale={360} renderOrder={-100} geometry={cloudGeo} material={skyMat} />
-      <mesh position={[58, 38, -155]} geometry={cloudGeo} material={sunMat} scale={[7.2, 7.2, 2.2]} />
+    <group ref={sky}>
+      <mesh scale={360} renderOrder={-100} geometry={cloudGeo} material={skyMat} />
+      <points geometry={stars} material={starMat} visible={timeOfDay === "night"} />
+      <mesh position={timeOfDay === "night" ? [-58, 52, -150] : [58, 38, -155]} geometry={cloudGeo} material={sunMat} scale={timeOfDay === "night" ? [5.8, 5.8, 2] : [7.2, 7.2, 2.2]} />
       {cloudPositions.map((p, i) => (
         <group key={i} ref={(el) => { clouds.current[i] = el; }} position={p}>
           <mesh position={[-2.2, 0, 0]} geometry={cloudGeo} material={cloudMat} scale={[5.3, 2.1, 2.2]} />
