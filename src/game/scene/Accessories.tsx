@@ -2,19 +2,29 @@ import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 
+const CARTOON_RAMP = (() => {
+  const data = new Uint8Array([78, 78, 78, 255, 142, 142, 142, 255, 205, 205, 205, 255, 255, 255, 255, 255]);
+  const texture = new THREE.DataTexture(data, 4, 1, THREE.RGBAFormat);
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+})();
+
 export function Accessories({ accessoryId }: { accessoryId?: string }) {
   const swing = useRef<THREE.Group>(null!);
   const materials = useMemo(() => ({
-    straw: new THREE.MeshStandardMaterial({ color: "#d6ad55", roughness: 0.88 }),
-    strawLight: new THREE.MeshStandardMaterial({ color: "#f0d48a", roughness: 0.9 }),
-    strawDark: new THREE.MeshStandardMaterial({ color: "#80502a", roughness: 0.82 }),
-    red: new THREE.MeshStandardMaterial({ color: "#a52c35", roughness: 0.86 }),
-    redLight: new THREE.MeshStandardMaterial({ color: "#d85a57", roughness: 0.78 }),
-    gold: new THREE.MeshStandardMaterial({ color: "#d7bd73", metalness: 0.35, roughness: 0.48 }),
-    glove: new THREE.MeshStandardMaterial({ color: "#252832", roughness: 0.72 }),
-    gloveEdge: new THREE.MeshStandardMaterial({ color: "#454b58", roughness: 0.62 }),
-    teal: new THREE.MeshStandardMaterial({ color: "#39d5b0", metalness: 0.28, roughness: 0.48 }),
-    darkTeal: new THREE.MeshStandardMaterial({ color: "#147f78", roughness: 0.6 }),
+    straw: new THREE.MeshToonMaterial({ gradientMap: CARTOON_RAMP, color: "#d6ad55" }),
+    strawLight: new THREE.MeshToonMaterial({ gradientMap: CARTOON_RAMP, color: "#f0d48a" }),
+    strawDark: new THREE.MeshToonMaterial({ gradientMap: CARTOON_RAMP, color: "#80502a" }),
+    red: new THREE.MeshToonMaterial({ gradientMap: CARTOON_RAMP, color: "#a52c35" }),
+    redLight: new THREE.MeshToonMaterial({ gradientMap: CARTOON_RAMP, color: "#d85a57" }),
+    gold: new THREE.MeshToonMaterial({ gradientMap: CARTOON_RAMP, color: "#d7bd73" }),
+    glove: new THREE.MeshToonMaterial({ gradientMap: CARTOON_RAMP, color: "#252832" }),
+    gloveEdge: new THREE.MeshToonMaterial({ gradientMap: CARTOON_RAMP, color: "#454b58" }),
+    teal: new THREE.MeshToonMaterial({ gradientMap: CARTOON_RAMP, color: "#39d5b0" }),
+    darkTeal: new THREE.MeshToonMaterial({ gradientMap: CARTOON_RAMP, color: "#147f78" }),
   }), []);
   useFrame((state, delta) => {
     if (!swing.current) return;
