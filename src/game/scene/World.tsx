@@ -90,12 +90,16 @@ function TrackArchitecture({ map }: { map: MapDef }) {
   return (
     <>
       <group ref={rails}>
-        {[-2.4, 0, 2.4].flatMap((lane) => [-0.72, 0.72].map((offset) => (
-          <mesh key={lane + ":" + offset} position={[lane + offset, 0.095, -TRACK_LEN / 2]} receiveShadow>
-            <boxGeometry args={[0.105, 0.16, TRACK_LEN]} />
-            <meshToonMaterial color={railColor} />
-          </mesh>
-        )))}
+        {Array.from({ length: 3 }, (_, segment) => (
+          <group key={segment} position={[0, 0, -segment * TRACK_LEN]}>
+            {[-2.4, 0, 2.4].flatMap((lane) => [-0.72, 0.72].map((offset) => (
+              <mesh key={lane + ":" + offset} position={[lane + offset, 0.095, -TRACK_LEN / 2]} receiveShadow>
+                <boxGeometry args={[0.105, 0.16, TRACK_LEN]} />
+                <meshToonMaterial color={railColor} />
+              </mesh>
+            )))}
+          </group>
+        ))}
       </group>
       <group ref={arches}>
         {Array.from({ length: 8 }, (_, i) => (
