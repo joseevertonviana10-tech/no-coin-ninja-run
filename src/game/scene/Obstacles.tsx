@@ -57,7 +57,7 @@ function makeMats(map: MapDef) {
     white: std("#f4f4f4"),
     yellow: std("#ffcc00"),
     sand: std("#d8b27a", { roughness: 1 }),
-    sandstone: std("#c9945a", { roughness: 0.95, flatShading: true }),
+    sandstone: std("#c9945a", {}),
     barricade: std("#ffffff", { map: stripeTexture("#d62828", "#f4f4f4") }),
     hazard: std("#ffffff", { map: stripeTexture("#111111", "#ffcc00") }),
     crowd: std("#ffffff", { map: crowdTexture() }),
