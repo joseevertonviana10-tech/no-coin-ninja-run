@@ -20,7 +20,7 @@ export function useCharacterMats(def: CharacterDef): Mats {
     const tex = patternTexture(def.pattern);
     const metal = def.metal ?? 0;
     const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-      new THREE.MeshStandardMaterial({ color, roughness: 0.72, flatShading: true, ...o });
+      new THREE.MeshStandardMaterial({ color, roughness: 0.68, flatShading: false, ...o });
     return {
       main: std(def.main, { map: tex, metalness: metal, roughness: metal > 0.3 ? 0.35 : 0.75 }),
       second: std(def.second, { map: tex, metalness: metal * 0.6, roughness: 0.7 }),
@@ -47,7 +47,7 @@ export function useCharacterMats(def: CharacterDef): Mats {
 
 const Cap = ({ r, len, m, pos = [0, 0, 0], scale = [1, 1, 1] }: { r: number; len: number; m: THREE.Material; pos?: [number, number, number]; scale?: [number, number, number] }) => (
   <mesh position={pos} scale={scale} material={m} castShadow>
-    <capsuleGeometry args={[r, len, 4, 10]} />
+    <capsuleGeometry args={[r, len, 6, 14]} />
   </mesh>
 );
 const Box = ({ s, m, pos = [0, 0, 0], rot = [0, 0, 0] }: { s: [number, number, number]; m: THREE.Material; pos?: [number, number, number]; rot?: [number, number, number] }) => (
@@ -57,7 +57,7 @@ const Box = ({ s, m, pos = [0, 0, 0], rot = [0, 0, 0] }: { s: [number, number, n
 );
 const Ball = ({ r, m, pos = [0, 0, 0], scale = [1, 1, 1] }: { r: number; m: THREE.Material; pos?: [number, number, number]; scale?: [number, number, number] }) => (
   <mesh position={pos} scale={scale} material={m} castShadow>
-    <sphereGeometry args={[r, 16, 12]} />
+    <sphereGeometry args={[r, 24, 18]} />
   </mesh>
 );
 
@@ -189,6 +189,20 @@ export function CharacterDetails({ def, m }: { def: CharacterDef; m: Mats }) {
 
 /* ---------- Torso ---------- */
 export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
+  if (def.id === "hacker-code") return (
+    <group>
+      <Cap r={0.22} len={0.38} m={m.main} pos={[0, 0.3, 0]} scale={[1.22, 1.05, 0.9]} />
+      <Ball r={0.11} m={m.main} pos={[-0.24, 0.48, 0]} scale={[1, 1.2, 1]} />
+      <Ball r={0.11} m={m.main} pos={[0.24, 0.48, 0]} scale={[1, 1.2, 1]} />
+      <Box s={[0.28, 0.12, 0.035]} m={m.second} pos={[0, 0.12, -0.18]} />
+      <Box s={[0.025, 0.34, 0.018]} m={m.glow} pos={[0, 0.31, -0.205]} />
+      <Box s={[0.3, 0.025, 0.02]} m={m.dark} pos={[0, 0.02, -0.19]} />
+      <Box s={[0.1, 0.1, 0.025]} m={m.glow} pos={[-0.12, 0.35, -0.205]} />
+      <Box s={[0.1, 0.1, 0.025]} m={m.glow} pos={[0.12, 0.35, -0.205]} />
+      <Cap r={0.012} len={0.16} m={m.accent} pos={[-0.09, 0.48, -0.18]} />
+      <Cap r={0.012} len={0.16} m={m.accent} pos={[0.09, 0.48, -0.18]} />
+    </group>
+  );
   switch (def.style) {
     case "robot":
       return (
