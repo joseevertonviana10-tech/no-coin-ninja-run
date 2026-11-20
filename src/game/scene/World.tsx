@@ -112,6 +112,62 @@ function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; ti
   );
 }
 
+function CartoonSky({ map, timeOfDay }: { map: MapDef; timeOfDay: "day" | "afternoon" | "night" }) {
+  const sky = useRef<THREE.Mesh>(null!);
+  const clouds = useRef<(THREE.Group | null)[]>([]);
+  const camera = useThree((state) => state.camera);
+  const palette = useMemo(() => {
+    const themes: Record<MapDef["id"], [string, string, string]> = {
+      city: ["#4d9be0", "#c8ecff", "#fff0ce"], snow: ["#568fc7", "#cce8fb", "#f5fbff"],
+      volcano: ["#6b283c", "#f18b59", "#ffc078"], jungle: ["#3b9d7a", "#b7e8ae", "#ffe7a1"],
+      race: ["#4d9de0", "#bde8ff", "#fff1d6"], desert: ["#e58b55", "#ffd08a", "#fff0bd"],
+      future: ["#20275c", "#5e5bb0", "#ff91db"],
+    };
+    const day = themes[map.id];
+    if (timeOfDay === "night") return ["#101a3b", "#263b62", "#526987"];
+    if (timeOfDay === "afternoon") return [day[0], day[2], day[1]];
+    return day;
+  }, [map.id, timeOfDay]);
+  const gradient = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 4; canvas.height = 256;
+    const ctx = canvas.getContext("2d");
+    const texture = new THREE.CanvasTexture(canvas);
+    if (ctx) {
+      const g = ctx.createLinearGradient(0, 0, 0, 256);
+      g.addColorStop(0, palette[0]); g.addColorStop(0.58, palette[1]); g.addColorStop(1, palette[2]);
+      ctx.fillStyle = g; ctx.fillRect(0, 0, 4, 256);
+    }
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    return texture;
+  }, [palette]);
+  const skyMat = useMemo(() => new THREE.MeshBasicMaterial({ map: gradient, side: THREE.BackSide, depthWrite: false, fog: false }), [gradient]);
+  const cloudMat = useMemo(() => new THREE.MeshBasicMaterial({ color: timeOfDay === "night" ? "#c5d7f5" : "#fffdf5", transparent: true, opacity: timeOfDay === "night" ? 0.3 : 0.84, depthWrite: false, fog: false }), [timeOfDay]);
+  const sunMat = useMemo(() => new THREE.MeshBasicMaterial({ color: timeOfDay === "night" ? "#dceaff" : palette[2], fog: false, toneMapped: false }), [palette, timeOfDay]);
+  const cloudGeo = useMemo(() => new THREE.SphereGeometry(1, 14, 10), []);
+  useEffect(() => () => { gradient.dispose(); skyMat.dispose(); cloudMat.dispose(); sunMat.dispose(); cloudGeo.dispose(); }, [gradient, skyMat, cloudMat, sunMat, cloudGeo]);
+  useFrame((state) => {
+    if (sky.current) sky.current.position.copy(camera.position);
+    clouds.current.forEach((cloud, i) => { if (cloud) cloud.position.x = [-72, 42, 112, -125][i]! + Math.sin(state.clock.elapsedTime * 0.035 + i * 2) * 2.8; });
+  });
+  const cloudPositions: [number, number, number][] = [[-72, 27, -135], [42, 39, -178], [112, 24, -235], [-125, 44, -260]];
+  return (
+    <group>
+      <mesh ref={sky} scale={360} renderOrder={-100} geometry={cloudGeo} material={skyMat} />
+      <mesh position={[58, 38, -155]} geometry={cloudGeo} material={sunMat} scale={[7.2, 7.2, 2.2]} />
+      {cloudPositions.map((p, i) => (
+        <group key={i} ref={(el) => { clouds.current[i] = el; }} position={p}>
+          <mesh position={[-2.2, 0, 0]} geometry={cloudGeo} material={cloudMat} scale={[5.3, 2.1, 2.2]} />
+          <mesh position={[1.2, 0.9, 0.15]} geometry={cloudGeo} material={cloudMat} scale={[4.2, 2.8, 2]} />
+          <mesh position={[4.2, 0.15, 0]} geometry={cloudGeo} material={cloudMat} scale={[5.5, 2, 2.5]} />
+          <mesh position={[0.1, -0.7, 0.25]} geometry={cloudGeo} material={cloudMat} scale={[6.8, 1.7, 2.4]} />
+        </group>
+      ))}
+    </group>
+  );
+}
+
 const hexRgb = (h: string): [number, number, number] => {
   const c = new THREE.Color(h);
   return [c.r, c.g, c.b];
@@ -335,16 +391,16 @@ export function World() {
   const map = MAP_BY_ID[mapId] ?? MAP_BY_ID.city;
   const night = timeOfDay === "night";
   const afternoon = timeOfDay === "afternoon";
-  const sky = night ? "#050914" : afternoon ? "#d99368" : map.sky;
-  const fog = night ? "#0a1020" : afternoon ? "#e6b18e" : map.fog;
+  const fog = night ? "#283c5e" : afternoon ? (map.id === "volcano" ? "#c86c53" : "#f0b58c") : map.fog;
   const def = CHARACTER_BY_ID[charId] ?? CHARACTERS[0]!;
   const perSide = { low: 7, medium: 11, high: 15, ultra: 20 }[quality];
   const weather = { low: 150, medium: 350, high: 600, ultra: 900 }[quality];
   return (
     <>
       <Stepper map={map} />
-      <color attach="background" args={[sky]} />
-      <fog attach="fog" args={[fog, night ? 12 : map.fogNear, night ? 82 : map.fogFar]} />
+      <color attach="background" args={[fog]} />
+      <CartoonSky map={map} timeOfDay={timeOfDay} />
+      <fog attach="fog" args={[fog, night ? 12 : map.fogNear, night ? 92 : map.fogFar]} />
       <Lights map={map} quality={quality} timeOfDay={timeOfDay} />
       <Ground map={map} />
       <Scenery key={map.id + perSide} map={map} perSide={perSide} />
