@@ -102,6 +102,12 @@ function TrackArchitecture({ map }: { map: MapDef }) {
         ))}
       </group>
       <group ref={arches}>
+        {[-3.5, -1.2, 1.2, 3.5].map((x) => (
+          <mesh key={x} position={[x, 5.42, -130]}>
+            <boxGeometry args={[0.035, 0.035, 260]} />
+            <meshToonMaterial color={map.id === "future" ? "#354d86" : "#303946"} />
+          </mesh>
+        ))}
         {Array.from({ length: 8 }, (_, i) => (
           <group key={i} position={[0, 0, -12 - i * 34]}>
             <mesh position={[-4.15, 2.55, 0]} castShadow><boxGeometry args={[0.22, 5.1, 0.24]} /><meshToonMaterial color={beamColor} /></mesh>
