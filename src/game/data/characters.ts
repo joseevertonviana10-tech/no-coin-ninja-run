@@ -34,6 +34,10 @@ export interface CharacterDef {
   armor?: "light" | "full";
   weapon?: "katana" | "sword" | "none" | "rifle" | "shotgun";
   desc: string;
+  code?: string;
+  scale?: number;
+  speedBonus?: number;
+  jumpBonus?: number;
 }
 
 const NINJA_SKIN = "#e8b98f";
@@ -101,6 +105,12 @@ export const CHARACTERS: CharacterDef[] = [
   { id: "alien-crystal", name: "Alien Cristal", category: "Outros", style: "alien", main: "#6c4fc4", second: "#30235f", accent: "#a9fff0", skin: "#9de7d9", pattern: "scales", glow: "#8dfff0", desc: "Criatura cristalina com brilho de outro mundo." },
   { id: "alien", name: "Alienígena", category: "Outros", style: "alien", main: "#5a6b8a", second: "#2a3448", accent: "#c0ff3a", skin: "#7ee08a", pattern: "scales", glow: "#c0ff3a", desc: "Veio de muito longe." },
   { id: "hacker-code", name: "Hacker de Código", category: "Outros", style: "coat", main: "#101916", second: "#050908", accent: "#18ff70", skin: "#e8c3a4", pattern: "circuit", glow: "#18ff70", desc: "Máscara digital, laptop aberto e uma trilha verde de códigos. +15% velocidade e +5% salto." },
+  { id: "sun-wukong", name: "Sun Wukong", category: "Macacos", style: "monkey", main: "#e7a52d", second: "#8b3c1c", accent: "#ffe66d", skin: "#d99a70", pattern: "fabric", glow: "#ffcf4a", weapon: "staff" as never, code: "SUNWUK0NG", speedBonus: 0.05, jumpBonus: 0.2, desc: "Rei Macaco com bastão dourado. +5% velocidade e +20% salto." },
+  { id: "godzilla", name: "Godzilla", category: "Outros", style: "dinosaur", main: "#315d55", second: "#193b39", accent: "#8de8d0", skin: "#416d61", pattern: "scales", glow: "#3af4db", code: "K1NG0FMONSTERS", scale: 1.72, speedBonus: 0.08, jumpBonus: 0.15, desc: "Monstro colossal com espinhos atômicos. Gigante, +8% velocidade e +15% salto." },
+  { id: "sun-kong", name: "Sun Kong", category: "Macacos", style: "monkey", main: "#b66a2d", second: "#3d2118", accent: "#ffcc55", skin: "#a96f50", pattern: "fabric", glow: "#ff9e36", code: "KingKong+SunWukong", scale: 1.78, speedBonus: 0.15, jumpBonus: 0.1, desc: "Fusão colossal do Rei Macaco com King Kong. +15% velocidade e +10% salto." },
+  { id: "skeleton-rgb", name: "Esqueleto Espectral RGB", category: "Outros", style: "skeleton", main: "#e9f7f5", second: "#a8d7d5", accent: "#45eaff", skin: "#e9f7f5", pattern: "plain", glow: "#45eaff", code: "R4INB0WSKELETON", speedBonus: 0.12, jumpBonus: 0.08, desc: "Ossos espectrais com brilho RGB permanente. +12% velocidade e +8% salto." },
+  { id: "ifood-delivery", name: "Entregador do iFood", category: "Outros", style: "coat", main: "#e52c3b", second: "#25252b", accent: "#ffffff", skin: "#d9a47d", pattern: "fabric", glow: "#ff4050", code: "IFOOD", speedBonus: 0.1, jumpBonus: 0.05, desc: "Uniforme vermelho, mochila de entrega e agilidade urbana. +10% velocidade e +5% salto." },
+  { id: "ant-rgb", name: "Formiga RGB", category: "Outros", style: "alien", main: "#25202e", second: "#5a344d", accent: "#49ffb2", skin: "#8b5361", pattern: "plain", glow: "#49ffb2", code: "TINYRGB", scale: 0.62, speedBonus: 0.2, jumpBonus: -0.1, desc: "Formiga minúscula com antenas e carapaça RGB. +20% velocidade, salto -10%." },
 ];
 
 export const CHARACTER_BY_ID = Object.fromEntries(CHARACTERS.map((c) => [c.id, c])) as Record<string, CharacterDef>;
