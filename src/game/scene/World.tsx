@@ -139,14 +139,21 @@ function Tunnels({ map }: { map: MapDef }) {
   const p = palette[map.id];
   useFrame(() => {
     const d = runtime.sim?.dist ?? 0;
-    const base = Math.floor((d - TUNNEL_FIRST) / TUNNEL_SPACING);
+    const starts = runtime.sim?.gen.tunnelStarts ?? [];
+    const visible = starts.filter((entrance) => {
+      const start = entrance - TUNNEL_VISUAL_LEAD;
+      return start < d + 190 && start + TUNNEL_SEGMENT_LENGTH > d - 24;
+    });
     refs.current.forEach((group, i) => {
       if (!group) return;
-      const tunnelIndex = base + i - 1;
-      const entrance = TUNNEL_FIRST + tunnelIndex * TUNNEL_SPACING;
+      const entrance = visible[i];
+      if (entrance === undefined) {
+        group.visible = false;
+        return;
+      }
       const visualStart = entrance - TUNNEL_VISUAL_LEAD;
       group.position.z = d - visualStart;
-      group.visible = visualStart < d + 190 && visualStart + TUNNEL_SEGMENT_LENGTH > d - 24;
+      group.visible = true;
     });
   });
   return (
@@ -211,16 +218,13 @@ function Tunnels({ map }: { map: MapDef }) {
             );
           })}
           {[-3.35, 3.35].map((x) => (
-            <group key={x}>
-              {[-12, -32, -52].map((z) => (
-                <pointLight key={z} position={[x, 4.9, z]} color={p.lamp} intensity={3.2} distance={15} decay={2} />
-              ))}
-              <mesh position={[x, 5.55, -TUNNEL_SEGMENT_LENGTH / 2]}>
-                <boxGeometry args={[0.12, 0.08, TUNNEL_SEGMENT_LENGTH]} />
-                <meshBasicMaterial color={p.lamp} toneMapped={false} />
-              </mesh>
-            </group>
+            <mesh key={x} position={[x, 5.55, -TUNNEL_SEGMENT_LENGTH / 2]}>
+              <boxGeometry args={[0.12, 0.08, TUNNEL_SEGMENT_LENGTH]} />
+              <meshBasicMaterial color={p.lamp} toneMapped={false} />
+            </mesh>
           ))}
+          <pointLight position={[0, 4.85, -16]} color={p.lamp} intensity={4.2} distance={19} decay={2} />
+          <pointLight position={[0, 4.85, -46]} color={p.lamp} intensity={4.2} distance={19} decay={2} />
           {/* Portal bands at both ends signal the tunnel entrance and exit. */}
           {[0, -TUNNEL_SEGMENT_LENGTH + 0.3].map((z) => (
             <group key={z}>
@@ -259,7 +263,7 @@ function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; ti
     const x = runtime.sim?.player.x ?? 0;
     sun.current.position.set(x + 8, 18, 6);
     sun.current.target.position.set(x, 0, -8);
-    const tunnel = getTunnelBlend(runtime.sim?.dist ?? 0);
+    const tunnel = getTunnelBlend(runtime.sim?.dist ?? 0, runtime.sim?.gen.tunnelStarts ?? []);
     const daylight = 1 - tunnel * 0.965;
     sun.current.intensity = sunPower * daylight;
     hemi.current.intensity = hemiPower * (1 - tunnel * 0.94);
