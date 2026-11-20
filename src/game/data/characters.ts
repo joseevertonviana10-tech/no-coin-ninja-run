@@ -100,6 +100,7 @@ export const CHARACTERS: CharacterDef[] = [
   { id: "monkey-cyber", name: "Macaco Cyber", category: "Macacos", style: "monkey", main: "#333c54", second: "#b7c7d9", accent: "#31e6ff", skin: "#b88b70", pattern: "circuit", metal: 0.55, glow: "#31e6ff", desc: "Pelagem metálica com detalhes holográficos." },
   { id: "alien-crystal", name: "Alien Cristal", category: "Outros", style: "alien", main: "#6c4fc4", second: "#30235f", accent: "#a9fff0", skin: "#9de7d9", pattern: "scales", glow: "#8dfff0", desc: "Criatura cristalina com brilho de outro mundo." },
   { id: "alien", name: "Alienígena", category: "Outros", style: "alien", main: "#5a6b8a", second: "#2a3448", accent: "#c0ff3a", skin: "#7ee08a", pattern: "scales", glow: "#c0ff3a", desc: "Veio de muito longe." },
+  { id: "hacker-code", name: "Hacker de Código", category: "Outros", style: "coat", main: "#101916", second: "#050908", accent: "#18ff70", skin: "#e8c3a4", pattern: "circuit", glow: "#18ff70", desc: "Máscara digital, laptop aberto e uma trilha verde de códigos. +15% velocidade e +5% salto." },
 ];
 
 export const CHARACTER_BY_ID = Object.fromEntries(CHARACTERS.map((c) => [c.id, c])) as Record<string, CharacterDef>;
