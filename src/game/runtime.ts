@@ -1,6 +1,7 @@
 // Per-frame game state shared between the scene and the HUD, kept outside React.
 import { audio } from "./audio";
 import { MAP_BY_ID } from "./data/maps";
+import { CHARACTER_BY_ID } from "./data/characters";
 import { ParticlePool } from "./particles";
 import { Sim } from "./sim/sim";
 import type { ChallengeMode } from "./sim/generator";
@@ -33,10 +34,16 @@ export function startRun(mode: boolean | RunChallenge = false) {
   const training = challenge === "three-rows" || challenge === "nerdola" || challenge === "run-normal";
   const s = useSettings.getState();
   const map = MAP_BY_ID[s.map] ?? MAP_BY_ID.city;
+  const selectedCharacter = CHARACTER_BY_ID[s.character];
+  const codeSkinUnlocked = s.character === "hacker-code"
+    ? s.hackerSkinUnlocked
+    : s.unlockedCodeCharacters.includes(s.character);
+  const characterSpeedBonus = codeSkinUnlocked ? (selectedCharacter?.speedBonus ?? 0) : 0;
+  const characterJumpBonus = codeSkinUnlocked ? (selectedCharacter?.jumpBonus ?? 0) : 0;
   runtime.sim = new Sim({
     difficulty: s.difficulty,
-    speedMult: s.speedMult * (s.hackerSkinUnlocked && s.character === "hacker-code" ? 1.15 : 1),
-    jumpMult: s.hackerSkinUnlocked && s.character === "hacker-code" ? 1.05 : 1,
+    speedMult: s.speedMult * (1 + characterSpeedBonus),
+    jumpMult: 1 + characterJumpBonus,
     coinSize: s.coinSize,
     noCoin: s.hackUnlocked && s.noCoinMode,
     autoDodge: s.hackUnlocked && s.autoDodge,
