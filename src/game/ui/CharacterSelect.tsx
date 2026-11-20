@@ -12,6 +12,8 @@ export function CharacterSelect() {
   const set = useSettings((s) => s.set);
   const bestBy = useStats((s) => s.bestByCharacter);
   const hackerSkinUnlocked = useSettings((s) => s.hackerSkinUnlocked);
+  const settings = useSettings();
+  const [creatorOpen, setCreatorOpen] = useState(false);
   const [cat, setCat] = useState<Category>(CHARACTER_BY_ID[selected]?.category ?? "Ninjas");
   const cur = CHARACTER_BY_ID[selected];
   return (
@@ -77,6 +79,32 @@ export function CharacterSelect() {
             ))}
           </div>
         </div>
+        <section className="glass space-y-3 p-3">
+          <button type="button" onClick={() => setCreatorOpen((v) => !v)} className="flex w-full items-center justify-between rounded-lg bg-secondary px-3 py-2 text-left font-display text-base">
+            <span>🎨 Crie seu personagem</span><span>{creatorOpen ? "−" : "+"}</span>
+          </button>
+          {creatorOpen && (
+            <div className="space-y-3">
+              <label className="flex items-center justify-between gap-3 text-sm font-semibold"><span>Ativar meu visual personalizado</span><input type="checkbox" checked={settings.customCharacterEnabled} onChange={(e) => settings.set({ customCharacterEnabled: e.target.checked })} className="h-5 w-5 accent-primary" /></label>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {([{ key: "customMain", label: "Cor principal", value: settings.customMain }, { key: "customSecond", label: "Cor secundária", value: settings.customSecond }, { key: "customAccent", label: "Detalhes", value: settings.customAccent }, { key: "customSkin", label: "Pele", value: settings.customSkin }, { key: "customGlow", label: "Brilho / energia", value: settings.customGlow }] as const).map((item) => (
+                  <label key={item.key} className="flex items-center gap-2 rounded-lg bg-muted/60 p-2 text-xs font-semibold">
+                    <input type="color" value={item.value} onChange={(e) => settings.set({ [item.key]: e.target.value })} className="h-9 w-10 cursor-pointer rounded border-0 bg-transparent" />
+                    <span>{item.label}</span>
+                  </label>
+                ))}
+              </div>
+              <label className="block space-y-1 text-xs font-semibold">Tamanho do corpo: {Math.round(settings.customBodyScale * 100)}%
+                <input type="range" min="0.8" max="1.25" step="0.01" value={settings.customBodyScale} onChange={(e) => settings.set({ customBodyScale: Number(e.target.value) })} className="w-full accent-primary" />
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                <ArcadeButton className="py-2 text-xs" onClick={() => setScreen("accessories")}>Acessórios</ArcadeButton>
+                <ArcadeButton className="py-2 text-xs" onClick={() => setScreen("effects")}>Efeitos especiais</ArcadeButton>
+              </div>
+              <p className="text-[11px] text-muted-foreground">As cores e proporções ficam salvas neste aparelho. Os acessórios e efeitos usam os itens disponíveis nas respectivas lojas.</p>
+            </div>
+          )}
+        </section>
         <ArcadeButton variant="primary" className="w-full py-3 text-lg" onClick={() => setScreen("menu")}>
           SELECIONAR
         </ArcadeButton>
