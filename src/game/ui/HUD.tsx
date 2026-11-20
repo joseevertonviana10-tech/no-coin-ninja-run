@@ -67,7 +67,7 @@ export function HUD() {
   }, [best, mapId, district, timerColor, timerRgb, timerGlow, timerSize, timerFont]);
 
   return (
-    <div className="pointer-events-none absolute inset-0 select-none">
+    <div className="hud-screen pointer-events-none absolute inset-0 select-none">
       <div className="flex items-start justify-between gap-2 p-3 sm:p-4">
         <div className="flex flex-col gap-1.5">
           <span className="chip max-w-[40vw] truncate">{MAP_BY_ID[mapId]?.name}</span>
