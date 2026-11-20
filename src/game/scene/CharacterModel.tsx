@@ -782,6 +782,7 @@ export function Thigh({ def, m }: { def: CharacterDef; m: Mats }) {
   return <Cap r={0.096} len={0.28} m={mat} pos={[0, -0.22, 0]} />;
 }
 export function Sneakers({ def, m }: { def: CharacterDef; m: Mats }) {
+  if (def.style === "monkey" || def.style === "lizard" || def.style === "dinosaur" || def.style === "skeleton") return null;
   const upper = def.style === "robot" ? m.second : def.style === "knight" ? m.steel : m.main;
   return (
     <group position={[0, -0.43, -0.09]}>
