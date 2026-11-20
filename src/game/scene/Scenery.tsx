@@ -36,7 +36,7 @@ function mats(map: MapDef) {
     b2: std("#ffffff", { map: windowsTexture("#fff4cc", "#8a5a4a"), roughness: 0.5 }),
     b3: std("#ffffff", { map: windowsTexture("#d0f0ff", "#3a4a5a"), roughness: 0.4, metalness: 0.3 }),
     fb: std("#ffffff", { map: windowsTexture("#7ff", "#14122a"), emissive: new THREE.Color("#ffffff"), emissiveMap: windowsTexture("#7ff", "#14122a"), emissiveIntensity: 0.8 }),
-    roof: std("#4a4f58"),
+    roof: std(map.id === "snow" ? "#d8edfa" : map.id === "desert" ? "#b9824e" : map.id === "volcano" ? "#392f31" : map.id === "future" ? "#29375d" : "#4a4f58"),
     pole: std("#3a3f48", { metalness: 0.6, roughness: 0.4 }),
     lamp: glow("#fff1b0", 1.5),
     trunk: std("#5a3a22"),
@@ -78,7 +78,7 @@ type SM = ReturnType<typeof mats>;
 
 const DISTRICT_KINDS: Record<MapId, string[][]> = {
   city: [["building", "building", "lamp", "sign"], ["factory", "silo", "factory", "building"], ["house", "house", "fence", "pine"], ["parkTree", "bench", "bush", "parkTree"]],
-  snow: [["pine", "pine", "snowrock"], ["house", "pine", "ice"], ["ice", "snowrock", "pine"], ["pine", "ice", "snowrock"]],
+  snow: [["building", "pine", "snowrock"], ["house", "building", "pine", "ice"], ["building", "ice", "snowrock", "pine"], ["building", "pine", "ice", "snowrock"]],
   volcano: [["spire", "lavarock"], ["silo", "spire", "lavarock"], ["house", "spire", "lavarock"], ["spire", "lavarock"]],
   jungle: [["bigtree", "bush", "parrot"], ["house", "bigtree", "bush"], ["ruin", "bigtree"], ["bigtree", "parrot", "bush"]],
   race: [["stand", "billboard"], ["tires", "flag", "stand"], ["building", "tires"], ["stand", "flag", "billboard"]],
@@ -414,7 +414,7 @@ export function Scenery({ map, perSide }: { map: MapDef; perSide: number }) {
           x: 0,
           s: worldS,
           v,
-          h: map.id === "city" ? 12 + v * 26 : map.id === "future" ? 18 + v * 40 : map.id === "volcano" ? 6 + v * 12 : 0,
+          h: map.id === "future" ? 18 + v * 40 : map.id === "volcano" ? 6 + v * 12 : map.id === "city" || map.id === "snow" || map.id === "race" ? 12 + v * 26 : 0,
         });
       }
     return list;
