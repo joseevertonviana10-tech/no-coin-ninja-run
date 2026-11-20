@@ -29,8 +29,18 @@ export function useCharacterMats(def: CharacterDef): Mats {
   const mats = useMemo(() => {
     const tex = patternTexture(def.pattern);
     const metal = def.metal ?? 0;
-    const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-      new THREE.MeshToonMaterial({ color, gradientMap: CARTOON_RAMP, ...o } as THREE.MeshToonMaterialParameters);
+    const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) => {
+      const params: THREE.MeshToonMaterialParameters = { color, gradientMap: CARTOON_RAMP };
+      if (o.map) params.map = o.map;
+      if (o.emissive) params.emissive = o.emissive;
+      if (o.emissiveMap) params.emissiveMap = o.emissiveMap;
+      if (o.emissiveIntensity !== undefined) params.emissiveIntensity = o.emissiveIntensity;
+      if (o.transparent !== undefined) params.transparent = o.transparent;
+      if (o.opacity !== undefined) params.opacity = o.opacity;
+      if (o.side !== undefined) params.side = o.side;
+      if (o.depthWrite !== undefined) params.depthWrite = o.depthWrite;
+      return new THREE.MeshToonMaterial(params);
+    };
     return {
       main: std(def.main, { map: tex, metalness: metal, roughness: metal > 0.3 ? 0.35 : 0.75 }),
       second: std(def.second, { map: tex, metalness: metal * 0.6, roughness: 0.7 }),
