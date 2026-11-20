@@ -52,7 +52,6 @@ function Ground({ map }: { map: MapDef }) {
           ref={sideMat}
           gradientMap={CARTOON_RAMP}
           map={side}
-          roughness={0.95}
           emissive={map.sideEmissive ?? "#000000"}
           emissiveMap={map.sideEmissive ? side : null}
           emissiveIntensity={map.sideEmissive ? (map.id === "volcano" ? 1.6 : 0.6) : 0}
@@ -61,7 +60,8 @@ function Ground({ map }: { map: MapDef }) {
       {[-1, 1].map((s) => (
         <mesh key={s} position={[s * (TRACK_W / 2 + 0.1), map.id === "volcano" ? -0.3 : 0.08, -TRACK_LEN / 2 + 30]} receiveShadow castShadow>
           <boxGeometry args={[0.25, map.id === "volcano" ? 0.8 : 0.16, TRACK_LEN]} />
-          <meshStandardMaterial
+          <meshToonMaterial
+            gradientMap={CARTOON_RAMP}
             color={edge}
             emissive={map.id === "future" ? edge : "#000000"}
             emissiveIntensity={map.id === "future" ? 2 : 0}
@@ -128,7 +128,7 @@ function CartoonSky({ map, timeOfDay }: { map: MapDef; timeOfDay: "day" | "after
   const sky = useRef<THREE.Group>(null!);
   const clouds = useRef<(THREE.Group | null)[]>([]);
   const camera = useThree((state) => state.camera);
-  const palette = useMemo(() => {
+  const palette = useMemo<[string, string, string]>(() => {
     const themes: Record<MapDef["id"], [string, string, string]> = {
       city: ["#4d9be0", "#c8ecff", "#fff0ce"], snow: ["#568fc7", "#cce8fb", "#f5fbff"],
       volcano: ["#6b283c", "#f18b59", "#ffc078"], jungle: ["#3b9d7a", "#b7e8ae", "#ffe7a1"],
