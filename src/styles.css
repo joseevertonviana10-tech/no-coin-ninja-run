@@ -298,3 +298,157 @@
 @media (prefers-reduced-motion: reduce) { .screen-wipe, .district-chip { animation-duration: 1ms; } }
 
 .map-card-selected { box-shadow: 0 0 0 2px oklch(0.85 0.14 190 / 25%), 0 8px 24px oklch(0.85 0.14 190 / 12%); }
+
+
+/* Landscape-first mobile layout: keep the runner, touch keys and HUD clear of each other. */
+@media (orientation: landscape) and (max-height: 600px) {
+  #game-root {
+    width: 100vw;
+    height: 100dvh;
+    min-height: 100svh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  #game-root canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    touch-action: none;
+  }
+
+  #game-root .menu-screen {
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-around;
+    gap: 2vw;
+    overflow-y: auto;
+    padding: max(8px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)) !important;
+  }
+
+  #game-root .menu-screen > div:first-child {
+    width: 38%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #game-root .menu-screen > div:last-child {
+    width: min(58%, 620px);
+    max-width: none;
+    margin: 0;
+  }
+
+  #game-root .menu-screen h1 {
+    font-size: clamp(2.1rem, 7vh, 4.1rem);
+  }
+
+  #game-root .menu-screen .arcade-btn {
+    min-height: 38px;
+    padding: 0.45rem 0.7rem;
+    font-size: clamp(0.72rem, 2.2vh, 0.92rem);
+  }
+
+  #game-root .menu-screen .space-y-3 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.4rem;
+  }
+
+  #game-root .map-screen {
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2vw;
+    overflow-y: auto;
+    padding: max(8px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)) !important;
+  }
+
+  #game-root .map-screen > div:first-child {
+    width: 17%;
+    max-width: none;
+    margin: 0;
+  }
+
+  #game-root .map-screen > div:nth-child(2) {
+    width: 81%;
+    max-width: none;
+    margin: 0;
+  }
+
+  #game-root .map-grid {
+    max-height: 57dvh !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.35rem;
+    padding: 0.45rem;
+  }
+
+  #game-root .map-grid .map-card {
+    min-height: 54px;
+    gap: 0.5rem;
+    padding: 0.4rem;
+  }
+
+  #game-root .map-grid .map-swatch {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  #game-root .map-screen .arcade-btn {
+    min-height: 38px;
+    padding: 0.45rem 0.7rem;
+  }
+
+  #game-root .hud-screen > div:first-child {
+    align-items: flex-start;
+    padding: max(6px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) 4px max(10px, env(safe-area-inset-left));
+    gap: 0.5rem;
+  }
+
+  #game-root .hud-screen .hud-main-panel {
+    padding: 0.25rem 0.65rem;
+  }
+
+  #game-root .hud-screen .timer-text {
+    font-size: clamp(1.35rem, 5.4vh, 2.25rem) !important;
+    line-height: 1.05;
+  }
+
+  #game-root .hud-screen .chip,
+  #game-root .hud-screen .district-chip {
+    padding: 0.15rem 0.45rem;
+    font-size: clamp(0.55rem, 1.65vh, 0.7rem);
+  }
+
+  #game-root .virtual-controls-root {
+    padding: 6px max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  }
+
+  #game-root .virtual-controls-root .keycap {
+    width: clamp(40px, 8.5vh, 54px) !important;
+    height: clamp(40px, 8.5vh, 54px) !important;
+    border-radius: 0.85rem;
+  }
+
+  #game-root .virtual-controls-root .flex.flex-col.items-center {
+    gap: 4px !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 420px) {
+  #game-root .menu-screen > div:first-child .chip {
+    margin-top: 0.25rem;
+  }
+
+  #game-root .menu-screen .menu-subtitle,
+  #game-root .menu-screen p.text-\\[11px\\] {
+    display: none;
+  }
+
+  #game-root .hud-screen .district-chip {
+    display: none;
+  }
+
+  #game-root .virtual-controls-root .keycap {
+    width: 38px !important;
+    height: 38px !important;
+  }
+}
