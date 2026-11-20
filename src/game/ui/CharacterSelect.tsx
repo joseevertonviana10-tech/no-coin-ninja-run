@@ -39,7 +39,7 @@ export function CharacterSelect() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-muted/60 p-1">
+        <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-white/10 bg-white/5 p-1">
           <button type="button" onClick={() => { setCreatorOpen(false); setCodeOpen(false); }} className={cn("rounded-lg px-2 py-2 text-xs font-bold", !creatorOpen && !codeOpen ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>Personagens</button>
           <button type="button" onClick={() => { setCreatorOpen(false); setCodeOpen(true); }} className={cn("rounded-lg px-2 py-2 text-xs font-bold", codeOpen ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>PERSONAGENS DE CÓDIGO</button>
           <button type="button" onClick={() => { setCreatorOpen(true); setCodeOpen(false); }} className={cn("rounded-lg px-2 py-2 text-xs font-bold", creatorOpen ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>Crie seu personagem</button>
@@ -76,7 +76,7 @@ export function CharacterSelect() {
                 }}
                 className={cn(
                   "relative flex items-center gap-2 rounded-xl border p-2 text-left transition-colors",
-                  c.id === selected ? "border-accent bg-secondary" : "border-border bg-muted/60 hover:bg-secondary",
+                  c.id === selected ? "border-accent bg-secondary" : "border-white/10 bg-white/5 hover:bg-secondary",
                 )}
               >
                 <span
@@ -91,7 +91,7 @@ export function CharacterSelect() {
         </div>
         )}
         {codeOpen && (
-          <section className="glass space-y-3 p-3">
+          <section className="glass glass-soft space-y-3 p-3">
             <div>
               <div className="font-display text-lg text-accent">PERSONAGENS DE CÓDIGO</div>
               <p className="text-xs text-muted-foreground">As silhuetas escondem personagens secretos. Digite o código correspondente para revelar e desbloquear cada um.</p>
@@ -131,7 +131,7 @@ export function CharacterSelect() {
               <label className="flex items-center justify-between gap-3 text-sm font-semibold"><span>Ativar meu visual personalizado</span><input type="checkbox" checked={settings.customCharacterEnabled} onChange={(e) => settings.set({ customCharacterEnabled: e.target.checked })} className="h-5 w-5 accent-primary" /></label>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {([{ key: "customMain", label: "Cor principal", value: settings.customMain }, { key: "customSecond", label: "Cor secundária", value: settings.customSecond }, { key: "customAccent", label: "Detalhes", value: settings.customAccent }, { key: "customSkin", label: "Pele", value: settings.customSkin }, { key: "customGlow", label: "Brilho / energia", value: settings.customGlow }] as const).map((item) => (
-                  <label key={item.key} className="flex items-center gap-2 rounded-lg bg-muted/60 p-2 text-xs font-semibold">
+                  <label key={item.key} className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 p-2 text-xs font-semibold">
                     <input type="color" value={item.value} onChange={(e) => settings.set({ [item.key]: e.target.value } as Partial<Settings>)} className="h-9 w-10 cursor-pointer rounded border-0 bg-transparent" />
                     <span>{item.label}</span>
                   </label>
