@@ -768,6 +768,8 @@ export function Sneakers({ def, m }: { def: CharacterDef; m: Mats }) {
       <Ball r={0.105} m={upper} scale={[1.28, 0.78, 1.62]} />
       <Box s={[0.17, 0.035, 0.27]} m={m.white} pos={[0, -0.055, 0.005]} />
       <Box s={[0.12, 0.018, 0.025]} m={m.accent} pos={[0, 0.005, -0.09]} />
+      <Box s={[0.075, 0.022, 0.09]} m={m.white} pos={[0, 0.03, -0.105]} />
+      {[-0.035, 0.035].map((x) => <Box key={x} s={[0.045, 0.008, 0.012]} m={m.accent} pos={[x, 0.038, -0.1]} />)}
     </group>
   );
 }
@@ -790,7 +792,6 @@ export function Shin({ def, m }: { def: CharacterDef; m: Mats }) {
         <Box s={[0.08, 0.05, 0.18]} m={m.main} pos={[0, -0.43, -0.04]} />
       </group>
     );
-  const boot = def.style === "knight" ? m.steel : def.style === "samurai" ? m.dark : def.style === "alien" ? m.skin : m.dark;
   const shin = def.style === "knight" ? m.steel : def.style === "samurai" && def.armor === "full" ? m.main : def.style === "alien" ? m.skin : m.second;
   return (
     <group>
