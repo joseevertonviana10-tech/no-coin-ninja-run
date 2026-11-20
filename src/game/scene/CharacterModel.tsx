@@ -4,15 +4,25 @@ import * as THREE from "three";
 import type { CharacterDef } from "../data/characters";
 import { patternTexture } from "./textures";
 
+const CARTOON_RAMP = (() => {
+  const data = new Uint8Array([78, 78, 78, 255, 142, 142, 142, 255, 205, 205, 205, 255, 255, 255, 255, 255]);
+  const texture = new THREE.DataTexture(data, 4, 1, THREE.RGBAFormat);
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+})();
+
 export interface Mats {
-  main: THREE.MeshStandardMaterial;
-  second: THREE.MeshStandardMaterial;
-  accent: THREE.MeshStandardMaterial;
-  skin: THREE.MeshStandardMaterial;
-  dark: THREE.MeshStandardMaterial;
-  white: THREE.MeshStandardMaterial;
-  steel: THREE.MeshStandardMaterial;
-  glow: THREE.MeshStandardMaterial;
+  main: THREE.MeshToonMaterial;
+  second: THREE.MeshToonMaterial;
+  accent: THREE.MeshToonMaterial;
+  skin: THREE.MeshToonMaterial;
+  dark: THREE.MeshToonMaterial;
+  white: THREE.MeshToonMaterial;
+  steel: THREE.MeshToonMaterial;
+  glow: THREE.MeshToonMaterial;
 }
 
 export function useCharacterMats(def: CharacterDef): Mats {
@@ -20,7 +30,7 @@ export function useCharacterMats(def: CharacterDef): Mats {
     const tex = patternTexture(def.pattern);
     const metal = def.metal ?? 0;
     const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-      new THREE.MeshStandardMaterial({ color, roughness: 0.68, flatShading: false, ...o });
+      new THREE.MeshToonMaterial({ color, gradientMap: CARTOON_RAMP, ...o } as THREE.MeshToonMaterialParameters);
     return {
       main: std(def.main, { map: tex, metalness: metal, roughness: metal > 0.3 ? 0.35 : 0.75 }),
       second: std(def.second, { map: tex, metalness: metal * 0.6, roughness: 0.7 }),
