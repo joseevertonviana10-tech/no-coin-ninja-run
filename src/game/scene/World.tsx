@@ -616,6 +616,7 @@ export function World() {
       <Lights map={map} quality={quality} timeOfDay={timeOfDay} />
       <Ground map={map} />
       <TrackArchitecture map={map} />
+      <Tunnels map={map} />
       <Scenery key={map.id + perSide} map={map} perSide={perSide} />
       <Obstacles map={map} />
       <Coins />
