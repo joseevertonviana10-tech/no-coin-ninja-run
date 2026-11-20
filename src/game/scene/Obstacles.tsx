@@ -8,11 +8,21 @@ import type { Sim } from "../sim/sim";
 import type { Obstacle } from "../sim/types";
 import { crowdTexture, stripeTexture, windowsTexture } from "./textures";
 
+const CARTOON_RAMP = (() => {
+  const data = new Uint8Array([78, 78, 78, 255, 142, 142, 142, 255, 205, 205, 205, 255, 255, 255, 255, 255]);
+  const texture = new THREE.DataTexture(data, 4, 1, THREE.RGBAFormat);
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+})();
+
 type M = ReturnType<typeof makeMats>;
 
 function makeMats(map: MapDef) {
   const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-    new THREE.MeshStandardMaterial({ color, roughness: 0.66, flatShading: false, ...o });
+    new THREE.MeshToonMaterial({ color, gradientMap: CARTOON_RAMP, ...o } as THREE.MeshToonMaterialParameters);
   const glow = (color: string, i = 2) => std(color, { emissive: new THREE.Color(color), emissiveIntensity: i, roughness: 0.3 });
   const id = map.id;
   const trainColor: Record<MapId, string> = { city: "#d9dde3", snow: "#c8202a", volcano: "#3a3330", jungle: "#6b4a2b", race: "#f4f4f4", desert: "#8a5a32", future: "#eef2ff" };
