@@ -17,6 +17,13 @@ const zero = (): Pose => Object.fromEntries(JOINTS.map((j) => [j, 0])) as Pose;
 export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: number; lane: number; finishAt: number; finished: boolean } }) {
   const m = useCharacterMats(def);
   const allRgb = useSettings((s) => s.hackUnlocked && s.allCharactersRgb);
+  const customEnabled = useSettings((s) => s.customCharacterEnabled && !bot);
+  const customMain = useSettings((s) => s.customMain);
+  const customSecond = useSettings((s) => s.customSecond);
+  const customAccent = useSettings((s) => s.customAccent);
+  const customSkin = useSettings((s) => s.customSkin);
+  const customGlow = useSettings((s) => s.customGlow);
+  const customBodyScale = useSettings((s) => s.customBodyScale);
   const accessory = useSettings((s) => s.equippedAccessories[def.id]);
   const timeOfDay = useSettings((s) => s.timeOfDay);
   const root = useRef<THREE.Group>(null!);
@@ -47,6 +54,13 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
       m.glow.color.setHSL(hue, 1, 0.62);
       m.glow.emissive.setHSL(hue, 1, 0.28);
       m.main.emissive.setHSL(hue, 0.9, 0.1);
+    } else if (customEnabled) {
+      m.main.color.set(customMain);
+      m.second.color.set(customSecond);
+      m.accent.color.set(customAccent);
+      m.skin.color.set(customSkin);
+      m.glow.color.set(customGlow);
+      m.glow.emissive.set(customGlow);
     } else if (def.id === "monkey-rainbow") {
       const hue = (t * 0.22) % 1;
       m.main.color.setHSL(hue, 0.9, 0.48);
@@ -271,7 +285,9 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
     root.current.rotation.y = s.spin;
     visual.current.rotation.set(c.vx, 0, c.vz);
     visual.current.position.z = c.z;
-    visual.current.scale.y = THREE.MathUtils.damp(visual.current.scale.y, squash, 18, dt);
+    visual.current.scale.x = customEnabled ? customBodyScale : 1;
+    visual.current.scale.z = customEnabled ? customBodyScale : 1;
+    visual.current.scale.y = THREE.MathUtils.damp(visual.current.scale.y, squash * (customEnabled ? customBodyScale : 1), 18, dt);
     hips.current.position.y = c.hipY;
     torso.current.rotation.set(c.tx, 0, c.tz);
     head.current.rotation.set(c.hx, c.hy, 0);
