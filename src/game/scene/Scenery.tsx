@@ -18,8 +18,18 @@ const CARTOON_RAMP = (() => {
 type Prop = { kind: string; side: number; x: number; s: number; v: number; h: number };
 
 function mats(map: MapDef) {
-  const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-    new THREE.MeshToonMaterial({ color, gradientMap: CARTOON_RAMP, ...o } as THREE.MeshToonMaterialParameters);
+  const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) => {
+    const params: THREE.MeshToonMaterialParameters = { color, gradientMap: CARTOON_RAMP };
+    if (o.map) params.map = o.map;
+    if (o.emissive) params.emissive = o.emissive;
+    if (o.emissiveMap) params.emissiveMap = o.emissiveMap;
+    if (o.emissiveIntensity !== undefined) params.emissiveIntensity = o.emissiveIntensity;
+    if (o.transparent !== undefined) params.transparent = o.transparent;
+    if (o.opacity !== undefined) params.opacity = o.opacity;
+    if (o.side !== undefined) params.side = o.side;
+    if (o.depthWrite !== undefined) params.depthWrite = o.depthWrite;
+    return new THREE.MeshToonMaterial(params);
+  };
   const glow = (c: string, i = 2) => std(c, { emissive: new THREE.Color(c), emissiveIntensity: i });
   return {
     b1: std("#ffffff", { map: windowsTexture("#ffe9a8", "#5a6b80"), roughness: 0.5 }),
