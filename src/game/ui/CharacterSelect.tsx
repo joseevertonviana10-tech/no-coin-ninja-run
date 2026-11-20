@@ -35,6 +35,11 @@ export function CharacterSelect() {
             </div>
           </div>
         </div>
+        <div className="grid grid-cols-2 gap-2 rounded-xl bg-muted/60 p-1">
+          <button type="button" onClick={() => setCreatorOpen(false)} className={cn("rounded-lg px-3 py-2 text-sm font-bold", !creatorOpen ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>Personagens</button>
+          <button type="button" onClick={() => setCreatorOpen(true)} className={cn("rounded-lg px-3 py-2 text-sm font-bold", creatorOpen ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>Crie seu personagem</button>
+        </div>
+        {!creatorOpen && (
         <div className="glass p-3">
           <div className="flex gap-1.5 overflow-x-auto pb-2">
             {CATEGORIES.map((c) => (
@@ -79,11 +84,9 @@ export function CharacterSelect() {
             ))}
           </div>
         </div>
+        )}
+        {creatorOpen && (
         <section className="glass space-y-3 p-3">
-          <button type="button" onClick={() => setCreatorOpen((v) => !v)} className="flex w-full items-center justify-between rounded-lg bg-secondary px-3 py-2 text-left font-display text-base">
-            <span>🎨 Crie seu personagem</span><span>{creatorOpen ? "−" : "+"}</span>
-          </button>
-          {creatorOpen && (
             <div className="space-y-3">
               <label className="flex items-center justify-between gap-3 text-sm font-semibold"><span>Ativar meu visual personalizado</span><input type="checkbox" checked={settings.customCharacterEnabled} onChange={(e) => settings.set({ customCharacterEnabled: e.target.checked })} className="h-5 w-5 accent-primary" /></label>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -103,8 +106,8 @@ export function CharacterSelect() {
               </div>
               <p className="text-[11px] text-muted-foreground">As cores e proporções ficam salvas neste aparelho. Os acessórios e efeitos usam os itens disponíveis nas respectivas lojas.</p>
             </div>
-          )}
         </section>
+        )}
         <ArcadeButton variant="primary" className="w-full py-3 text-lg" onClick={() => setScreen("menu")}>
           SELECIONAR
         </ArcadeButton>
