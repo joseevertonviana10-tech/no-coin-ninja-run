@@ -1,6 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import type { MapDef, MapId } from "../data/maps";
 import { runtime } from "../runtime";
 import { LANE_W } from "../sim/constants";
@@ -87,10 +88,18 @@ function makeMats(map: MapDef) {
   };
 }
 
+const obstacleBoxCache = new Map<string, RoundedBoxGeometry>();
+function obstacleBox(s: [number, number, number]) {
+  const key = s.join(":");
+  let geometry = obstacleBoxCache.get(key);
+  if (!geometry) {
+    geometry = new RoundedBoxGeometry(s[0], s[1], s[2], 2, Math.min(...s) * 0.1);
+    obstacleBoxCache.set(key, geometry);
+  }
+  return geometry;
+}
 const B = ({ s, m, p, r = [0, 0, 0] }: { s: [number, number, number]; m: THREE.Material; p: [number, number, number]; r?: [number, number, number] }) => (
-  <mesh position={p} rotation={r} material={m} castShadow receiveShadow>
-    <boxGeometry args={s} />
-  </mesh>
+  <mesh position={p} rotation={r} geometry={obstacleBox(s)} material={m} castShadow receiveShadow />
 );
 const Cyl = ({ a, m, p, r = [0, 0, 0] }: { a: [number, number, number, number?]; m: THREE.Material; p: [number, number, number]; r?: [number, number, number] }) => (
   <mesh position={p} rotation={r} material={m} castShadow receiveShadow>
