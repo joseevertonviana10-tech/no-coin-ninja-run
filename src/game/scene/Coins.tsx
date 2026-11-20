@@ -33,7 +33,7 @@ export function Coins() {
         map: map ?? null,
         metalness: coinColor === "black" ? 0.6 : 0.85,
         roughness: 0.22,
-        flatShading: true,
+        flatShading: false,
         emissive,
         emissiveIntensity: (rainbow ? 0.95 : 0.35) * coinGlow,
         toneMapped: false,
