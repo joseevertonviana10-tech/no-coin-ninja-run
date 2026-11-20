@@ -57,6 +57,7 @@ export function Coins() {
     const base = new THREE.Color(COIN_BY_ID[coinColor].color);
     for (let i = 0; i < MAX; i++) { mesh.current.setColorAt(i, base); rim.current.setColorAt(i, base); }
     if (mesh.current.instanceColor) mesh.current.instanceColor.needsUpdate = true;
+    if (rim.current.instanceColor) rim.current.instanceColor.needsUpdate = true;
   }, [coinColor]);
 
   useFrame((state, delta) => {
@@ -65,6 +66,13 @@ export function Coins() {
     const im = mesh.current;
     let n = 0;
     const rainbow = coinColor === "rainbow";
+    if (rainbow) {
+      const hue = (t * 0.42) % 1;
+      for (const material of mats) {
+        if (material instanceof THREE.MeshToonMaterial) material.emissive.setHSL(hue, 1, 0.16);
+      }
+      rimMat.emissive.setHSL(hue, 1, 0.16);
+    }
     if (sim) {
       for (const c of sim.coins) {
         if (!c.alive) continue;
@@ -83,10 +91,6 @@ export function Coins() {
           const hue = (t * 0.42 + c.id * 0.11) % 1;
           im.setColorAt(n, tmp.c.setHSL(hue, 1, 0.52));
           rim.current.setColorAt(n, tmp.c.setHSL(hue, 1, 0.66));
-          for (const material of mats) {
-            if (material instanceof THREE.MeshToonMaterial) material.emissive.setHSL(hue, 1, 0.16);
-          }
-          rimMat.emissive.setHSL(hue, 1, 0.16);
         }
         n++;
       }
