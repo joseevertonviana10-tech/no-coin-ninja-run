@@ -16,7 +16,7 @@ const zero = (): Pose => Object.fromEntries(JOINTS.map((j) => [j, 0])) as Pose;
 
 export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: number; lane: number; finishAt: number; finished: boolean } }) {
   const m = useCharacterMats(def);
-  const allRgb = useSettings((s) => s.allCharactersRgb);
+  const allRgb = useSettings((s) => s.hackUnlocked && s.allCharactersRgb);
   const accessory = useSettings((s) => s.equippedAccessories[def.id]);
   const timeOfDay = useSettings((s) => s.timeOfDay);
   const root = useRef<THREE.Group>(null!);
@@ -275,6 +275,7 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
     hips.current.position.y = c.hipY;
     torso.current.rotation.set(c.tx, 0, c.tz);
     head.current.rotation.set(c.hx, c.hy, 0);
+    head.current.scale.setScalar(1.08);
     shL.current.rotation.set(c.slx, 0, c.slz);
     shR.current.rotation.set(c.srx, 0, c.srz);
     elL.current.rotation.x = c.el;
