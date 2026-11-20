@@ -16,6 +16,11 @@ export function HUD() {
   const keys = useStats((s) => s.keys);
   const mapId = useSettings((s) => s.map);
   const charId = useSettings((s) => s.character);
+  const timerColor = useSettings((s) => s.timerColor);
+  const timerRgb = useSettings((s) => s.timerRgb);
+  const timerGlow = useSettings((s) => s.timerGlow);
+  const timerSize = useSettings((s) => s.timerSize);
+  const timerFont = useSettings((s) => s.timerFont);
   const [dead, setDead] = useState<string | null>(null);
   const [beating, setBeating] = useState(false);
   const [raceTime, setRaceTime] = useState(0);
@@ -32,6 +37,10 @@ export function HUD() {
       const sim = runtime.sim;
       if (sim && timer.current) {
         timer.current.textContent = formatTime(sim.time);
+        timer.current.style.color = timerRgb ? "hsl(" + ((performance.now() * 0.045) % 360) + " 100% 68%)" : timerColor;
+        timer.current.style.textShadow = timerGlow ? "0 0 7px currentColor, 0 0 18px currentColor" : "0 2px 4px rgba(0,0,0,0.9)";
+        timer.current.style.fontSize = (3 * timerSize) + "rem";
+        timer.current.style.fontFamily = timerFont === "mono" ? "monospace" : timerFont === "rounded" ? "system-ui, sans-serif" : "";
         const currentDistrict = getDistrict(mapId, sim.dist);
         if (currentDistrict !== district) setDistrict(currentDistrict);
         if (sim.time < raceClock.current) { raceClock.current = 0; setRaceTime(0); }
@@ -55,7 +64,7 @@ export function HUD() {
     };
     loop();
     return () => cancelAnimationFrame(raf);
-  }, [best, mapId, district]);
+  }, [best, mapId, district, timerColor, timerRgb, timerGlow, timerSize, timerFont]);
 
   return (
     <div className="pointer-events-none absolute inset-0 select-none">
