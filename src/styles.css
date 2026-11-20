@@ -106,7 +106,7 @@
   --coin-foreground: oklch(0.22 0.05 70);
   --success: oklch(0.82 0.18 150);
   --ink: oklch(0.12 0.025 265);
-  --panel: oklch(0.19 0.035 265 / 0.82);
+  --panel: oklch(0.19 0.035 265 / 0.52);
   --arcade-depth: oklch(0.42 0.17 28);
   --chart-1: oklch(0.66 0.23 28);
   --chart-2: oklch(0.85 0.14 190);
@@ -146,10 +146,15 @@
 @layer components {
   .glass {
     background: var(--panel);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid oklch(1 0 0 / 12%);
+    backdrop-filter: blur(14px) saturate(125%);
+    -webkit-backdrop-filter: blur(14px) saturate(125%);
     border-radius: var(--radius-xl);
+  }
+  .glass-soft {
+    background: oklch(0.12 0.025 265 / 38%);
+    border-color: oklch(1 0 0 / 10%);
+    box-shadow: 0 12px 32px oklch(0.05 0.02 265 / 14%);
   }
   .arcade-btn {
     font-family: var(--font-display);
