@@ -30,7 +30,7 @@ export function Menu() {
   const map = MAP_BY_ID[s.map];
   const ch = CHARACTER_BY_ID[s.character];
   return (
-    <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-4 sm:p-8">
+    <div className="menu-screen pointer-events-none absolute inset-0 flex flex-col justify-between p-4 sm:p-8">
       <div className="pointer-events-auto mx-auto w-full max-w-md animate-pop-in pt-2 sm:mx-0 sm:max-w-sm">
         <Logo />
         <div className="mt-3 flex justify-center gap-2">
