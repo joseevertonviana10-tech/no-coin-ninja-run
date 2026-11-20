@@ -66,7 +66,7 @@ export function VirtualControls() {
   return (
     <div
       className={cn(
-        "pointer-events-none absolute bottom-0 flex p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]",
+        "virtual-controls-root pointer-events-none absolute bottom-0 flex p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]",
         pos === "left" && "left-0",
         pos === "right" && "right-0",
         pos === "center" && "inset-x-0 justify-center",
