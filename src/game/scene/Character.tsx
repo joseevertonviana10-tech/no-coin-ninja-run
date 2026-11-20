@@ -67,6 +67,17 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
       m.second.color.setHSL((hue + 0.34) % 1, 0.82, 0.62);
       m.accent.color.setHSL((hue + 0.67) % 1, 0.95, 0.58);
       m.main.emissive.setHSL(hue, 0.85, 0.12);
+    } else {
+      m.main.color.set(def.main);
+      m.second.color.set(def.second);
+      m.accent.color.set(def.accent);
+      m.skin.color.set(def.skin);
+      m.glow.color.set(def.glow ?? def.accent);
+      m.main.emissive.set("#000000");
+      m.skin.emissive.set(def.id === "zombie-rad" ? (def.glow ?? "#000000") : "#000000");
+      m.skin.emissiveIntensity = def.id === "zombie-rad" ? 0.25 : 0;
+      m.glow.emissive.set(def.glow ?? def.accent);
+      m.glow.emissiveIntensity = def.glow ? 2.2 : 0.3;
     }
     const sim = runtime.sim;
     const mode = runtime.mode;
