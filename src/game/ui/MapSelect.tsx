@@ -11,7 +11,7 @@ export function MapSelect() {
   const s = useSettings();
   const bestBy = useStats((st) => st.bestByMap);
   return (
-    <div className="absolute inset-0 flex flex-col justify-between gap-3 p-4 sm:p-6">
+    <div className="map-screen absolute inset-0 flex flex-col justify-between gap-3 p-4 sm:p-6">
       <div className="mx-auto w-full max-w-2xl">
         <ScreenHeader title="Mapas" onBack={() => setScreen("menu")} />
       </div>
