@@ -32,13 +32,15 @@ export class TrackGenerator {
       if (this.nextS >= this.nextTunnel) {
         const s = this.nextS;
         const openSides = ([-1, 1] as const).filter((lane) => this.blocked(lane) < s + TUNNEL_APPROACH - 2);
-        if (openSides.length === 0) {
+        const reachableSides = openSides.filter((lane) => Math.abs(lane - this.safeLane) <= 1);
+        const routes = reachableSides.length ? reachableSides : openSides;
+        if (routes.length === 0) {
           // Let an earlier train clear before committing to a tunnel route.
           this.nextS += Math.max(8, gap * 0.75);
           changed = true;
           continue;
         }
-        const safeSide = this.rng.pick(openSides) ?? openSides[0]!;
+        const safeSide = this.rng.pick(routes) ?? routes[0]!;
         this.safeLane = safeSide;
         this.rows.push({ s, safe: safeSide });
 
