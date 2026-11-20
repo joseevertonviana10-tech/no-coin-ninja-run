@@ -16,7 +16,7 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
   const [tab, setTab] = useState<Tab>("Gráficos");
   const [secretCode, setSecretCode] = useState("");
   const [secretMessage, setSecretMessage] = useState("");
-  const normalizeCode = (value: string) => value.normalize("NFKC").replace(/[\\u200B-\\u200D\\uFEFF]/g, "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const normalizeCode = (value: string) => value.normalize("NFKC").replace(/[\u200B-\u200D\uFEFF]/g, "").toUpperCase().replace(/[^A-Z0-9]/g, "");
   const back = onBack ?? (() => setScreen("menu"));
   const visibleTabs = s.hackUnlocked ? TABS : TABS.filter((t) => t !== "Painel Hack");
   return (
