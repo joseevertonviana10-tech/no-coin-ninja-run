@@ -27,13 +27,13 @@ const DOR = [0, 2, 3, 5, 7, 9, 10];
 
 const _ = null;
 const MUSIC: Record<MapId, MusicDef> = {
-  city: { bpm: 112, root: 45, scale: DOR, prog: [0, 3, 4, 3], bass: [0, _, 0, _, 4, _, 0, _, 0, _, 6, _, 4, _, 2, _], lead: [7, _, 9, _, 11, _, 9, _, _, 7, _, _, 4, _, _, _], kick: "x...x...x...x...", snare: "....x.......x...", hat: "x.x.x.x.x.x.x.xx", leadWave: "square", bassWave: "sawtooth", leadGain: 0.05 },
-  snow: { bpm: 96, root: 52, scale: MAJ, prog: [0, 5, 3, 4], bass: [0, _, _, _, 4, _, _, _, 0, _, _, _, 4, _, _, _], lead: [7, 9, 11, 14, _, 11, 9, _, 7, _, 4, _, 9, _, _, _], kick: "x.......x.......", snare: "........x.......", hat: "..x...x...x...x.", leadWave: "triangle", bassWave: "triangle", leadGain: 0.09 },
-  volcano: { bpm: 128, root: 38, scale: PHRYG, prog: [0, 1, 0, 6], bass: [0, 0, _, 0, _, 0, 1, _, 0, 0, _, 0, _, 4, 1, _], lead: [7, _, _, 8, _, _, 7, _, 11, _, 8, _, 7, _, _, _], kick: "x..x..x.x..x..x.", snare: "....x.......x..x", hat: "x.xxx.xxx.xxx.xx", leadWave: "sawtooth", bassWave: "sawtooth", leadGain: 0.035 },
-  jungle: { bpm: 104, root: 50, scale: PENTA, prog: [0, 3, 1, 4], bass: [0, _, _, 2, _, _, 4, _, 0, _, _, 2, _, 4, _, _], lead: [9, 7, _, 4, 7, _, 9, _, 12, _, 9, 7, _, 4, _, _], kick: "x.....x...x.....", snare: "...x......x..x..", hat: "x..x..x..x..x.x.", leadWave: "triangle", bassWave: "sine", leadGain: 0.1 },
-  race: { bpm: 140, root: 40, scale: MIN, prog: [0, 5, 6, 4], bass: [0, 0, 7, 0, 0, 7, 0, 0, 0, 0, 7, 0, 5, 5, 6, 6], lead: [7, _, 7, _, 9, _, 10, _, 9, _, 7, _, 4, _, 5, _], kick: "x...x...x...x...", snare: "....x.......x...", hat: "xxxxxxxxxxxxxxxx", leadWave: "square", bassWave: "square", leadGain: 0.035 },
-  desert: { bpm: 100, root: 47, scale: PHRYG, prog: [0, 1, 0, 1], bass: [0, _, _, 0, _, _, 0, _, 1, _, _, 1, _, _, 0, _], lead: [7, 8, _, 7, 5, _, 4, _, 5, 4, _, 1, 0, _, _, _], kick: "x.....x...x.....", snare: "....x.......x...", hat: "x.xx..x.x.xx..x.", leadWave: "sawtooth", bassWave: "triangle", leadGain: 0.04 },
-  future: { bpm: 124, root: 45, scale: MIN, prog: [0, 5, 2, 6], bass: [0, _, 7, _, 0, _, 7, _, 0, _, 7, _, 0, _, 7, _], lead: [0, 2, 4, 7, 9, 7, 4, 2, 0, 2, 4, 7, 9, 11, 9, 7], kick: "x...x...x...x...", snare: "....x.......x...", hat: "..x...x...x...x.", leadWave: "sawtooth", bassWave: "sawtooth", leadGain: 0.03 },
+  city: { bpm: 94, root: 45, scale: DOR, prog: [0, 3, 4, 3], bass: [0, _, 0, _, 4, _, 0, _, 0, _, 6, _, 4, _, 2, _], lead: [7, _, 9, _, 11, _, 9, _, _, 7, _, _, 4, _, _, _], kick: "x...x...x...x...", snare: "....x.......x...", hat: "x.x.x.x.x.x.x.xx", leadWave: "square", bassWave: "sawtooth", leadGain: 0.05 },
+  snow: { bpm: 88, root: 52, scale: MAJ, prog: [0, 5, 3, 4], bass: [0, _, _, _, 4, _, _, _, 0, _, _, _, 4, _, _, _], lead: [7, 9, 11, 14, _, 11, 9, _, 7, _, 4, _, 9, _, _, _], kick: "x.......x.......", snare: "........x.......", hat: "..x...x...x...x.", leadWave: "triangle", bassWave: "triangle", leadGain: 0.09 },
+  volcano: { bpm: 142, root: 38, scale: PHRYG, prog: [0, 1, 0, 6], bass: [0, 0, _, 0, _, 0, 1, _, 0, 0, _, 0, _, 4, 1, _], lead: [7, _, _, 8, _, _, 7, _, 11, _, 8, _, 7, _, _, _], kick: "x..x..x.x..x..x.", snare: "....x.......x..x", hat: "x.xxx.xxx.xxx.xx", leadWave: "sawtooth", bassWave: "sawtooth", leadGain: 0.035 },
+  jungle: { bpm: 108, root: 50, scale: PENTA, prog: [0, 3, 1, 4], bass: [0, _, _, 2, _, _, 4, _, 0, _, _, 2, _, 4, _, _], lead: [9, 7, _, 4, 7, _, 9, _, 12, _, 9, 7, _, 4, _, _], kick: "x.....x...x.....", snare: "...x......x..x..", hat: "x..x..x..x..x.x.", leadWave: "triangle", bassWave: "sine", leadGain: 0.1 },
+  race: { bpm: 148, root: 40, scale: MIN, prog: [0, 5, 6, 4], bass: [0, 0, 7, 0, 0, 7, 0, 0, 0, 0, 7, 0, 5, 5, 6, 6], lead: [7, _, 7, _, 9, _, 10, _, 9, _, 7, _, 4, _, 5, _], kick: "x...x...x...x...", snare: "....x.......x...", hat: "xxxxxxxxxxxxxxxx", leadWave: "square", bassWave: "square", leadGain: 0.035 },
+  desert: { bpm: 102, root: 47, scale: PHRYG, prog: [0, 1, 0, 1], bass: [0, _, _, 0, _, _, 0, _, 1, _, _, 1, _, _, 0, _], lead: [7, 8, _, 7, 5, _, 4, _, 5, 4, _, 1, 0, _, _, _], kick: "x.....x...x.....", snare: "....x.......x...", hat: "x.xx..x.x.xx..x.", leadWave: "sawtooth", bassWave: "triangle", leadGain: 0.04 },
+  future: { bpm: 128, root: 45, scale: MIN, prog: [0, 5, 2, 6], bass: [0, _, 7, _, 0, _, 7, _, 0, _, 7, _, 0, _, 7, _], lead: [0, 2, 4, 7, 9, 7, 4, 2, 0, 2, 4, 7, 9, 11, 9, 7], kick: "x...x...x...x...", snare: "....x.......x...", hat: "..x...x...x...x.", leadWave: "sawtooth", bassWave: "sawtooth", leadGain: 0.03 },
 };
 
 const midi = (n: number) => 440 * Math.pow(2, (n - 69) / 12);
@@ -43,6 +43,11 @@ class AudioEngine {
   private master!: GainNode;
   private sfx!: GainNode;
   private music!: GainNode;
+  private ambientBus!: GainNode;
+  private ambientSource: AudioBufferSourceNode | null = null;
+  private ambientFilter: BiquadFilterNode | null = null;
+  private ambientGain: GainNode | null = null;
+  private ambienceOn = true;
   private ui!: GainNode;
   private noiseBuf!: AudioBuffer;
   private vol = { master: 0.8, sfx: 0.8, music: 0.5, on: true };
@@ -67,9 +72,11 @@ class AudioEngine {
       this.master.connect(limiter);
       this.sfx = ctx.createGain();
       this.music = ctx.createGain();
+      this.ambientBus = ctx.createGain();
       this.ui = ctx.createGain();
       this.sfx.connect(this.master);
       this.music.connect(this.master);
+      this.ambientBus.connect(this.master);
       this.ui.connect(this.master);
       const len = ctx.sampleRate;
       this.noiseBuf = ctx.createBuffer(1, len, ctx.sampleRate);
@@ -81,7 +88,57 @@ class AudioEngine {
     if (this.ctx.state === "suspended") void this.ctx.resume();
   }
 
-  setVolumes(v: { master: number; sfx: number; music: number; on: boolean }) {
+  setAmbience(enabled: boolean, map: MapId) {
+    this.ambienceOn = enabled;
+    this.pendingMap = map;
+    if (!this.ctx) return;
+    if (enabled) this.startAmbience(map);
+    else this.stopAmbience();
+  }
+
+  private startAmbience(map: MapId) {
+    this.stopAmbience();
+    if (!this.ctx || !this.ambienceOn || !this.vol.on) return;
+    const profiles: Record<MapId, { type: BiquadFilterType; frequency: number; gain: number }> = {
+      city: { type: "highpass", frequency: 1500, gain: 0.075 },
+      snow: { type: "lowpass", frequency: 420, gain: 0.095 },
+      volcano: { type: "lowpass", frequency: 680, gain: 0.065 },
+      jungle: { type: "bandpass", frequency: 1250, gain: 0.045 },
+      race: { type: "bandpass", frequency: 520, gain: 0.035 },
+      desert: { type: "lowpass", frequency: 850, gain: 0.055 },
+      future: { type: "bandpass", frequency: 2600, gain: 0.035 },
+    };
+    const profile = profiles[map];
+    const source = this.ctx.createBufferSource();
+    const filter = this.ctx.createBiquadFilter();
+    const gain = this.ctx.createGain();
+    source.buffer = this.noiseBuf;
+    source.loop = true;
+    filter.type = profile.type;
+    filter.frequency.value = profile.frequency;
+    filter.Q.value = map === "jungle" || map === "future" ? 0.8 : 0.35;
+    gain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
+    gain.gain.setTargetAtTime(profile.gain, this.ctx.currentTime, 0.8);
+    source.connect(filter).connect(gain).connect(this.ambientBus);
+    source.start();
+    this.ambientSource = source;
+    this.ambientFilter = filter;
+    this.ambientGain = gain;
+  }
+
+  private stopAmbience() {
+    if (this.ambientSource) {
+      try { this.ambientSource.stop(); } catch { /* already stopped */ }
+      this.ambientSource.disconnect();
+    }
+    this.ambientFilter?.disconnect();
+    this.ambientGain?.disconnect();
+    this.ambientSource = null;
+    this.ambientFilter = null;
+    this.ambientGain = null;
+  }
+
+  setVolumes(v: { master: number; sfx: number; music: number; on: boolean })
     this.vol = v;
     this.applyGains();
   }
@@ -191,6 +248,7 @@ class AudioEngine {
     if (!this.ctx) return;
     this.stopMusic();
     const def = MUSIC[map];
+    this.startAmbience(map);
     this.seq = { def, step: 0, next: this.ctx.currentTime + 0.1, timer: 0 };
     const tick = () => {
       const s = this.seq;
@@ -208,6 +266,7 @@ class AudioEngine {
   stopMusic() {
     if (this.seq) window.clearInterval(this.seq.timer);
     this.seq = null;
+    this.stopAmbience();
   }
 
   private playStep(d: MusicDef, step: number, t: number, stepDur: number) {
