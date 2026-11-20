@@ -99,7 +99,7 @@ export const useSettings = create<SettingsStore>()(
       set: (patch) => set(patch),
       reset: () => set(DEFAULT_SETTINGS),
     }),
-    { name: "nocoin-settings-v1", version: 2, storage: createJSONStorage(() => localStorage), migrate: (persisted, version) => version < 2 ? { ...(persisted as SettingsStore), hackUnlocked: false } : persisted as SettingsStore },
+    { name: "nocoin-settings-v1", version: 2, storage: createJSONStorage(() => localStorage), migrate: (persisted, version) => version < 2 ? { ...(persisted as SettingsStore), hackUnlocked: false, allCharactersRgb: false } : persisted as SettingsStore },
   ),
 );
 
