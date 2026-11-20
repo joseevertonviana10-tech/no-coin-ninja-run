@@ -5,11 +5,21 @@ import type { MapDef, MapId } from "../data/maps";
 import { runtime } from "../runtime";
 import { crowdTexture, windowsTexture } from "./textures";
 
+const CARTOON_RAMP = (() => {
+  const data = new Uint8Array([78, 78, 78, 255, 142, 142, 142, 255, 205, 205, 205, 255, 255, 255, 255, 255]);
+  const texture = new THREE.DataTexture(data, 4, 1, THREE.RGBAFormat);
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+})();
+
 type Prop = { kind: string; side: number; x: number; s: number; v: number; h: number };
 
 function mats(map: MapDef) {
   const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-    new THREE.MeshStandardMaterial({ color, roughness: 0.78, flatShading: false, ...o });
+    new THREE.MeshToonMaterial({ color, gradientMap: CARTOON_RAMP, ...o } as THREE.MeshToonMaterialParameters);
   const glow = (c: string, i = 2) => std(c, { emissive: new THREE.Color(c), emissiveIntensity: i });
   return {
     b1: std("#ffffff", { map: windowsTexture("#ffe9a8", "#5a6b80"), roughness: 0.5 }),
