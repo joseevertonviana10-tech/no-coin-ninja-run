@@ -3,6 +3,16 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { patternTexture } from "./textures";
 
+const CARTOON_RAMP = (() => {
+  const data = new Uint8Array([78, 78, 78, 255, 142, 142, 142, 255, 205, 205, 205, 255, 255, 255, 255, 255]);
+  const texture = new THREE.DataTexture(data, 4, 1, THREE.RGBAFormat);
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+})();
+
 const COLS = 5;
 const ROWS = 9;
 const SEG = 0.105;
@@ -38,7 +48,7 @@ export function Cape({
     return g;
   }, []);
   const mat = useMemo(() => {
-    const m = new THREE.MeshStandardMaterial({ color, side: THREE.DoubleSide, roughness: 0.85, map: patternTexture("fabric") });
+    const m = new THREE.MeshToonMaterial({ color, gradientMap: CARTOON_RAMP, side: THREE.DoubleSide, map: patternTexture("fabric") });
     return m;
   }, [color]);
   useEffect(() => () => {
