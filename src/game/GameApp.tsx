@@ -45,8 +45,9 @@ export function GameApp() {
   // Audio volumes and sensitivity follow settings.
   useEffect(() => {
     audio.setVolumes({ master: s.masterVolume, sfx: s.sfxVolume, music: s.musicVolume, on: s.soundOn });
+    audio.setAmbience(s.ambientWeather && s.soundOn, s.map);
     setSensitivity(s.sensitivity);
-  }, [s.masterVolume, s.sfxVolume, s.musicVolume, s.soundOn, s.sensitivity]);
+  }, [s.masterVolume, s.sfxVolume, s.musicVolume, s.soundOn, s.sensitivity, s.ambientWeather, s.map]);
 
   // Start menu music on the first gesture.
   useEffect(() => {
