@@ -748,8 +748,8 @@ export function Forearm({ def, m }: { def: CharacterDef; m: Mats }) {
     def.style === "ninja" || def.style === "samurai" || def.style === "soldier" ? m.second : def.style === "knight" ? m.steel : m.skin;
   return (
     <group>
-      <Cap r={0.058} len={0.16} m={sleeve} pos={[0, -0.12, 0]} />
-      <Ball r={0.068} m={glove} pos={[0, -0.28, 0]} />
+      <Cap r={0.066} len={0.17} m={sleeve} pos={[0, -0.12, 0]} />
+      <Ball r={0.078} m={glove} pos={[0, -0.28, 0]} />
     </group>
   );
 }
@@ -759,7 +759,7 @@ export function Thigh({ def, m }: { def: CharacterDef; m: Mats }) {
   if (def.style === "robot") return <Box s={[0.15, 0.36, 0.15]} m={m.second} pos={[0, -0.2, 0]} />;
   if (def.style === "skeleton" || def.style === "stick") return <Cap r={0.035} len={0.36} m={m.main} pos={[0, -0.22, 0]} />;
   const mat = def.style === "ninja" || def.style === "scientist" || def.style === "alien" ? m.second : def.style === "knight" ? m.steel : m.second;
-  return <Cap r={0.085} len={0.26} m={mat} pos={[0, -0.22, 0]} />;
+  return <Cap r={0.096} len={0.28} m={mat} pos={[0, -0.22, 0]} />;
 }
 export function Sneakers({ def, m }: { def: CharacterDef; m: Mats }) {
   const upper = def.style === "robot" ? m.second : def.style === "knight" ? m.steel : m.main;
@@ -794,9 +794,8 @@ export function Shin({ def, m }: { def: CharacterDef; m: Mats }) {
   const shin = def.style === "knight" ? m.steel : def.style === "samurai" && def.armor === "full" ? m.main : def.style === "alien" ? m.skin : m.second;
   return (
     <group>
-      <Cap r={0.075} len={0.24} m={shin} pos={[0, -0.2, 0]} />
-      <Ball r={0.105} m={boot} pos={[0, -0.4, -0.075]} scale={[1.28, 0.78, 1.62]} />
-      <Box s={[0.16, 0.035, 0.27]} m={m.white} pos={[0, -0.455, -0.065]} />
+      <Cap r={0.084} len={0.26} m={shin} pos={[0, -0.2, 0]} />
+
     </group>
   );
 }
