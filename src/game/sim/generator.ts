@@ -17,6 +17,7 @@ export class TrackGenerator {
   rows: RowLog[] = [];
   private id = 1;
   private nextTunnel = TUNNEL_FIRST;
+  readonly tunnelStarts: number[] = [];
 
   constructor(
     private rng: Rng,
@@ -31,6 +32,8 @@ export class TrackGenerator {
       const gap = Math.min(42, Math.max(13, speed * 0.85 * this.diff.gapMult)) * this.rng.range(1, 1.3);
       if (this.nextS >= this.nextTunnel) {
         const s = this.nextS;
+        this.tunnelStarts.push(s);
+        if (this.tunnelStarts.length > 16) this.tunnelStarts.shift();
         const openSides = ([-1, 1] as const).filter((lane) => this.blocked(lane) < s + TUNNEL_APPROACH - 2);
         const reachableSides = openSides.filter((lane) => Math.abs(lane - this.safeLane) <= 1);
         const routes = reachableSides.length ? reachableSides : openSides;
