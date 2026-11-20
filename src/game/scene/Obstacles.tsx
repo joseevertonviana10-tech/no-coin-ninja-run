@@ -58,7 +58,7 @@ function makeMats(map: MapDef) {
     metal: std("#8a9099", { metalness: 0.8, roughness: 0.3 }),
     wood: std("#9a6a3a", { roughness: 0.9 }),
     darkwood: std("#5a3a1e", { roughness: 0.95 }),
-    rock: std(id === "volcano" ? "#2a2422" : id === "desert" ? "#c9a06a" : "#6f6a64", { roughness: 0.9, flatShading: false }),
+    rock: std(id === "volcano" ? "#2a2422" : id === "desert" ? "#c9a06a" : "#6f6a64", {}),
     moss: std("#4a8a2a", { roughness: 1 }),
     snow: std("#f6fbff", { roughness: 0.9 }),
     ice: std("#a8dcff", { transparent: true, opacity: 0.75, roughness: 0.05, metalness: 0.1 }),
