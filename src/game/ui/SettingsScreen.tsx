@@ -6,7 +6,7 @@ import { DIFFICULTIES, type DifficultyId } from "../sim/constants";
 import { useSettings, useUI, type CameraMode, type ControlsPos, type Quality, type TimeOfDay } from "../store";
 import { ArcadeButton, clickSfx, pct, Row, ScreenHeader, Segmented, SliderRow, SwitchRow } from "./kit";
 
-const TABS = ["Gráficos", "Áudio", "Controles", "Jogo", "Moedas", "Painel Hack"] as const;
+const TABS = ["Gráficos", "Cronômetro", "Áudio", "Controles", "Jogo", "Moedas", "Painel Hack"] as const;
 type Tab = (typeof TABS)[number];
 
 export function SettingsScreen({ onBack }: { onBack?: () => void }) {
@@ -99,6 +99,24 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
               <SwitchRow label="Efeitos visuais (poeira, faíscas)" checked={s.visualEffects} onChange={(v) => s.set({ visualEffects: v })} />
               <SwitchRow label="Clima e efeitos ambientais" checked={s.ambientWeather} onChange={(v) => s.set({ ambientWeather: v })} />
               <p className="pb-3 text-xs text-muted-foreground">Ativa chuva, neve, cinzas, folhas, areia e partículas temáticas de cada mapa, além da ambientação sonora.</p>
+            </>
+          )}
+          {tab === "Cronômetro" && (
+            <>
+              <Row label="Cor dos números">
+                <input type="color" aria-label="Cor dos números do cronômetro" value={s.timerColor} onChange={(e) => s.set({ timerColor: e.target.value, timerRgb: false })} className="h-10 w-16 cursor-pointer rounded-lg border border-border bg-transparent p-1" />
+              </Row>
+              <SwitchRow label="Cores RGB animadas" checked={s.timerRgb} onChange={(v) => s.set({ timerRgb: v })} />
+              <SwitchRow label="Brilho neon" checked={s.timerGlow} onChange={(v) => s.set({ timerGlow: v })} />
+              <SliderRow label="Tamanho dos números" value={s.timerSize} min={0.7} max={1.5} step={0.05} format={pct} onChange={(v) => s.set({ timerSize: v })} />
+              <Row label="Estilo da fonte">
+                <Segmented<"arcade" | "rounded" | "mono">
+                  value={s.timerFont}
+                  onChange={(v) => s.set({ timerFont: v })}
+                  options={[{ value: "arcade", label: "Arcade" }, { value: "rounded", label: "Redonda" }, { value: "mono", label: "Digital" }]}
+                />
+              </Row>
+              <p className="py-3 text-xs text-muted-foreground">Personalize o cronômetro da partida. As alterações aparecem imediatamente e ficam salvas no aparelho.</p>
             </>
           )}
           {tab === "Áudio" && (
