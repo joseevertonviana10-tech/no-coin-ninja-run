@@ -138,7 +138,7 @@ class AudioEngine {
     this.ambientGain = null;
   }
 
-  setVolumes(v: { master: number; sfx: number; music: number; on: boolean })
+  setVolumes(v: { master: number; sfx: number; music: number; on: boolean }) {
     this.vol = v;
     this.applyGains();
   }
