@@ -331,6 +331,7 @@ export function World() {
   const charId = useSettings((s) => s.character);
   const quality = useSettings((s) => s.quality);
   const timeOfDay = useSettings((s) => s.timeOfDay);
+  const ambientWeather = useSettings((s) => s.ambientWeather);
   const map = MAP_BY_ID[mapId] ?? MAP_BY_ID.city;
   const night = timeOfDay === "night";
   const afternoon = timeOfDay === "afternoon";
@@ -355,7 +356,7 @@ export function World() {
         return botDef ? <CharacterRig key={`race-bot-${bot.id}`} def={botDef} bot={bot} /> : null;
       })}
       <Particles />
-      <Weather key={map.id + weather} map={map} count={weather} />
+      {ambientWeather && <Weather key={map.id + weather} map={map} count={weather} />}
     </>
   );
 }
