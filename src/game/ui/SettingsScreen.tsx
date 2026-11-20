@@ -2,6 +2,7 @@ import { RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { COIN_COLORS } from "../data/coins";
+import { CHARACTERS } from "../data/characters";
 import { DIFFICULTIES, type DifficultyId } from "../sim/constants";
 import { useSettings, useUI, type CameraMode, type ControlsPos, type Quality, type TimeOfDay } from "../store";
 import { ArcadeButton, clickSfx, pct, Row, ScreenHeader, Segmented, SliderRow, SwitchRow } from "./kit";
@@ -15,6 +16,7 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
   const [tab, setTab] = useState<Tab>("Gráficos");
   const [secretCode, setSecretCode] = useState("");
   const [secretMessage, setSecretMessage] = useState("");
+  const normalizeCode = (value: string) => value.normalize("NFKC").replace(/[\\u200B-\\u200D\\uFEFF]/g, "").toUpperCase().replace(/[^A-Z0-9]/g, "");
   const back = onBack ?? (() => setScreen("menu"));
   const visibleTabs = s.hackUnlocked ? TABS : TABS.filter((t) => t !== "Painel Hack");
   return (
@@ -35,10 +37,12 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
           className="flex flex-wrap items-center gap-2 border-b border-border p-3"
           onSubmit={(e) => {
             e.preventDefault();
-            const code = secretCode.trim().toUpperCase();
-            if (code === "SKINH4CK3R") {
-              s.set({ hackerSkinUnlocked: true });
-              setSecretMessage("Skin Hacker de Código desbloqueada!");
+            const code = normalizeCode(secretCode);
+            const character = CHARACTERS.find((item) => item.code && normalizeCode(item.code) === code);
+            if (character) {
+              if (character.id === "hacker-code") s.set({ hackerSkinUnlocked: true });
+              else s.set({ unlockedCodeCharacters: Array.from(new Set([...(s.unlockedCodeCharacters ?? []), character.id])) });
+              setSecretMessage(character.name + " desbloqueado!");
               setSecretCode("");
             } else if (code === "PAINELHACK") {
               s.set({ hackUnlocked: true, allCharactersRgb: true });
