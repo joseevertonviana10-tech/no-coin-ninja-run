@@ -7,6 +7,15 @@ import { COIN_R, LANE_W } from "../sim/constants";
 import { useSettings } from "../store";
 import { coinFaceTexture } from "./textures";
 
+const CARTOON_RAMP = (() => {
+  const data = new Uint8Array([72, 72, 72, 255, 148, 148, 148, 255, 220, 220, 220, 255, 255, 255, 255, 255]);
+  const texture = new THREE.DataTexture(data, 4, 1, THREE.RGBAFormat);
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+})();
 const MAX = 320;
 
 export function Coins() {
@@ -22,18 +31,16 @@ export function Coins() {
     return g;
   }, []);
   const rimGeom = useMemo(() => new THREE.TorusGeometry(COIN_R * 0.82, 0.024, 8, 40), []);
-  const rimMat = useMemo(() => new THREE.MeshStandardMaterial({ color: COIN_BY_ID[coinColor].color, metalness: 0.95, roughness: 0.2, emissive: COIN_BY_ID[coinColor].emissive, emissiveIntensity: 0.5 * coinGlow, toneMapped: false }), [coinColor, coinGlow]);
+  const rimMat = useMemo(() => new THREE.MeshToonMaterial({ color: COIN_BY_ID[coinColor].color, gradientMap: CARTOON_RAMP, emissive: COIN_BY_ID[coinColor].emissive, emissiveIntensity: 0.5 * coinGlow, toneMapped: false }), [coinColor, coinGlow]);
   const mats = useMemo(() => {
     const def = COIN_BY_ID[coinColor];
     const rainbow = coinColor === "rainbow";
     const emissive = new THREE.Color(rainbow ? "#ffffff" : def.emissive);
     const mk = (map?: THREE.Texture) =>
-      new THREE.MeshStandardMaterial({
+      new THREE.MeshToonMaterial({
         color: "#ffffff",
+        gradientMap: CARTOON_RAMP,
         map: map ?? null,
-        metalness: coinColor === "black" ? 0.6 : 0.85,
-        roughness: 0.22,
-        flatShading: false,
         emissive,
         emissiveIntensity: (rainbow ? 0.95 : 0.35) * coinGlow,
         toneMapped: false,
