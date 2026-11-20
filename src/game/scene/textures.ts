@@ -193,12 +193,24 @@ export function trackTexture(map: MapDef) {
       }
       break;
     case "snow":
-      for (const l of [-1, 0, 1]) {
-        g.fillStyle = "rgba(120,150,190,0.25)";
-        g.fillRect(laneX(l) - 30, 0, 12, H);
-        g.fillRect(laneX(l) + 18, 0, 12, H);
+      // Snowy urban rail yard: visible timber sleepers and steel rails under a light dusting.
+      for (let y = 0; y < H; y += 32) {
+        for (const l of [-1, 0, 1]) {
+          g.fillStyle = "#79553b";
+          g.fillRect(laneX(l) - 46, y, 92, 12);
+          g.fillStyle = "rgba(238,248,255,0.26)";
+          g.fillRect(laneX(l) - 43, y + 1, 86, 2);
+        }
       }
-      speckle(g, W, H, 1500, 220, 255, 0.5, 2);
+      for (const l of [-1, 0, 1]) {
+        g.fillStyle = "#8299ad";
+        g.fillRect(laneX(l) - 34, 0, 6, H);
+        g.fillRect(laneX(l) + 28, 0, 6, H);
+        g.fillStyle = "rgba(255,255,255,0.6)";
+        g.fillRect(laneX(l) - 33, 0, 2, H);
+        g.fillRect(laneX(l) + 29, 0, 2, H);
+      }
+      speckle(g, W, H, 1500, 220, 255, 0.38, 2);
       break;
     case "dirt":
       for (let i = 0; i < 120; i++) {
