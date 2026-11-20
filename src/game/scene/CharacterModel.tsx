@@ -260,6 +260,37 @@ export function CharacterDetails({ def, m }: { def: CharacterDef; m: Mats }) {
 
 /* ---------- Torso ---------- */
 export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
+  if (def.id === "sun-wukong" || def.id === "sun-kong") return (
+    <group>
+      <Ball r={0.22} m={m.main} pos={[0, 0.2, 0]} />
+      <Ball r={0.15} m={m.second} pos={[0, 0.12, -0.17]} scale={[1.1, 0.72, 0.55]} />
+      <Ball r={0.1} m={m.main} pos={[-0.24, 0.23, 0]} />
+      <Ball r={0.1} m={m.main} pos={[0.24, 0.23, 0]} />
+      {eyes(m.dark, 0.025, 0.24, -0.2)}
+      <mesh position={[0, 0.37, 0]} material={m.accent} castShadow><torusGeometry args={[0.2, 0.035, 8, 20]} /></mesh>
+      <mesh position={[0, 0.47, 0]} material={m.glow} castShadow><sphereGeometry args={[0.055, 10, 8]} /></mesh>
+      {def.id === "sun-kong" && <Ball r={0.16} m={m.second} pos={[0, 0.02, 0.08]} scale={[1.35, 0.7, 0.8]} />}
+    </group>
+  );
+  if (def.id === "godzilla") return (
+    <group>
+      <Ball r={0.24} m={m.main} pos={[0, 0.22, 0]} scale={[1.1, 1.1, 1.15]} />
+      <Ball r={0.19} m={m.main} pos={[0, 0.11, -0.14]} scale={[1.2, 0.65, 0.7]} />
+      <Box s={[0.28, 0.075, 0.12]} m={m.second} pos={[0, 0.12, -0.2]} />
+      <Ball r={0.035} m={m.glow} pos={[-0.105, 0.28, -0.2]} />
+      <Ball r={0.035} m={m.glow} pos={[0.105, 0.28, -0.2]} />
+      {[-0.16, 0, 0.16].map((x) => <mesh key={x} position={[x, 0.43, 0.02]} material={m.glow}><coneGeometry args={[0.065, 0.18, 5]} /></mesh>)}
+    </group>
+  );
+  if (def.id === "ant-rgb") return (
+    <group>
+      <Ball r={0.19} m={m.main} pos={[0, 0.22, 0]} scale={[1.05, 1.15, 0.95]} />
+      <Ball r={0.14} m={m.second} pos={[0, 0.1, -0.16]} scale={[1.15, 0.7, 0.6]} />
+      {[-0.1, 0.1].map((x) => <group key={x} position={[x, 0.39, 0]} rotation={[0, 0, x * 4]}><Cap r={0.018} len={0.25} m={m.glow} pos={[x * 0.5, 0.12, 0]} /><Ball r={0.03} m={m.accent} pos={[x, 0.24, 0]} /></group>)}
+      <Ball r={0.045} m={m.glow} pos={[-0.075, 0.24, -0.17]} />
+      <Ball r={0.045} m={m.glow} pos={[0.075, 0.24, -0.17]} />
+    </group>
+  );
   if (def.id === "hacker-code") return (
     <group>
       <Cap r={0.22} len={0.38} m={m.main} pos={[0, 0.3, 0]} scale={[1.22, 1.05, 0.9]} />
