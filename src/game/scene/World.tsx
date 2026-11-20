@@ -9,7 +9,7 @@ import { MAP_BY_ID, type MapDef } from "../data/maps";
 import { updateInput } from "../input";
 import { runtime } from "../runtime";
 import { LANE_W } from "../sim/constants";
-import { getTunnelBlend, TUNNEL_FIRST, TUNNEL_LENGTH, TUNNEL_SPACING, TUNNEL_VISUAL_LEAD } from "../sim/tunnels";
+import { getTunnelBlend, TUNNEL_LENGTH, TUNNEL_VISUAL_LEAD } from "../sim/tunnels";
 import { useSettings, useStats, useUI, type Quality } from "../store";
 import { CharacterRig } from "./Character";
 import { Coins } from "./Coins";
