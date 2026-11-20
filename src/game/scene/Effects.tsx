@@ -66,7 +66,7 @@ function HackerGlyphs() {
   return (
     <group ref={group}>
       {Array.from({ length: 18 }, (_, i) => (
-        <sprite key={i} position={[(Math.random() - 0.5) * 1.05, 0.15 + (i / 18) * 2.45, -0.18 + Math.random() * 0.12]} scale={[0.075, 0.18, 1]}>
+        <sprite key={i} userData={{ fallSpeed: 0.35 + (i % 5) * 0.16 }} position={[(Math.random() - 0.5) * 1.05, 0.15 + (i / 18) * 2.45, -0.18 + Math.random() * 0.12]} scale={[0.075, 0.18, 1]}>
           <spriteMaterial map={texture} color="#55ff91" transparent opacity={0.82} depthWrite={false} blending={THREE.AdditiveBlending} />
         </sprite>
       ))}
