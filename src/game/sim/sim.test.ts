@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BASE_SPEED, LANE_W, TRAIN_TOP, type DifficultyId } from "./constants";
 import { Sim } from "./sim";
+import { TUNNEL_FIRST, TUNNEL_LENGTH } from "./tunnels";
 import type { KindWeights, Obstacle, ObstacleKind } from "./types";
 
 const W: KindWeights = { low: 3, high: 2, crate: 2, car: 1, train: 2, hole: 1 };
@@ -162,6 +163,42 @@ describe("NO COIN rules", () => {
     expect(sim.coins.some((c) => c.lane === 0 && c.y === 1)).toBe(true);
     expect(sim.coins.some((c) => c.lane === -1 && c.y > TRAIN_TOP)).toBe(true);
     expect(sim.coins.some((c) => c.lane === 1 && c.y > TRAIN_TOP)).toBe(true);
+  });
+
+  it("tunnels always place a long train in the centre and leave a reachable side platform", () => {
+    for (const seed of [1, 7, 42, 99, 2026]) {
+      const sim = new Sim({
+        difficulty: "normal", speedMult: 1, coinSize: 1, laneGrip: 1,
+        weights: W, seed,
+      });
+      sim.gen.fill(sim.obstacles, sim.coins, TUNNEL_FIRST + 100, sim.speed);
+      const train = sim.obstacles.find((o) => o.kind === "train" && o.lane === 0 && o.s0 >= TUNNEL_FIRST);
+      const tunnelRow = sim.gen.rows.find((row) => row.s >= TUNNEL_FIRST && row.s < TUNNEL_FIRST + 80);
+      expect(train, `missing centre train for seed ${seed}`).toBeDefined();
+      expect(train!.s1 - train!.s0).toBeCloseTo(TUNNEL_LENGTH - 13, 5);
+      expect(tunnelRow?.safe === -1 || tunnelRow?.safe === 1).toBe(true);
+      expect(sim.coins.some((coin) => coin.s >= train!.s0 && coin.s <= train!.s1 && coin.lane === tunnelRow!.safe)).toBe(false);
+    }
+  });
+
+  it("tunnel side-platform coin traps are random, and the safe platform remains coin-free", () => {
+    let withCoinTrap = 0;
+    let withoutCoinTrap = 0;
+    for (let seed = 1; seed <= 32; seed++) {
+      const sim = new Sim({
+        difficulty: "normal", speedMult: 1, coinSize: 1, laneGrip: 1,
+        weights: W, seed,
+      });
+      sim.gen.fill(sim.obstacles, sim.coins, TUNNEL_FIRST + 100, sim.speed);
+      const train = sim.obstacles.find((o) => o.kind === "train" && o.lane === 0 && o.s0 >= TUNNEL_FIRST)!;
+      const safe = sim.gen.rows.find((row) => row.s >= TUNNEL_FIRST && row.s < TUNNEL_FIRST + 80)!.safe;
+      const trapCoins = sim.coins.filter((coin) => coin.s >= train.s0 + 6 && coin.s <= train.s0 + 24 && coin.lane === -safe);
+      if (trapCoins.length) withCoinTrap++;
+      else withoutCoinTrap++;
+      expect(sim.coins.some((coin) => coin.s >= train.s0 && coin.s <= train.s1 && coin.lane === safe)).toBe(false);
+    }
+    expect(withCoinTrap).toBeGreaterThan(0);
+    expect(withoutCoinTrap).toBeGreaterThan(0);
   });
   it("speed setting scales the starting speed", () => {
     expect(emptySim(1.5).speed).toBeCloseTo(BASE_SPEED * 1.5);
