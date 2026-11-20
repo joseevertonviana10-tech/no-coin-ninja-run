@@ -47,6 +47,18 @@ export interface Settings {
   equippedAccessories: Record<string, string>;
   unlockedAccessories: string[];
   timeOfDay: TimeOfDay;
+  customCharacterEnabled: boolean;
+  customMain: string;
+  customSecond: string;
+  customAccent: string;
+  customSkin: string;
+  customGlow: string;
+  customBodyScale: number;
+  timerColor: string;
+  timerRgb: boolean;
+  timerGlow: boolean;
+  timerSize: number;
+  timerFont: "arcade" | "rounded" | "mono";
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -85,6 +97,18 @@ export const DEFAULT_SETTINGS: Settings = {
   equippedAccessories: {},
   unlockedAccessories: [],
   timeOfDay: "day",
+  customCharacterEnabled: false,
+  customMain: "#e63946",
+  customSecond: "#252b37",
+  customAccent: "#ffd166",
+  customSkin: "#d9a47d",
+  customGlow: "#ffb347",
+  customBodyScale: 1,
+  timerColor: "#ffffff",
+  timerRgb: false,
+  timerGlow: true,
+  timerSize: 1,
+  timerFont: "arcade",
 };
 
 interface SettingsStore extends Settings {
