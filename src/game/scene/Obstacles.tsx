@@ -12,7 +12,7 @@ type M = ReturnType<typeof makeMats>;
 
 function makeMats(map: MapDef) {
   const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-    new THREE.MeshStandardMaterial({ color, roughness: 0.72, flatShading: true, ...o });
+    new THREE.MeshStandardMaterial({ color, roughness: 0.66, flatShading: false, ...o });
   const glow = (color: string, i = 2) => std(color, { emissive: new THREE.Color(color), emissiveIntensity: i, roughness: 0.3 });
   const id = map.id;
   const trainColor: Record<MapId, string> = { city: "#d9dde3", snow: "#c8202a", volcano: "#3a3330", jungle: "#6b4a2b", race: "#f4f4f4", desert: "#8a5a32", future: "#eef2ff" };
@@ -37,7 +37,7 @@ function makeMats(map: MapDef) {
     metal: std("#8a9099", { metalness: 0.8, roughness: 0.3 }),
     wood: std("#9a6a3a", { roughness: 0.9 }),
     darkwood: std("#5a3a1e", { roughness: 0.95 }),
-    rock: std(id === "volcano" ? "#2a2422" : id === "desert" ? "#c9a06a" : "#6f6a64", { roughness: 0.95, flatShading: true }),
+    rock: std(id === "volcano" ? "#2a2422" : id === "desert" ? "#c9a06a" : "#6f6a64", { roughness: 0.9, flatShading: false }),
     moss: std("#4a8a2a", { roughness: 1 }),
     snow: std("#f6fbff", { roughness: 0.9 }),
     ice: std("#a8dcff", { transparent: true, opacity: 0.75, roughness: 0.05, metalness: 0.1 }),
@@ -74,12 +74,12 @@ const B = ({ s, m, p, r = [0, 0, 0] }: { s: [number, number, number]; m: THREE.M
 );
 const Cyl = ({ a, m, p, r = [0, 0, 0] }: { a: [number, number, number, number?]; m: THREE.Material; p: [number, number, number]; r?: [number, number, number] }) => (
   <mesh position={p} rotation={r} material={m} castShadow receiveShadow>
-    <cylinderGeometry args={[a[0], a[1], a[2], a[3] ?? 14]} />
+    <cylinderGeometry args={[a[0], a[1], a[2], a[3] ?? 18]} />
   </mesh>
 );
 const Rock = ({ r, m, p, s = [1, 1, 1] }: { r: number; m: THREE.Material; p: [number, number, number]; s?: [number, number, number] }) => (
   <mesh position={p} scale={s} material={m} castShadow receiveShadow>
-    <dodecahedronGeometry args={[r, 0]} />
+    <dodecahedronGeometry args={[r, 1]} />
   </mesh>
 );
 const RX = Math.PI / 2;
