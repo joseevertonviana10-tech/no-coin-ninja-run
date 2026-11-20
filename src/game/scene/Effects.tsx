@@ -30,8 +30,53 @@ void main() {
   gl_FragColor = vec4(vC, a);
 }`;
 
+function HackerGlyphs() {
+  const group = useRef<THREE.Group>(null!);
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.clearRect(0, 0, 64, 64);
+      ctx.fillStyle = "#4dff91";
+      ctx.shadowColor = "#12ff68";
+      ctx.shadowBlur = 12;
+      ctx.font = "bold 54px monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(Math.random() > 0.5 ? "0" : "1", 32, 32);
+    }
+    const map = new THREE.CanvasTexture(canvas);
+    map.colorSpace = THREE.SRGBColorSpace;
+    return map;
+  }, []);
+  useEffect(() => () => texture.dispose(), [texture]);
+  useFrame((_, delta) => {
+    if (!group.current) return;
+    for (const glyph of group.current.children) {
+      glyph.position.y -= delta * (0.5 + glyph.userData.fallSpeed);
+      glyph.position.x += Math.sin(glyph.position.y * 2) * delta * 0.08;
+      if (glyph.position.y < 0.05) {
+        glyph.position.y = 1.8 + Math.random() * 0.9;
+        glyph.position.x = (Math.random() - 0.5) * 1.05;
+      }
+    }
+  });
+  return (
+    <group ref={group}>
+      {Array.from({ length: 18 }, (_, i) => (
+        <sprite key={i} position={[(Math.random() - 0.5) * 1.05, 0.15 + (i / 18) * 2.45, -0.18 + Math.random() * 0.12]} scale={[0.075, 0.18, 1]}>
+          <spriteMaterial map={texture} color="#55ff91" transparent opacity={0.82} depthWrite={false} blending={THREE.AdditiveBlending} />
+        </sprite>
+      ))}
+    </group>
+  );
+}
+
 export function Particles() {
   const pool = runtime.particles;
+  const isHacker = useSettings((s) => s.character === "hacker-code" && s.hackerSkinUnlocked);
   const size = useThree((s) => s.size);
   const dpr = useThree((s) => s.viewport.dpr);
   const hackerEmit = useRef(0);
@@ -80,7 +125,7 @@ export function Particles() {
     } else hackerEmit.current = 0;
     for (const k of ["position", "aColor", "aAlpha", "aSize"]) (geom.getAttribute(k) as THREE.BufferAttribute).needsUpdate = true;
   });
-  return <points geometry={geom} material={mat} frustumCulled={false} />;
+  return <><points geometry={geom} material={mat} frustumCulled={false} />{isHacker && <HackerGlyphs />}</>;
 }
 
 /** Ambient weather per map: rain, blizzards, ashfall, techno-rain and sandstorms. */
