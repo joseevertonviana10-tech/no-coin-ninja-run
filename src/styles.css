@@ -433,13 +433,40 @@
   }
 }
 
+@media (orientation: landscape) and (max-height: 600px) {
+  /* Other screens (characters, settings, shops, records and training) can scroll
+     within the short landscape viewport instead of clipping their lower controls. */
+  #game-root .absolute.inset-0.flex.flex-col:not(.menu-screen):not(.map-screen) {
+    max-height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+
+  #game-root .absolute.inset-0.flex.flex-col:not(.menu-screen):not(.map-screen) > div.glass {
+    min-height: 0;
+    max-height: calc(100dvh - 76px);
+  }
+
+  #game-root .absolute.inset-0.flex.items-end {
+    align-items: center;
+    overflow-y: auto;
+    padding-top: max(8px, env(safe-area-inset-top));
+  }
+
+  #game-root .absolute.inset-0.flex.items-center.justify-center {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
 @media (orientation: landscape) and (max-height: 420px) {
   #game-root .menu-screen > div:first-child .chip {
     margin-top: 0.25rem;
   }
 
-  #game-root .menu-screen .menu-subtitle,
-  #game-root .menu-screen p.text-\\[11px\\] {
+  #game-root .menu-screen .menu-subtitle {
     display: none;
   }
 
