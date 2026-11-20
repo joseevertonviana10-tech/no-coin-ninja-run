@@ -21,8 +21,18 @@ const CARTOON_RAMP = (() => {
 type M = ReturnType<typeof makeMats>;
 
 function makeMats(map: MapDef) {
-  const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-    new THREE.MeshToonMaterial({ color, gradientMap: CARTOON_RAMP, ...o } as THREE.MeshToonMaterialParameters);
+  const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) => {
+    const params: THREE.MeshToonMaterialParameters = { color, gradientMap: CARTOON_RAMP };
+    if (o.map) params.map = o.map;
+    if (o.emissive) params.emissive = o.emissive;
+    if (o.emissiveMap) params.emissiveMap = o.emissiveMap;
+    if (o.emissiveIntensity !== undefined) params.emissiveIntensity = o.emissiveIntensity;
+    if (o.transparent !== undefined) params.transparent = o.transparent;
+    if (o.opacity !== undefined) params.opacity = o.opacity;
+    if (o.side !== undefined) params.side = o.side;
+    if (o.depthWrite !== undefined) params.depthWrite = o.depthWrite;
+    return new THREE.MeshToonMaterial(params);
+  };
   const glow = (color: string, i = 2) => std(color, { emissive: new THREE.Color(color), emissiveIntensity: i, roughness: 0.3 });
   const id = map.id;
   const trainColor: Record<MapId, string> = { city: "#d9dde3", snow: "#c8202a", volcano: "#3a3330", jungle: "#6b4a2b", race: "#f4f4f4", desert: "#8a5a32", future: "#eef2ff" };
