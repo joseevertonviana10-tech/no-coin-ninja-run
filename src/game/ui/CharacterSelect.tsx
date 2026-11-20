@@ -21,7 +21,7 @@ export function CharacterSelect() {
       <div className="mx-auto w-full max-w-2xl">
         <ScreenHeader title="Personagens" onBack={() => setScreen("menu")} />
       </div>
-      <div className="mx-auto w-full max-w-2xl animate-pop-in space-y-3">
+      <div className="mx-auto max-h-[calc(100dvh-110px)] w-full max-w-2xl animate-pop-in space-y-3 overflow-y-auto pb-2">
         <div className="glass px-4 py-3">
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
