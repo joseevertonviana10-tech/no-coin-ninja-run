@@ -37,6 +37,7 @@ export interface Settings {
   trainingTimescale: TrainingSpeed;
   hackUnlocked: boolean;
   hackerSkinUnlocked: boolean;
+  unlockedCodeCharacters: string[];
   hackBots: boolean;
   noCoinMode: boolean;
   rgbPhone: boolean;
@@ -87,6 +88,7 @@ export const DEFAULT_SETTINGS: Settings = {
   trainingTimescale: 0.75,
   hackUnlocked: false,
   hackerSkinUnlocked: false,
+  unlockedCodeCharacters: [],
   hackBots: false,
   noCoinMode: false,
   rgbPhone: false,
