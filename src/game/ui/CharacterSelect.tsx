@@ -3,7 +3,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { CATEGORIES, CHARACTERS, CHARACTER_BY_ID, type Category } from "../data/characters";
 import { runtime } from "../runtime";
-import { formatTime, useSettings, useStats, useUI } from "../store";
+import { formatTime, useSettings, useStats, useUI, type Settings } from "../store";
 import { ArcadeButton, clickSfx, ScreenHeader } from "./kit";
 
 export function CharacterSelect() {
@@ -89,7 +89,7 @@ export function CharacterSelect() {
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {([{ key: "customMain", label: "Cor principal", value: settings.customMain }, { key: "customSecond", label: "Cor secundária", value: settings.customSecond }, { key: "customAccent", label: "Detalhes", value: settings.customAccent }, { key: "customSkin", label: "Pele", value: settings.customSkin }, { key: "customGlow", label: "Brilho / energia", value: settings.customGlow }] as const).map((item) => (
                   <label key={item.key} className="flex items-center gap-2 rounded-lg bg-muted/60 p-2 text-xs font-semibold">
-                    <input type="color" value={item.value} onChange={(e) => settings.set({ [item.key]: e.target.value })} className="h-9 w-10 cursor-pointer rounded border-0 bg-transparent" />
+                    <input type="color" value={item.value} onChange={(e) => settings.set({ [item.key]: e.target.value } as Partial<Settings>)} className="h-9 w-10 cursor-pointer rounded border-0 bg-transparent" />
                     <span>{item.label}</span>
                   </label>
                 ))}
