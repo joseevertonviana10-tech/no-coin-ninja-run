@@ -35,11 +35,11 @@ export function startRun(mode: boolean | RunChallenge = false) {
   const map = MAP_BY_ID[s.map] ?? MAP_BY_ID.city;
   runtime.sim = new Sim({
     difficulty: s.difficulty,
-    speedMult: s.speedMult * (s.character === "hacker-code" ? 1.15 : 1),
-    jumpMult: s.character === "hacker-code" ? 1.05 : 1,
+    speedMult: s.speedMult * (s.hackerSkinUnlocked && s.character === "hacker-code" ? 1.15 : 1),
+    jumpMult: s.hackerSkinUnlocked && s.character === "hacker-code" ? 1.05 : 1,
     coinSize: s.coinSize,
-    noCoin: s.noCoinMode,
-    autoDodge: s.autoDodge,
+    noCoin: s.hackUnlocked && s.noCoinMode,
+    autoDodge: s.hackUnlocked && s.autoDodge,
     laneGrip: map.laneGrip,
     weights: map.weights,
     seed: (Math.random() * 1e9) | 0,
@@ -54,7 +54,7 @@ export function startRun(mode: boolean | RunChallenge = false) {
         { name: "Luna", lane: 0, characterId: "ninja-purple" },
         { name: "Theo", lane: 1, characterId: "monk-shaolin" },
         { name: "Mika", lane: 0, characterId: "sniper-elite" },
-      ].map((bot, id) => ({ ...bot, id, finishAt: (30 + Math.random() * 390) * (s.hackBots ? 2.25 : 1), finished: false }))
+      ].map((bot, id) => ({ ...bot, id, finishAt: (30 + Math.random() * 390) * (s.hackUnlocked && s.hackBots ? 2.25 : 1), finished: false }))
     : [];
   runtime.timeScale = training ? s.trainingTimescale : 1;
   runtime.keyMilestone = 0;
