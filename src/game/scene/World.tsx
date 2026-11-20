@@ -92,8 +92,8 @@ function TrackArchitecture({ map }: { map: MapDef }) {
       <group ref={rails}>
         {Array.from({ length: 3 }, (_, segment) => (
           <group key={segment} position={[0, 0, -segment * TRACK_LEN]}>
-            {[-2.4, 0, 2.4].flatMap((lane) => [-0.72, 0.72].map((offset) => (
-              <mesh key={lane + ":" + offset} position={[lane + offset, 0.095, -TRACK_LEN / 2]} receiveShadow>
+            {[-1, 0, 1].flatMap((lane) => [-0.72, 0.72].map((offset) => (
+              <mesh key={lane + ":" + offset} position={[lane * LANE_W + offset, 0.095, -TRACK_LEN / 2]} receiveShadow>
                 <boxGeometry args={[0.105, 0.16, TRACK_LEN]} />
                 <meshToonMaterial color={railColor} />
               </mesh>
@@ -108,7 +108,7 @@ function TrackArchitecture({ map }: { map: MapDef }) {
             <mesh position={[4.15, 2.55, 0]} castShadow><boxGeometry args={[0.22, 5.1, 0.24]} /><meshToonMaterial color={beamColor} /></mesh>
             <mesh position={[0, 5.05, 0]} castShadow><boxGeometry args={[8.5, 0.24, 0.3]} /><meshToonMaterial color={beamColor} /></mesh>
             <mesh position={[0, 4.78, 0]}><boxGeometry args={[1.55, 0.42, 0.12]} /><meshToonMaterial color={lampColor} emissive={lampColor} emissiveIntensity={map.id === "future" ? 1.2 : 0.18} /></mesh>
-            {[-2.4, 0, 2.4].map((x) => <mesh key={x} position={[x, 4.45, 0]}><boxGeometry args={[0.1, 0.5, 0.1]} /><meshToonMaterial color={railColor} /></mesh>)}
+            {[-LANE_W, 0, LANE_W].map((x) => <mesh key={x} position={[x, 4.45, 0]}><boxGeometry args={[0.1, 0.5, 0.1]} /><meshToonMaterial color={railColor} /></mesh>)}
           </group>
         ))}
       </group>
