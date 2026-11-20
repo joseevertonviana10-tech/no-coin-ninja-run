@@ -86,6 +86,7 @@ function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; ti
   return (
     <>
       <hemisphereLight args={[night ? "#263b68" : afternoon ? "#ffd0a0" : map.hemiSky, night ? "#080d18" : map.hemiGround, hemiPower]} />
+      <ambientLight color={night ? "#7e98c9" : "#fff0d5"} intensity={night ? 0.18 : 0.28} />
       <directionalLight
         ref={sun}
         color={sunColor}
