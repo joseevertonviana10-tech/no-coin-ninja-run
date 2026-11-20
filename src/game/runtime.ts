@@ -35,7 +35,8 @@ export function startRun(mode: boolean | RunChallenge = false) {
   const map = MAP_BY_ID[s.map] ?? MAP_BY_ID.city;
   runtime.sim = new Sim({
     difficulty: s.difficulty,
-    speedMult: s.speedMult,
+    speedMult: s.speedMult * (s.character === "hacker-code" ? 1.15 : 1),
+    jumpMult: s.character === "hacker-code" ? 1.05 : 1,
     coinSize: s.coinSize,
     noCoin: s.noCoinMode,
     autoDodge: s.autoDodge,
