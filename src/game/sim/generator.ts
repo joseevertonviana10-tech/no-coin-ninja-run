@@ -1,6 +1,7 @@
 import { COIN_Y, TRAIN_TOP, type Difficulty } from "./constants";
 import type { Rng } from "./rng";
 import type { Coin, KindWeights, Obstacle, ObstacleKind, RowLog } from "./types";
+import { TUNNEL_APPROACH, TUNNEL_FIRST, TUNNEL_LENGTH, TUNNEL_SPACING } from "./tunnels";
 
 /**
  * Procedural track generator. Content is laid out in rows. Every row keeps one
@@ -15,6 +16,7 @@ export class TrackGenerator {
   blockedUntil = [-1e9, -1e9, -1e9];
   rows: RowLog[] = [];
   private id = 1;
+  private nextTunnel = TUNNEL_FIRST;
 
   constructor(
     private rng: Rng,
@@ -27,6 +29,37 @@ export class TrackGenerator {
     let changed = false;
     while (this.nextS < limit) {
       const gap = Math.min(42, Math.max(13, speed * 0.85 * this.diff.gapMult)) * this.rng.range(1, 1.3);
+      if (this.nextS >= this.nextTunnel) {
+        const s = this.nextS;
+        const openSides = ([-1, 1] as const).filter((lane) => this.blocked(lane) < s + TUNNEL_APPROACH - 2);
+        if (openSides.length === 0) {
+          // Let an earlier train clear before committing to a tunnel route.
+          this.nextS += Math.max(8, gap * 0.75);
+          changed = true;
+          continue;
+        }
+        const safeSide = this.rng.pick(openSides) ?? openSides[0]!;
+        this.safeLane = safeSide;
+        this.rows.push({ s, safe: safeSide });
+
+        // The tunnel train occupies the centre lane for almost the whole passage.
+        // Runners have a short, clearly visible lead-in to choose either side platform.
+        const trainStart = s + TUNNEL_APPROACH;
+        const train = this.add(obstacles, "train", 0, trainStart);
+        train.s1 = trainStart + TUNNEL_LENGTH - TUNNEL_APPROACH - 5;
+        this.blockedUntil[1] = train.s1;
+
+        // One side platform may contain a coin line; the other remains a fair route.
+        const trapSide = -safeSide;
+        if (this.rng.chance(this.diff.coinDensity * 0.72)) {
+          this.coinLine(coins, trapSide, trainStart + 7, 16);
+        }
+
+        this.nextTunnel += TUNNEL_SPACING;
+        this.nextS = s + TUNNEL_LENGTH + gap;
+        changed = true;
+        continue;
+      }
       this.row(obstacles, coins, this.nextS, gap, speed);
       this.nextS += gap;
       changed = true;
