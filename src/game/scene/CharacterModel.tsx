@@ -761,6 +761,17 @@ export function Thigh({ def, m }: { def: CharacterDef; m: Mats }) {
   const mat = def.style === "ninja" || def.style === "scientist" || def.style === "alien" ? m.second : def.style === "knight" ? m.steel : m.second;
   return <Cap r={0.085} len={0.26} m={mat} pos={[0, -0.22, 0]} />;
 }
+export function Sneakers({ def, m }: { def: CharacterDef; m: Mats }) {
+  const upper = def.style === "robot" ? m.second : def.style === "knight" ? m.steel : m.main;
+  return (
+    <group position={[0, -0.43, -0.09]}>
+      <Ball r={0.105} m={upper} scale={[1.28, 0.78, 1.62]} />
+      <Box s={[0.17, 0.035, 0.27]} m={m.white} pos={[0, -0.055, 0.005]} />
+      <Box s={[0.12, 0.018, 0.025]} m={m.accent} pos={[0, 0.005, -0.09]} />
+    </group>
+  );
+}
+
 export function Shin({ def, m }: { def: CharacterDef; m: Mats }) {
   if (def.style === "monkey") return <group><Cap r={0.07} len={0.25} m={m.main} pos={[0, -0.2, 0]} /><Ball r={0.09} m={m.second} pos={[0, -0.4, -0.08]} scale={[1.2, 0.65, 1.5]} /></group>;
   if (def.style === "monk") return <group><Cap r={0.07} len={0.27} m={m.main} pos={[0, -0.2, 0]} /><Box s={[0.15, 0.08, 0.23]} m={m.second} pos={[0, -0.4, -0.04]} /></group>;
