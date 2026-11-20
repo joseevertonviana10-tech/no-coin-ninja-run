@@ -25,6 +25,7 @@ export interface Settings {
   speedMult: number;
   difficulty: DifficultyId;
   visualEffects: boolean;
+  ambientWeather: boolean;
   vibration: boolean;
   camera: CameraMode;
   cameraShake: boolean;
@@ -62,6 +63,7 @@ export const DEFAULT_SETTINGS: Settings = {
   speedMult: 1,
   difficulty: "normal",
   visualEffects: true,
+  ambientWeather: true,
   vibration: true,
   camera: "normal",
   cameraShake: true,
