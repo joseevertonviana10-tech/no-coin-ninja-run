@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BASE_SPEED, LANE_W, TRAIN_TOP, type DifficultyId } from "./constants";
 import { Sim } from "./sim";
-import { TUNNEL_FIRST, TUNNEL_LENGTH } from "./tunnels";
+import { getTunnelBlend, TUNNEL_APPROACH, TUNNEL_FIRST, TUNNEL_LENGTH, TUNNEL_VISUAL_LEAD } from "./tunnels";
 import type { KindWeights, Obstacle, ObstacleKind } from "./types";
 
 const W: KindWeights = { low: 3, high: 2, crate: 2, car: 1, train: 2, hole: 1 };
@@ -175,10 +175,18 @@ describe("NO COIN rules", () => {
       const train = sim.obstacles.find((o) => o.kind === "train" && o.lane === 0 && o.s0 >= TUNNEL_FIRST);
       const tunnelRow = sim.gen.rows.find((row) => row.s >= TUNNEL_FIRST && row.s < TUNNEL_FIRST + 80);
       expect(train, `missing centre train for seed ${seed}`).toBeDefined();
+      expect(train!.s0).toBe(sim.gen.tunnelStarts[0]! + TUNNEL_APPROACH);
       expect(train!.s1 - train!.s0).toBeCloseTo(TUNNEL_LENGTH - 13, 5);
       expect(tunnelRow?.safe === -1 || tunnelRow?.safe === 1).toBe(true);
       expect(sim.coins.some((coin) => coin.s >= train!.s0 && coin.s <= train!.s1 && coin.lane === tunnelRow!.safe)).toBe(false);
     }
+  });
+
+  it("tunnel darkness fades in before the portal and fades out after the exit", () => {
+    const entrance = 240;
+    expect(getTunnelBlend(entrance - TUNNEL_VISUAL_LEAD - 8, [entrance])).toBe(0);
+    expect(getTunnelBlend(entrance + 3, [entrance])).toBeCloseTo(1, 5);
+    expect(getTunnelBlend(entrance + TUNNEL_LENGTH + TUNNEL_VISUAL_LEAD + 9, [entrance])).toBe(0);
   });
 
   it("tunnel side-platform coin traps are random, and the safe platform remains coin-free", () => {
