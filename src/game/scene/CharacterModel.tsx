@@ -111,7 +111,7 @@ function MonkeyTail({ material }: { material: THREE.Material }) {
 }
 
 export function CharacterDetails({ def, m }: { def: CharacterDef; m: Mats }) {
-  if (def.style === "monkey") return null;
+  if (def.style === "monkey" && def.id !== "sun-wukong" && def.id !== "sun-kong") return null;
   if (def.style === "skeleton") return (
     <group>
       <Box s={[0.28, 0.035, 0.035]} m={m.main} pos={[0, 0.56, -0.015]} />
@@ -163,6 +163,46 @@ export function CharacterDetails({ def, m }: { def: CharacterDef; m: Mats }) {
         <>
           {[-0.18, 0, 0.18].map((x, i) => <mesh key={x} position={[x, 0.44 + (i % 2) * 0.06, -0.02]} rotation={[0.1, 0, x * 1.5]} material={m.glow} castShadow><octahedronGeometry args={[0.075, 0]} /></mesh>)}
         </>
+      )}
+      {def.id === "sun-wukong" && (
+        <group>
+          <mesh position={[0, 0.72, 0]} material={m.accent} castShadow><torusGeometry args={[0.16, 0.035, 8, 20]} /></mesh>
+          <mesh position={[0, 0.83, 0]} material={m.glow} castShadow><sphereGeometry args={[0.055, 10, 8]} /></mesh>
+          <mesh position={[0.3, 0.25, 0.18]} rotation={[0, 0, Math.PI / 2]} material={m.accent} castShadow><cylinderGeometry args={[0.035, 0.035, 1.15, 10]} /></mesh>
+          <mesh position={[0.3, 0.84, 0.18]} material={m.glow}><sphereGeometry args={[0.07, 10, 8]} /></mesh>
+        </group>
+      )}
+      {def.id === "sun-kong" && (
+        <group>
+          <mesh position={[0, 0.7, 0]} material={m.accent} castShadow><torusGeometry args={[0.2, 0.045, 8, 20]} /></mesh>
+          <mesh position={[0, 0.82, 0]} material={m.glow}><octahedronGeometry args={[0.09, 0]} /></mesh>
+          <Box s={[0.48, 0.42, 0.3]} m={m.second} pos={[0, 0.28, 0.25]} />
+          <Box s={[0.12, 0.12, 0.04]} m={m.glow} pos={[0, 0.3, 0.1]} />
+        </group>
+      )}
+      {def.id === "godzilla" && (
+        <group>
+          <group rotation={[0.85, 0, 0]}><Cap r={0.12} len={0.95} m={m.main} pos={[0, 0.02, 0.55]} /></group>
+          {[-0.24, -0.12, 0, 0.12, 0.24].map((x, i) => (
+            <mesh key={x} position={[x, 0.56 + (i % 2) * 0.035, 0.16]} rotation={[0.15, 0, x * 2]} material={m.glow} castShadow><coneGeometry args={[0.075, 0.24, 5]} /></mesh>
+          ))}
+          <Box s={[0.16, 0.09, 0.08]} m={m.glow} pos={[0, 0.16, -0.22]} />
+        </group>
+      )}
+      {def.id === "ifood-delivery" && (
+        <group>
+          <Box s={[0.48, 0.5, 0.28]} m={m.main} pos={[0, 0.34, 0.25]} />
+          <Box s={[0.32, 0.12, 0.025]} m={m.accent} pos={[0, 0.38, 0.105]} />
+          <Box s={[0.22, 0.055, 0.03]} m={m.glow} pos={[0, 0.38, 0.08]} />
+          <Box s={[0.28, 0.055, 0.3]} m={m.second} pos={[0, 0.62, 0.24]} />
+        </group>
+      )}
+      {def.id === "ant-rgb" && (
+        <group>
+          {[-0.1, 0.1].map((x) => <group key={x} position={[x, 0.72, 0]} rotation={[0, 0, x * 3]}><Cap r={0.018} len={0.28} m={m.glow} pos={[x * 0.7, 0.12, 0]} /><Ball r={0.035} m={m.accent} pos={[x * 1.4, 0.26, 0]} /></group>)}
+          <Ball r={0.09} m={m.second} pos={[0, 0.08, 0.22]} />
+          <Ball r={0.055} m={m.glow} pos={[0, 0.08, 0.29]} />
+        </group>
       )}
       {def.style === "ninja" && (
         <>
