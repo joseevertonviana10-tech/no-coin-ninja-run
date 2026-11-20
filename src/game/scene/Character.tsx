@@ -61,6 +61,14 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
       m.skin.color.set(customSkin);
       m.glow.color.set(customGlow);
       m.glow.emissive.set(customGlow);
+    } else if (def.id === "skeleton-rgb") {
+      const hue = (t * 0.28) % 1;
+      m.main.color.setHSL(hue, 0.9, 0.72);
+      m.second.color.setHSL((hue + 0.32) % 1, 0.85, 0.62);
+      m.accent.color.setHSL((hue + 0.66) % 1, 1, 0.68);
+      m.glow.color.setHSL(hue, 1, 0.68);
+      m.glow.emissive.setHSL(hue, 1, 0.38);
+      m.main.emissive.setHSL(hue, 0.9, 0.22);
     } else if (def.id === "monkey-rainbow") {
       const hue = (t * 0.22) % 1;
       m.main.color.setHSL(hue, 0.9, 0.48);
@@ -296,9 +304,11 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
     root.current.rotation.y = s.spin;
     visual.current.rotation.set(c.vx, 0, c.vz);
     visual.current.position.z = c.z;
-    visual.current.scale.x = customEnabled ? customBodyScale : 1;
-    visual.current.scale.z = customEnabled ? customBodyScale : 1;
-    visual.current.scale.y = THREE.MathUtils.damp(visual.current.scale.y, squash * (customEnabled ? customBodyScale : 1), 18, dt);
+    const characterScale = def.scale ?? 1;
+    const bodyScale = characterScale * (customEnabled ? customBodyScale : 1);
+    visual.current.scale.x = bodyScale;
+    visual.current.scale.z = bodyScale;
+    visual.current.scale.y = THREE.MathUtils.damp(visual.current.scale.y, squash * bodyScale, 18, dt);
     hips.current.position.y = c.hipY;
     torso.current.rotation.set(c.tx, 0, c.tz);
     head.current.rotation.set(c.hx, c.hy, 0);
