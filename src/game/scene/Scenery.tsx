@@ -9,7 +9,7 @@ type Prop = { kind: string; side: number; x: number; s: number; v: number; h: nu
 
 function mats(map: MapDef) {
   const std = (color: string, o: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-    new THREE.MeshStandardMaterial({ color, roughness: 0.85, flatShading: true, ...o });
+    new THREE.MeshStandardMaterial({ color, roughness: 0.78, flatShading: false, ...o });
   const glow = (c: string, i = 2) => std(c, { emissive: new THREE.Color(c), emissiveIntensity: i });
   return {
     b1: std("#ffffff", { map: windowsTexture("#ffe9a8", "#5a6b80"), roughness: 0.5 }),
@@ -98,7 +98,7 @@ function PropView({ p, m }: { p: Prop; m: SM }) {
     case "fence":
       return <group position={[s * 6.2, 0, 0]}>{[-2, 0, 2].map((x) => <mesh key={x} position={[x, 0.65, 0]} material={m.fence}><boxGeometry args={[0.14, 1.3, 0.14]} /></mesh>)}{[0.35, 0.9].map((y) => <mesh key={y} position={[0, y, 0]} material={m.fence}><boxGeometry args={[4.2, 0.12, 0.12]} /></mesh>)}</group>;
     case "parkTree":
-      return <group position={[s * (7 + p.v * 5), 0, 0]}><mesh position={[0, 1.5, 0]} material={m.trunk}><cylinderGeometry args={[0.3, 0.42, 3, 7]} /></mesh><mesh position={[0, 3.4, 0]} material={m.parkGreen} castShadow><icosahedronGeometry args={[2.1, 1]} /></mesh><mesh position={[-1.1, 3, 0.5]} material={m.leaf2}><sphereGeometry args={[1.1, 8, 6]} /></mesh></group>;
+      return <group position={[s * (7 + p.v * 5), 0, 0]}><mesh position={[0, 1.5, 0]} material={m.trunk}><cylinderGeometry args={[0.3, 0.42, 3, 12]} /></mesh><mesh position={[0, 3.4, 0]} material={m.parkGreen} castShadow><sphereGeometry args={[2.1, 18, 14]} /></mesh><mesh position={[-1.1, 3, 0.5]} material={m.leaf2}><sphereGeometry args={[1.1, 16, 12]} /></mesh></group>;
     case "bench":
       return <group position={[s * 5.8, 0, 0]}><mesh position={[0, 0.7, 0]} material={m.parkWood}><boxGeometry args={[2.2, 0.16, 0.55]} /></mesh><mesh position={[0, 1.15, -0.22]} material={m.parkWood}><boxGeometry args={[2.2, 0.8, 0.12]} /></mesh>{[-0.8, 0.8].map((x) => <mesh key={x} position={[x, 0.35, 0]} material={m.pipe}><boxGeometry args={[0.12, 0.7, 0.45]} /></mesh>)}</group>;
     case "lamp":
@@ -132,7 +132,7 @@ function PropView({ p, m }: { p: Prop; m: SM }) {
           </mesh>
           {[0, 1, 2].map((i) => (
             <mesh key={i} position={[0, 2 + i * 1.3, 0]} material={i === 2 ? m.snow : m.pine} castShadow>
-              <coneGeometry args={[1.8 - i * 0.45, 2.2, 8]} />
+              <coneGeometry args={[1.8 - i * 0.45, 2.2, 12]} />
             </mesh>
           ))}
           <mesh position={[0, 2.4, 0]} material={m.snow}>
@@ -182,10 +182,10 @@ function PropView({ p, m }: { p: Prop; m: SM }) {
             <cylinderGeometry args={[0.7, 1.2, 12, 8]} />
           </mesh>
           <mesh position={[0, 13, 0]} material={m.leaf} castShadow>
-            <sphereGeometry args={[4.2, 10, 8]} />
+            <sphereGeometry args={[4.2, 18, 14]} />
           </mesh>
           <mesh position={[-s * 2.5, 11, 1]} material={m.leaf2}>
-            <sphereGeometry args={[2.8, 8, 6]} />
+            <sphereGeometry args={[2.8, 16, 12]} />
           </mesh>
           <mesh position={[-s * 1.5, 5, 0]} rotation={[0, 0, -s * 0.4]} material={m.leaf}>
             <cylinderGeometry args={[0.05, 0.05, 9, 4]} />
@@ -200,7 +200,7 @@ function PropView({ p, m }: { p: Prop; m: SM }) {
             <sphereGeometry args={[1.1, 8, 6]} />
           </mesh>
           <mesh position={[0.9, 0.5, 0.5]} material={m.leaf}>
-            <sphereGeometry args={[0.8, 8, 6]} />
+            <sphereGeometry args={[0.8, 14, 10]} />
           </mesh>
         </group>
       );
@@ -645,5 +645,5 @@ function FactorySmoke({ material, y }: { material: THREE.Material; y: number }) 
     puff.current.scale.setScalar(scale);
     puff.current.rotation.y = t * 0.3;
   });
-  return <group ref={puff} position={[0, y, -2]}><mesh material={material}><sphereGeometry args={[1.05, 8, 6]} /></mesh><mesh position={[0.7, 0.35, 0]} material={material}><sphereGeometry args={[0.72, 8, 6]} /></mesh></group>;
+  return <group ref={puff} position={[0, y, -2]}><mesh material={material}><sphereGeometry args={[1.05, 8, 6]} /></mesh><mesh position={[0.7, 0.35, 0]} material={material}><sphereGeometry args={[0.72, 14, 10]} /></mesh></group>;
 }
