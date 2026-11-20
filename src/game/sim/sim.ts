@@ -40,6 +40,7 @@ export interface SimConfig {
   challenge?: ChallengeMode;
   noCoin?: boolean;
   autoDodge?: boolean;
+  jumpMult?: number;
 }
 
 export interface PlayerState {
@@ -92,6 +93,7 @@ export class Sim {
   private generate: boolean;
   private noCoin: boolean;
   private autoDodge: boolean;
+  private jumpMult: number;
 
   constructor(cfg: SimConfig) {
     this.diff = DIFFICULTIES[cfg.difficulty];
@@ -103,6 +105,7 @@ export class Sim {
     this.generate = cfg.generate !== false;
     this.noCoin = cfg.noCoin ?? false;
     this.autoDodge = cfg.autoDodge ?? false;
+    this.jumpMult = cfg.jumpMult ?? 1;
     this.gen = new TrackGenerator(makeRng(cfg.seed), this.diff, cfg.weights, cfg.challenge ?? "standard");
     if (this.generate) this.gen.fill(this.obstacles, this.coins, LOOKAHEAD, this.maxSpeed * 0.6);
   }
@@ -221,7 +224,7 @@ export class Sim {
     const prevY = p.y;
     p.coyote = p.grounded ? COYOTE : p.coyote - h;
     if ((ib.jumpBuf > 0 || ib.jumpHeld) && p.coyote > 0 && !p.falling) {
-      p.vy = JUMP_V;
+      p.vy = JUMP_V * this.jumpMult;
       p.grounded = false;
       p.coyote = 0;
       p.slideT = 0;
