@@ -266,7 +266,8 @@ export function Torso({ def, m }: { def: CharacterDef; m: Mats }) {
       <Ball r={0.15} m={m.second} pos={[0, 0.12, -0.17]} scale={[1.1, 0.72, 0.55]} />
       <Ball r={0.1} m={m.main} pos={[-0.24, 0.23, 0]} />
       <Ball r={0.1} m={m.main} pos={[0.24, 0.23, 0]} />
-      {eyes(m.dark, 0.025, 0.24, -0.2)}
+      <Ball r={0.025} m={m.dark} pos={[-0.075, 0.24, -0.2]} />
+      <Ball r={0.025} m={m.dark} pos={[0.075, 0.24, -0.2]} />
       <mesh position={[0, 0.37, 0]} material={m.accent} castShadow><torusGeometry args={[0.2, 0.035, 8, 20]} /></mesh>
       <mesh position={[0, 0.47, 0]} material={m.glow} castShadow><sphereGeometry args={[0.055, 10, 8]} /></mesh>
       {def.id === "sun-kong" && <Ball r={0.16} m={m.second} pos={[0, 0.02, 0.08]} scale={[1.35, 0.7, 0.8]} />}
