@@ -31,19 +31,18 @@ export function Coins() {
     return g;
   }, []);
   const rimGeom = useMemo(() => new THREE.TorusGeometry(COIN_R * 0.82, 0.024, 8, 40), []);
-  const rimMat = useMemo(() => new THREE.MeshToonMaterial({ color: COIN_BY_ID[coinColor].color, gradientMap: CARTOON_RAMP, emissive: COIN_BY_ID[coinColor].emissive, emissiveIntensity: 0.5 * coinGlow, toneMapped: false }), [coinColor, coinGlow]);
+  const rimMat = useMemo(() => new THREE.MeshToonMaterial({ color: COIN_BY_ID[coinColor].color, gradientMap: CARTOON_RAMP, emissive: coinColor === "rainbow" ? "#000000" : COIN_BY_ID[coinColor].emissive, emissiveIntensity: coinColor === "rainbow" ? 0 : 0.18 * coinGlow }), [coinColor, coinGlow]);
   const mats = useMemo(() => {
     const def = COIN_BY_ID[coinColor];
     const rainbow = coinColor === "rainbow";
-    const emissive = new THREE.Color(rainbow ? "#ffffff" : def.emissive);
+    const emissive = new THREE.Color(rainbow ? "#000000" : def.emissive);
     const mk = (map?: THREE.Texture) =>
       new THREE.MeshToonMaterial({
         color: "#ffffff",
         gradientMap: CARTOON_RAMP,
         map: map ?? null,
         emissive,
-        emissiveIntensity: (rainbow ? 0.95 : 0.35) * coinGlow,
-        toneMapped: false,
+        emissiveIntensity: (rainbow ? 0 : 0.16) * coinGlow,
       });
     const face = mk(coinFaceTexture());
     const side = mk();
@@ -82,8 +81,12 @@ export function Coins() {
         rim.current.setMatrixAt(n, tmp.o.matrix);
         if (rainbow) {
           const hue = (t * 0.42 + c.id * 0.11) % 1;
-          im.setColorAt(n, tmp.c.setHSL(hue, 1, 0.58));
-          rim.current.setColorAt(n, tmp.c.setHSL(hue, 0.95, 0.68));
+          im.setColorAt(n, tmp.c.setHSL(hue, 1, 0.52));
+          rim.current.setColorAt(n, tmp.c.setHSL(hue, 1, 0.66));
+          for (const material of mats) {
+            if (material instanceof THREE.MeshToonMaterial) material.emissive.setHSL(hue, 1, 0.16);
+          }
+          rimMat.emissive.setHSL(hue, 1, 0.16);
         }
         n++;
       }
@@ -92,8 +95,8 @@ export function Coins() {
     rim.current.count = n;
     im.instanceMatrix.needsUpdate = true;
     rim.current.instanceMatrix.needsUpdate = true;
-    if (rainbow && im.instanceColor) im.instanceColor.needsUpdate = true;
-    if (rainbow && rim.current.instanceColor) rim.current.instanceColor.needsUpdate = true;
+    if (im.instanceColor) im.instanceColor.needsUpdate = true;
+    if (rim.current.instanceColor) rim.current.instanceColor.needsUpdate = true;
 
     // Collected coin flies up and fades.
     const f = runtime.coinFx;
