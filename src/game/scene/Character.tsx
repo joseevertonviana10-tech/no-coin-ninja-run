@@ -305,6 +305,15 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
                 <UpperArm def={def} m={m} />
                 <group ref={elL} position={[0, -0.27, 0]}>
                   <Forearm def={def} m={m} />
+                  {def.id === "hacker-code" && (
+                    <group position={[-0.12, -0.29, -0.2]} rotation={[0.12, 0, -0.12]}>
+                      <mesh position={[0, -0.02, 0]} material={m.dark}><boxGeometry args={[0.38, 0.025, 0.24]} /></mesh>
+                      <mesh position={[0, 0.12, 0.105]} rotation={[-0.16, 0, 0]} material={m.second}><boxGeometry args={[0.35, 0.24, 0.025]} /></mesh>
+                      <mesh position={[0, 0.12, 0.09]} rotation={[-0.16, 0, 0]} material={m.glow}><boxGeometry args={[0.31, 0.2, 0.008]} /></mesh>
+                      <mesh position={[0, -0.003, -0.005]} material={m.accent}><boxGeometry args={[0.28, 0.012, 0.16]} /></mesh>
+                      {[-0.09, -0.03, 0.03, 0.09].map((x) => <mesh key={x} position={[x, 0.012, -0.005]} material={m.glow}><boxGeometry args={[0.025, 0.004, 0.07]} /></mesh>)}
+                    </group>
+                  )}
                 </group>
               </group>
               <group ref={shR} position={[0.27, 0.5, 0]}>
