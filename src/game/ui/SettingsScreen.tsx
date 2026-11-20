@@ -35,10 +35,10 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
           className="flex flex-wrap items-center gap-2 border-b border-border p-3"
           onSubmit={(e) => {
             e.preventDefault();
-            if (secretCode.trim().toUpperCase() === "PAINELHACK") {
-              s.set({ hackUnlocked: true, allCharactersRgb: true });
+            if (secretCode.trim().toUpperCase() === "SKINH4CK3R") {
+              s.set({ hackUnlocked: true, hackerSkinUnlocked: true, allCharactersRgb: true });
               setTab("Painel Hack");
-              setSecretMessage("Painel Hack desbloqueado!");
+              setSecretMessage("Conteúdo especial desbloqueado!");
               setSecretCode("");
             } else setSecretMessage("Código incorreto.");
           }}
@@ -47,7 +47,7 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
             aria-label="Código secreto"
             value={secretCode}
             onChange={(e) => setSecretCode(e.target.value)}
-            placeholder="Código secreto"
+            placeholder="Digite o código para a skin"
             autoComplete="off"
             className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
           />
