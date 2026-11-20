@@ -35,10 +35,15 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
           className="flex flex-wrap items-center gap-2 border-b border-border p-3"
           onSubmit={(e) => {
             e.preventDefault();
-            if (secretCode.trim().toUpperCase() === "SKINH4CK3R") {
-              s.set({ hackUnlocked: true, hackerSkinUnlocked: true, allCharactersRgb: true });
+            const code = secretCode.trim().toUpperCase();
+            if (code === "SKINH4CK3R") {
+              s.set({ hackerSkinUnlocked: true });
+              setSecretMessage("Skin Hacker de Código desbloqueada!");
+              setSecretCode("");
+            } else if (code === "PAINELHACK") {
+              s.set({ hackUnlocked: true, allCharactersRgb: true });
               setTab("Painel Hack");
-              setSecretMessage("Conteúdo especial desbloqueado!");
+              setSecretMessage("Painel Hack desbloqueado!");
               setSecretCode("");
             } else setSecretMessage("Código incorreto.");
           }}
@@ -92,6 +97,8 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
                 adicionam reflexos de ambiente e sombras nítidas.
               </p>
               <SwitchRow label="Efeitos visuais (poeira, faíscas)" checked={s.visualEffects} onChange={(v) => s.set({ visualEffects: v })} />
+              <SwitchRow label="Clima e efeitos ambientais" checked={s.ambientWeather} onChange={(v) => s.set({ ambientWeather: v })} />
+              <p className="pb-3 text-xs text-muted-foreground">Ativa chuva, neve, cinzas, folhas, areia e partículas temáticas de cada mapa, além da ambientação sonora.</p>
             </>
           )}
           {tab === "Áudio" && (
