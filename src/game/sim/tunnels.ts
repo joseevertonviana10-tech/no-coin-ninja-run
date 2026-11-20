@@ -16,7 +16,7 @@ export function getTunnelBlend(distance: number, entrances: readonly number[] = 
     const start = entrance - TUNNEL_VISUAL_LEAD;
     const end = start + TUNNEL_LENGTH + TUNNEL_VISUAL_LEAD;
     if (distance < start - 7 || distance > end + 8) continue;
-    const entering = smoothstep(start - 7, start + 3, distance);
+    const entering = smoothstep(start - 7, start + 12, distance);
     const leaving = 1 - smoothstep(end - 5, end + 8, distance);
     blend = Math.max(blend, entering * leaving);
   }
