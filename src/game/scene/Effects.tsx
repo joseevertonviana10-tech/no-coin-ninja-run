@@ -54,6 +54,7 @@ function HackerGlyphs() {
   useEffect(() => () => texture.dispose(), [texture]);
   useFrame((_, delta) => {
     if (!group.current) return;
+    group.current.position.x = runtime.sim?.player.x ?? 0;
     for (const glyph of group.current.children) {
       glyph.position.y -= delta * (0.5 + glyph.userData.fallSpeed);
       glyph.position.x += Math.sin(glyph.position.y * 2) * delta * 0.08;
@@ -112,13 +113,14 @@ export function Particles() {
       hackerEmit.current += Math.min(delta, 0.05);
       while (hackerEmit.current >= 0.045) {
         hackerEmit.current -= 0.045;
-        const x = (Math.random() - 0.5) * 0.52;
+        const playerX = runtime.sim?.player.x ?? 0;
+        const x = playerX + (Math.random() - 0.5) * 0.52;
         const g = 0.8 + Math.random() * 0.2;
         // Green digital fragments stream from the torso.
         pool.emit(x, 0.9 + Math.random() * 0.85, -0.12, (Math.random() - 0.5) * 0.35, -0.3 - Math.random() * 0.9, -0.25, 0.04, g, 0.16 + Math.random() * 0.22, 0.7 + Math.random() * 0.55, 0.12, -0.05);
         // Soft green smoke continuously rises from both shoes.
         if (Math.random() > 0.52) {
-          const foot = Math.random() > 0.5 ? -0.14 : 0.14;
+          const foot = playerX + (Math.random() > 0.5 ? -0.14 : 0.14);
           pool.emit(foot, 0.06, 0.12, (Math.random() - 0.5) * 0.16, 0.55 + Math.random() * 0.55, 0.1, 0.06, 0.72 + Math.random() * 0.2, 0.18, 1.15 + Math.random() * 0.7, 0.24 + Math.random() * 0.12, -0.45);
         }
       }
