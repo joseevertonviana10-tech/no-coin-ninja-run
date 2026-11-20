@@ -9,6 +9,7 @@ import { MAP_BY_ID, type MapDef } from "../data/maps";
 import { updateInput } from "../input";
 import { runtime } from "../runtime";
 import { LANE_W } from "../sim/constants";
+import { getTunnelBlend, TUNNEL_FIRST, TUNNEL_LENGTH, TUNNEL_SPACING, TUNNEL_VISUAL_LEAD } from "../sim/tunnels";
 import { useSettings, useStats, useUI, type Quality } from "../store";
 import { CharacterRig } from "./Character";
 import { Coins } from "./Coins";
@@ -122,10 +123,131 @@ function TrackArchitecture({ map }: { map: MapDef }) {
   );
 }
 
+const TUNNEL_SEGMENT_LENGTH = TUNNEL_LENGTH + TUNNEL_VISUAL_LEAD;
+
+function Tunnels({ map }: { map: MapDef }) {
+  const refs = useRef<(THREE.Group | null)[]>([]);
+  const palette: Record<MapDef["id"], { wall: string; floor: string; rib: string; stripe: string; lamp: string }> = {
+    city: { wall: "#263445", floor: "#72808c", rib: "#718397", stripe: "#ffbd45", lamp: "#ffcf7a" },
+    snow: { wall: "#1d3449", floor: "#9ab7c9", rib: "#b3d3e5", stripe: "#eafaff", lamp: "#9be4ff" },
+    volcano: { wall: "#241a1b", floor: "#51403b", rib: "#875044", stripe: "#ff5a26", lamp: "#ff713b" },
+    jungle: { wall: "#172820", floor: "#5c5740", rib: "#5c7547", stripe: "#d2b66e", lamp: "#b2d47b" },
+    race: { wall: "#202935", floor: "#66717e", rib: "#9aa5b3", stripe: "#f04e52", lamp: "#ffd36b" },
+    desert: { wall: "#4b3327", floor: "#b38a5d", rib: "#d1a675", stripe: "#f5d18b", lamp: "#ffbd67" },
+    future: { wall: "#10142d", floor: "#303455", rib: "#424d86", stripe: "#2be0ff", lamp: "#2be0ff" },
+  };
+  const p = palette[map.id];
+  useFrame(() => {
+    const d = runtime.sim?.dist ?? 0;
+    const base = Math.floor((d - TUNNEL_FIRST) / TUNNEL_SPACING);
+    refs.current.forEach((group, i) => {
+      if (!group) return;
+      const tunnelIndex = base + i - 1;
+      const entrance = TUNNEL_FIRST + tunnelIndex * TUNNEL_SPACING;
+      const visualStart = entrance - TUNNEL_VISUAL_LEAD;
+      group.position.z = d - visualStart;
+      group.visible = visualStart < d + 190 && visualStart + TUNNEL_SEGMENT_LENGTH > d - 24;
+    });
+  });
+  return (
+    <>
+      {[0, 1, 2].map((index) => (
+        <group key={index} ref={(el) => { refs.current[index] = el; }}>
+          {/* Raised emergency platforms occupy only the first and third lanes. */}
+          {[-1, 1].map((side) => (
+            <group key={side}>
+              <mesh position={[side * LANE_W, 0.035, -TUNNEL_SEGMENT_LENGTH / 2]} receiveShadow>
+                <boxGeometry args={[2.12, 0.12, TUNNEL_SEGMENT_LENGTH]} />
+                <meshToonMaterial color={p.floor} />
+              </mesh>
+              <mesh position={[side * LANE_W, 0.105, -TUNNEL_SEGMENT_LENGTH / 2]} >
+                <boxGeometry args={[1.86, 0.025, TUNNEL_SEGMENT_LENGTH]} />
+                <meshToonMaterial color={map.id === "snow" ? "#c9e9f7" : map.id === "future" ? "#232f58" : "#8b9298"} />
+              </mesh>
+              {[-1, 1].map((edge) => (
+                <mesh key={edge} position={[side * LANE_W + edge * 0.91, 0.13, -TUNNEL_SEGMENT_LENGTH / 2]}>
+                  <boxGeometry args={[0.055, 0.035, TUNNEL_SEGMENT_LENGTH]} />
+                  <meshBasicMaterial color={p.stripe} toneMapped={false} />
+                </mesh>
+              ))}
+            </group>
+          ))}
+          {/* Central lane stays open for the train. */}
+          <mesh position={[0, -0.08, -TUNNEL_SEGMENT_LENGTH / 2]}>
+            <boxGeometry args={[2.75, 0.12, TUNNEL_SEGMENT_LENGTH]} />
+            <meshToonMaterial color={p.wall} />
+          </mesh>
+          {/* Dark roof and side walls enclose the full track width. */}
+          <mesh position={[0, 6.35, -TUNNEL_SEGMENT_LENGTH / 2]}>
+            <boxGeometry args={[8.65, 0.42, TUNNEL_SEGMENT_LENGTH]} />
+            <meshToonMaterial color={p.wall} />
+          </mesh>
+          {[-4.18, 4.18].map((x) => (
+            <mesh key={x} position={[x, 3.15, -TUNNEL_SEGMENT_LENGTH / 2]}>
+              <boxGeometry args={[0.38, 6.35, TUNNEL_SEGMENT_LENGTH]} />
+              <meshToonMaterial color={p.wall} />
+            </mesh>
+          ))}
+          {/* Repeating structural ribs make the tunnel depth readable. */}
+          {Array.from({ length: 5 }, (_, i) => {
+            const z = -3 - i * 14;
+            return (
+              <group key={i}>
+                {[-4.0, 4.0].map((x) => (
+                  <mesh key={x} position={[x, 3.1, z]}>
+                    <boxGeometry args={[0.16, 6.0, 0.24]} />
+                    <meshToonMaterial color={p.rib} />
+                  </mesh>
+                ))}
+                <mesh position={[0, 6.05, z]}>
+                  <boxGeometry args={[8.05, 0.18, 0.24]} />
+                  <meshToonMaterial color={p.rib} />
+                </mesh>
+                <mesh position={[0, 5.8, z - 0.2]}>
+                  <boxGeometry args={[1.25, 0.12, 0.08]} />
+                  <meshBasicMaterial color={p.lamp} toneMapped={false} />
+                </mesh>
+              </group>
+            );
+          })}
+          {[-3.35, 3.35].map((x) => (
+            <group key={x}>
+              {[-12, -32, -52].map((z) => (
+                <pointLight key={z} position={[x, 4.9, z]} color={p.lamp} intensity={3.2} distance={15} decay={2} />
+              ))}
+              <mesh position={[x, 5.55, -TUNNEL_SEGMENT_LENGTH / 2]}>
+                <boxGeometry args={[0.12, 0.08, TUNNEL_SEGMENT_LENGTH]} />
+                <meshBasicMaterial color={p.lamp} toneMapped={false} />
+              </mesh>
+            </group>
+          ))}
+          {/* Portal bands at both ends signal the tunnel entrance and exit. */}
+          {[0, -TUNNEL_SEGMENT_LENGTH + 0.3].map((z) => (
+            <group key={z}>
+              {[-4.0, 4.0].map((x) => (
+                <mesh key={x} position={[x, 3.2, z]}>
+                  <boxGeometry args={[0.22, 6.3, 0.42]} />
+                  <meshToonMaterial color={p.stripe} />
+                </mesh>
+              ))}
+              <mesh position={[0, 6.3, z]}>
+                <boxGeometry args={[8.2, 0.28, 0.42]} />
+                <meshToonMaterial color={p.stripe} />
+              </mesh>
+            </group>
+          ))}
+        </group>
+      ))}
+    </>
+  );
+}
+
 const SHADOW: Record<Quality, number> = { low: 0, medium: 1024, high: 2048, ultra: 2048 };
 
 function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; timeOfDay: "day" | "afternoon" | "night" }) {
   const sun = useRef<THREE.DirectionalLight>(null!);
+  const hemi = useRef<THREE.HemisphereLight>(null!);
+  const ambient = useRef<THREE.AmbientLight>(null!);
   const { scene } = useThree();
   useEffect(() => {
     scene.add(sun.current.target);
@@ -137,6 +259,11 @@ function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; ti
     const x = runtime.sim?.player.x ?? 0;
     sun.current.position.set(x + 8, 18, 6);
     sun.current.target.position.set(x, 0, -8);
+    const tunnel = getTunnelBlend(runtime.sim?.dist ?? 0);
+    const daylight = 1 - tunnel * 0.965;
+    sun.current.intensity = sunPower * daylight;
+    hemi.current.intensity = hemiPower * (1 - tunnel * 0.94);
+    ambient.current.intensity = (night ? 0.18 : 0.28) * (1 - tunnel * 0.94);
   });
   const sm = SHADOW[quality];
   const night = timeOfDay === "night";
@@ -146,8 +273,8 @@ function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; ti
   const hemiPower = map.hemiIntensity * (night ? 0.28 : afternoon ? 0.82 : 1);
   return (
     <>
-      <hemisphereLight args={[night ? "#263b68" : afternoon ? "#ffd0a0" : map.hemiSky, night ? "#080d18" : map.hemiGround, hemiPower]} />
-      <ambientLight color={night ? "#7e98c9" : "#fff0d5"} intensity={night ? 0.18 : 0.28} />
+      <hemisphereLight ref={hemi} args={[night ? "#263b68" : afternoon ? "#ffd0a0" : map.hemiSky, night ? "#080d18" : map.hemiGround, hemiPower]} />
+      <ambientLight ref={ambient} color={night ? "#7e98c9" : "#fff0d5"} intensity={night ? 0.18 : 0.28} />
       <directionalLight
         ref={sun}
         color={sunColor}
@@ -418,8 +545,9 @@ function Stepper({ map }: { map: MapDef }) {
 
     // Camera
     const portrait = size.width / size.height < 0.85;
+    const landscape = size.width / size.height > 1.3;
     const persp = camera as THREE.PerspectiveCamera;
-    const fov = portrait ? 74 : 60;
+    const fov = portrait ? 74 : landscape ? 58 : 60;
     if (Math.abs(persp.fov - fov) > 0.01) {
       persp.fov = fov;
       persp.updateProjectionMatrix();
@@ -429,8 +557,8 @@ function Stepper({ map }: { map: MapDef }) {
     let k = 3;
     if (sim && (runtime.mode === "playing" || runtime.mode === "dead" || runtime.mode === "paused")) {
       const p = sim.player;
-      const zback = (portrait ? 7.4 : 6.6) * camK;
-      tmpPos.set(p.x * 0.6, (portrait ? 3.9 : 3.4) * camK + Math.max(0, p.y) * 0.55, zback);
+      const zback = (portrait ? 7.4 : landscape ? 7.2 : 6.6) * camK;
+      tmpPos.set(p.x * 0.6, (portrait ? 3.9 : landscape ? 3.55 : 3.4) * camK + Math.max(0, p.y) * 0.55, zback);
       tmpLook.set(p.x * 0.8, 1.2 + Math.max(0, p.y) * 0.6, -10);
       if (runtime.mode === "dead" && sim.reason === "fall") tmpLook.y -= 1.5;
       k = 7;
