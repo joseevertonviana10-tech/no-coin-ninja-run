@@ -9,13 +9,13 @@ function smoothstep(edge0: number, edge1: number, value: number) {
   return t * t * (3 - 2 * t);
 }
 
-/** 0 outside, smoothly darkens the view while the runner is inside a tunnel. */
-export function getTunnelBlend(distance: number) {
-  const index = Math.floor((distance - TUNNEL_FIRST + TUNNEL_VISUAL_LEAD) / TUNNEL_SPACING);
+/** Darkness envelope shared by lighting and tunnel rendering. */
+export function getTunnelBlend(distance: number, entrances: readonly number[] = []) {
   let blend = 0;
-  for (let i = index - 1; i <= index + 1; i++) {
-    const start = TUNNEL_FIRST + i * TUNNEL_SPACING - TUNNEL_VISUAL_LEAD;
+  for (const entrance of entrances) {
+    const start = entrance - TUNNEL_VISUAL_LEAD;
     const end = start + TUNNEL_LENGTH + TUNNEL_VISUAL_LEAD;
+    if (distance < start - 7 || distance > end + 8) continue;
     const entering = smoothstep(start - 7, start + 3, distance);
     const leaving = 1 - smoothstep(end - 5, end + 8, distance);
     blend = Math.max(blend, entering * leaving);
