@@ -17,6 +17,7 @@ export function CharacterSelect() {
   const [codeOpen, setCodeOpen] = useState(false);
   const [unlockCode, setUnlockCode] = useState("");
   const [unlockMessage, setUnlockMessage] = useState("");
+  const normalizeUnlockCode = (value: string) => value.normalize("NFKC").replace(/[\u200B-\u200D\uFEFF]/g, "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
   const [cat, setCat] = useState<Category>(CHARACTER_BY_ID[selected]?.category ?? "Ninjas");
   const cur = CHARACTER_BY_ID[selected];
   return (
@@ -97,7 +98,7 @@ export function CharacterSelect() {
             </div>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {CHARACTERS.filter((character) => !!character.code).map((character) => {
-                const unlocked = character.id === "hacker-code" ? hackerSkinUnlocked : settings.unlockedCodeCharacters.includes(character.id);
+                const unlocked = character.id === "hacker-code" ? hackerSkinUnlocked : (settings.unlockedCodeCharacters ?? []).includes(character.id);
                 return (
                   <button key={character.id} type="button" disabled={!unlocked} onClick={() => { set({ character: character.id }); runtime.celebrateT = 0; }} className={cn("relative flex min-h-28 flex-col items-center justify-center gap-1 rounded-xl border p-3 text-center", selected === character.id ? "border-accent bg-secondary" : "border-border bg-muted/60", !unlocked && "cursor-not-allowed")}>
                     {unlocked ? <span className="h-12 w-12 rounded-full border-2 border-white/30 shadow-lg" style={{ background: "linear-gradient(135deg, " + character.main + ", " + character.accent + ")" }} /> : <UserRound className="h-12 w-12 fill-current text-black drop-shadow-[0_2px_2px_rgba(255,255,255,0.25)]" />}
@@ -110,11 +111,11 @@ export function CharacterSelect() {
             </div>
             <form className="flex flex-wrap gap-2" onSubmit={(e) => {
               e.preventDefault();
-              const normalized = unlockCode.trim().toUpperCase();
-              const found = CHARACTERS.find((character) => character.code?.toUpperCase() === normalized);
+              const normalized = normalizeUnlockCode(unlockCode);
+              const found = normalized ? CHARACTERS.find((character) => character.code && normalizeUnlockCode(character.code) === normalized) : undefined;
               if (!found) { setUnlockMessage("Código incorreto. Confira e tente novamente."); return; }
               if (found.id === "hacker-code") set({ hackerSkinUnlocked: true });
-              else set({ unlockedCodeCharacters: Array.from(new Set([...settings.unlockedCodeCharacters, found.id])) });
+              else set({ unlockedCodeCharacters: Array.from(new Set([...(settings.unlockedCodeCharacters ?? []), found.id])) });
               setUnlockMessage(found.name + " desbloqueado! ✨");
               setUnlockCode("");
             }}>
