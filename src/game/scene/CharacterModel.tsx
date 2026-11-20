@@ -94,15 +94,6 @@ export function CharacterDetails({ def, m }: { def: CharacterDef; m: Mats }) {
       <Box s={[0.43, 0.065, 0.34]} m={m.second} pos={[0, 0.045, 0]} />
       <Box s={[0.09, 0.09, 0.035]} m={m.accent} pos={[0, 0.05, -0.19]} />
       <Ball r={0.025} m={m.glow} pos={[0, 0.37, -0.19]} />
-      {def.id === "hacker-code" && (
-        <group position={[-0.42, -0.02, -0.24]} rotation={[0.12, 0, -0.16]}>
-          <Box s={[0.38, 0.025, 0.24]} m={m.dark} pos={[0, -0.02, 0]} />
-          <Box s={[0.35, 0.24, 0.025]} m={m.second} pos={[0, 0.12, 0.105]} rot={[-0.16, 0, 0]} />
-          <Box s={[0.31, 0.2, 0.008]} m={m.glow} pos={[0, 0.12, 0.09]} rot={[-0.16, 0, 0]} />
-          <Box s={[0.28, 0.012, 0.16]} m={m.accent} pos={[0, -0.003, -0.005]} />
-          {[-0.09, -0.03, 0.03, 0.09].map((x) => <Box key={x} s={[0.025, 0.004, 0.07]} m={m.glow} pos={[x, 0.012, -0.005]} />)}
-        </group>
-      )}
       {def.id === "ninja-oni" && (
         <>
           {[-1, 1].map((side) => <mesh key={side} position={[side * 0.15, 0.58, 0.02]} rotation={[0, 0, side * 0.22]} material={m.accent} castShadow><coneGeometry args={[0.055, 0.2, 6]} /></mesh>)}
