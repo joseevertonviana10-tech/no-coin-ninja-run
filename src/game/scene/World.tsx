@@ -17,13 +17,23 @@ import { Obstacles } from "./Obstacles";
 import { Scenery } from "./Scenery";
 import { sideTexture, trackTexture } from "./textures";
 
+const CARTOON_RAMP = (() => {
+  const data = new Uint8Array([78, 78, 78, 255, 142, 142, 142, 255, 205, 205, 205, 255, 255, 255, 255, 255]);
+  const texture = new THREE.DataTexture(data, 4, 1, THREE.RGBAFormat);
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+})();
+
 const TRACK_LEN = 260;
 const TRACK_W = 8.4;
 
 function Ground({ map }: { map: MapDef }) {
   const track = useMemo(() => trackTexture(map), [map]);
   const side = useMemo(() => sideTexture(map), [map]);
-  const sideMat = useRef<THREE.MeshStandardMaterial>(null!);
+  const sideMat = useRef<THREE.MeshToonMaterial>(null!);
   useFrame((st) => {
     const d = runtime.sim?.dist ?? 0;
     track.offset.y = (d / TRACK_LEN) * track.repeat.y;
@@ -34,12 +44,13 @@ function Ground({ map }: { map: MapDef }) {
     <group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -TRACK_LEN / 2 + 30]} receiveShadow>
         <planeGeometry args={[TRACK_W, TRACK_LEN]} />
-        <meshStandardMaterial map={track} roughness={map.id === "future" ? 0.25 : 0.9} metalness={map.id === "future" ? 0.5 : 0} />
+        <meshToonMaterial map={track} gradientMap={CARTOON_RAMP} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, map.sideEmissive && map.id === "volcano" ? -0.6 : -0.02, -TRACK_LEN / 2 + 30]} receiveShadow>
         <planeGeometry args={[240, TRACK_LEN]} />
-        <meshStandardMaterial
+        <meshToonMaterial
           ref={sideMat}
+          gradientMap={CARTOON_RAMP}
           map={side}
           roughness={0.95}
           emissive={map.sideEmissive ?? "#000000"}
