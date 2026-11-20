@@ -48,7 +48,7 @@ function mats(map: MapDef) {
     lava: glow("#ff5a10", 2.5),
     dune: std("#e4b672"),
     cactus: std("#4f8a3a"),
-    ruin: std("#c9945a", { flatShading: true }),
+    ruin: std("#c9945a", {}),
     crowd: std("#ffffff", { map: crowdTexture() }),
     stand: std("#c8ccd4"),
     red: std("#e63946"),
