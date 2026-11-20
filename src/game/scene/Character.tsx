@@ -61,11 +61,12 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
       m.skin.color.set(customSkin);
       m.glow.color.set(customGlow);
       m.glow.emissive.set(customGlow);
-    } else if (def.id === "skeleton-rgb") {
-      const hue = (t * 0.28) % 1;
-      m.main.color.setHSL(hue, 0.9, 0.72);
+    } else if (def.id === "skeleton-rgb" || def.id === "ant-rgb") {
+      const hue = (t * (def.id === "ant-rgb" ? 0.36 : 0.28)) % 1;
+      m.main.color.setHSL(hue, 0.9, def.id === "ant-rgb" ? 0.48 : 0.72);
       m.second.color.setHSL((hue + 0.32) % 1, 0.85, 0.62);
       m.accent.color.setHSL((hue + 0.66) % 1, 1, 0.68);
+      m.skin.color.setHSL((hue + 0.12) % 1, 0.75, 0.62);
       m.glow.color.setHSL(hue, 1, 0.68);
       m.glow.emissive.setHSL(hue, 1, 0.38);
       m.main.emissive.setHSL(hue, 0.9, 0.22);
