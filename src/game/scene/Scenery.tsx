@@ -34,7 +34,7 @@ function mats(map: MapDef) {
     snow: std("#f6fbff"),
     leaf: std("#2f7a2a"),
     leaf2: std("#3f9a34"),
-    rock: std(map.id === "volcano" ? "#2a2220" : map.id === "desert" ? "#c08a50" : "#7a7670", { flatShading: true }),
+    rock: std(map.id === "volcano" ? "#2a2220" : map.id === "desert" ? "#c08a50" : "#7a7670", {}),
     lava: glow("#ff5a10", 2.5),
     dune: std("#e4b672"),
     cactus: std("#4f8a3a"),
