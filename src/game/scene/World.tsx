@@ -159,7 +159,7 @@ function Tunnels({ map }: { map: MapDef }) {
   return (
     <>
       {[0, 1, 2].map((index) => (
-        <group key={index} ref={(el) => { refs.current[index] = el; }}>
+        <group key={index} visible={false} ref={(el) => { refs.current[index] = el; }}>
           {/* Raised emergency platforms occupy only the first and third lanes. */}
           {[-1, 1].map((side) => (
             <group key={side}>
@@ -253,6 +253,16 @@ function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; ti
   const hemi = useRef<THREE.HemisphereLight>(null!);
   const ambient = useRef<THREE.AmbientLight>(null!);
   const { scene } = useThree();
+  const night = timeOfDay === "night";
+  const afternoon = timeOfDay === "afternoon";
+  const sunColor = night ? "#9bbcff" : afternoon ? "#ffbd83" : map.sun;
+  const sunPower = map.sunIntensity * (night ? 0.12 : afternoon ? 0.72 : 1);
+  const hemiPower = map.hemiIntensity * (night ? 0.28 : afternoon ? 0.82 : 1);
+  const baseFog = useMemo(
+    () => new THREE.Color(night ? "#283c5e" : afternoon ? (map.id === "volcano" ? "#c86c53" : "#f0b58c") : map.fog),
+    [map.id, map.fog, night, afternoon],
+  );
+  const tunnelFog = useMemo(() => new THREE.Color("#050914"), []);
   useEffect(() => {
     scene.add(sun.current.target);
     return () => {
@@ -268,13 +278,13 @@ function Lights({ map, quality, timeOfDay }: { map: MapDef; quality: Quality; ti
     sun.current.intensity = sunPower * daylight;
     hemi.current.intensity = hemiPower * (1 - tunnel * 0.94);
     ambient.current.intensity = (night ? 0.18 : 0.28) * (1 - tunnel * 0.94);
+    if (scene.fog instanceof THREE.Fog) {
+      scene.fog.color.copy(baseFog).lerp(tunnelFog, tunnel * 0.985);
+      scene.fog.near = THREE.MathUtils.lerp(night ? 12 : map.fogNear, 8, tunnel);
+      scene.fog.far = THREE.MathUtils.lerp(night ? 92 : map.fogFar, 80, tunnel);
+    }
   });
   const sm = SHADOW[quality];
-  const night = timeOfDay === "night";
-  const afternoon = timeOfDay === "afternoon";
-  const sunColor = night ? "#9bbcff" : afternoon ? "#ffbd83" : map.sun;
-  const sunPower = map.sunIntensity * (night ? 0.12 : afternoon ? 0.72 : 1);
-  const hemiPower = map.hemiIntensity * (night ? 0.28 : afternoon ? 0.82 : 1);
   return (
     <>
       <hemisphereLight ref={hemi} args={[night ? "#263b68" : afternoon ? "#ffd0a0" : map.hemiSky, night ? "#080d18" : map.hemiGround, hemiPower]} />
