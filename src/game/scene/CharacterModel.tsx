@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import type { CharacterDef } from "../data/characters";
 import { patternTexture } from "./textures";
 
@@ -70,10 +71,20 @@ const Cap = ({ r, len, m, pos = [0, 0, 0], scale = [1, 1, 1] }: { r: number; len
     <capsuleGeometry args={[r, len, 6, 14]} />
   </mesh>
 );
+const roundedBoxCache = new Map<string, RoundedBoxGeometry>();
+function roundedBox(s: [number, number, number]) {
+  const key = s.join(":");
+  let geometry = roundedBoxCache.get(key);
+  if (!geometry) {
+    const radius = Math.min(...s) * 0.12;
+    geometry = new RoundedBoxGeometry(s[0], s[1], s[2], 3, radius);
+    roundedBoxCache.set(key, geometry);
+  }
+  return geometry;
+}
+
 const Box = ({ s, m, pos = [0, 0, 0], rot = [0, 0, 0] }: { s: [number, number, number]; m: THREE.Material; pos?: [number, number, number]; rot?: [number, number, number] }) => (
-  <mesh position={pos} rotation={rot} material={m} castShadow>
-    <boxGeometry args={s} />
-  </mesh>
+  <mesh position={pos} rotation={rot} geometry={roundedBox(s)} material={m} castShadow />
 );
 const Ball = ({ r, m, pos = [0, 0, 0], scale = [1, 1, 1] }: { r: number; m: THREE.Material; pos?: [number, number, number]; scale?: [number, number, number] }) => (
   <mesh position={pos} scale={scale} material={m} castShadow>
