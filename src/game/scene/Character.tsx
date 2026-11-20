@@ -275,7 +275,7 @@ export function CharacterRig({ def, bot }: { def: CharacterDef; bot?: { id: numb
     hips.current.position.y = c.hipY;
     torso.current.rotation.set(c.tx, 0, c.tz);
     head.current.rotation.set(c.hx, c.hy, 0);
-    head.current.scale.setScalar(1.08);
+    head.current.scale.setScalar(1.14);
     shL.current.rotation.set(c.slx, 0, c.slz);
     shR.current.rotation.set(c.srx, 0, c.srz);
     elL.current.rotation.x = c.el;
