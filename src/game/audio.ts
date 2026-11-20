@@ -17,6 +17,7 @@ interface MusicDef {
   leadWave: Wave;
   bassWave: Wave;
   leadGain: number;
+  bell?: boolean;
 }
 
 const MAJ = [0, 2, 4, 5, 7, 9, 11];
@@ -28,7 +29,7 @@ const DOR = [0, 2, 3, 5, 7, 9, 10];
 const _ = null;
 const MUSIC: Record<MapId, MusicDef> = {
   city: { bpm: 94, root: 45, scale: DOR, prog: [0, 3, 4, 3], bass: [0, _, 0, _, 4, _, 0, _, 0, _, 6, _, 4, _, 2, _], lead: [7, _, 9, _, 11, _, 9, _, _, 7, _, _, 4, _, _, _], kick: "x..x..x...x..x..", snare: "....x.......x...", hat: "x.xx.x.x.x.xx.x.", leadWave: "triangle", bassWave: "sawtooth", leadGain: 0.045 },
-  snow: { bpm: 88, root: 52, scale: MAJ, prog: [0, 5, 3, 4], bass: [0, _, _, _, 4, _, _, _, 0, _, _, _, 4, _, _, _], lead: [7, 9, 11, 14, _, 11, 9, _, 7, _, 4, _, 9, _, _, _], kick: "x.......x.......", snare: "........x.......", hat: "..x...x...x...x.", leadWave: "sine", bassWave: "triangle", leadGain: 0.085 },
+  snow: { bpm: 88, root: 52, scale: MAJ, prog: [0, 5, 3, 4], bass: [0, _, _, _, 4, _, _, _, 0, _, _, _, 4, _, _, _], lead: [7, 9, 11, 14, _, 11, 9, _, 7, _, 4, _, 9, _, _, _], kick: "x.......x.......", snare: "........x.......", hat: "..x...x...x...x.", leadWave: "sine", bassWave: "triangle", leadGain: 0.085, bell: true },
   volcano: { bpm: 142, root: 38, scale: PHRYG, prog: [0, 1, 0, 6], bass: [0, 0, _, 0, _, 0, 1, _, 0, 0, _, 0, _, 4, 1, _], lead: [7, _, _, 8, _, _, 7, _, 11, _, 8, _, 7, _, _, _], kick: "x..x.x.x.x..x.x.", snare: "....x.......x..x", hat: "xxxxxxxxxxxxxxxx", leadWave: "sawtooth", bassWave: "sawtooth", leadGain: 0.04 },
   jungle: { bpm: 108, root: 50, scale: PENTA, prog: [0, 3, 1, 4], bass: [0, _, _, 2, _, _, 4, _, 0, _, _, 2, _, 4, _, _], lead: [9, 7, _, 4, 7, _, 9, _, 12, _, 9, 7, _, 4, _, _], kick: "x...x..x...x..x.", snare: "..x...x...x...x..", hat: "x.x.x.x.x.x.x.x.", leadWave: "triangle", bassWave: "sine", leadGain: 0.085 },
   race: { bpm: 148, root: 40, scale: MIN, prog: [0, 5, 6, 4], bass: [0, 0, 7, 0, 0, 7, 0, 0, 0, 0, 7, 0, 5, 5, 6, 6], lead: [7, _, 7, _, 9, _, 10, _, 9, _, 7, _, 4, _, 5, _], kick: "x...x...x...x...", snare: "....x.......x...", hat: "xxxxxxxxxxxxxxxx", leadWave: "square", bassWave: "square", leadGain: 0.035 },
@@ -284,6 +285,10 @@ class AudioEngine {
     if (d.kick[i] === "x") this.tone(150, 0.18, "sine", this.music, 0.5, 45, 0, t);
     if (d.snare[i] === "x") this.noise(0.12, this.music, 0.22, 1800, "bandpass", undefined, t);
     if (d.hat[i] === "x") this.noise(0.03, this.music, 0.07, 8000, "highpass", undefined, t);
+    if (d.bell && (i === 2 || i === 6 || i === 10 || i === 14)) {
+      this.tone(1760, 0.22, "sine", this.music, 0.035, 1320, 0, t);
+      this.tone(2349, 0.16, "sine", this.music, 0.018, undefined, 0.025, t);
+    }
     const b = d.bass[i];
     if (b !== null && b !== undefined) this.tone(note(b, 0), stepDur * 1.6, d.bassWave, this.music, 0.09, undefined, 0, t);
     const l = d.lead[i];
