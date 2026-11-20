@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, Lock, UserRound } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { CATEGORIES, CHARACTERS, CHARACTER_BY_ID, type Category } from "../data/characters";
@@ -14,6 +14,9 @@ export function CharacterSelect() {
   const hackerSkinUnlocked = useSettings((s) => s.hackerSkinUnlocked);
   const settings = useSettings();
   const [creatorOpen, setCreatorOpen] = useState(false);
+  const [codeOpen, setCodeOpen] = useState(false);
+  const [unlockCode, setUnlockCode] = useState("");
+  const [unlockMessage, setUnlockMessage] = useState("");
   const [cat, setCat] = useState<Category>(CHARACTER_BY_ID[selected]?.category ?? "Ninjas");
   const cur = CHARACTER_BY_ID[selected];
   return (
@@ -35,11 +38,12 @@ export function CharacterSelect() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2 rounded-xl bg-muted/60 p-1">
-          <button type="button" onClick={() => setCreatorOpen(false)} className={cn("rounded-lg px-3 py-2 text-sm font-bold", !creatorOpen ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>Personagens</button>
-          <button type="button" onClick={() => setCreatorOpen(true)} className={cn("rounded-lg px-3 py-2 text-sm font-bold", creatorOpen ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>Crie seu personagem</button>
+        <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-muted/60 p-1">
+          <button type="button" onClick={() => { setCreatorOpen(false); setCodeOpen(false); }} className={cn("rounded-lg px-2 py-2 text-xs font-bold", !creatorOpen && !codeOpen ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>Personagens</button>
+          <button type="button" onClick={() => { setCreatorOpen(false); setCodeOpen(true); }} className={cn("rounded-lg px-2 py-2 text-xs font-bold", codeOpen ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>PERSONAGENS DE CÓDIGO</button>
+          <button type="button" onClick={() => { setCreatorOpen(true); setCodeOpen(false); }} className={cn("rounded-lg px-2 py-2 text-xs font-bold", creatorOpen ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>Crie seu personagem</button>
         </div>
-        {!creatorOpen && (
+        {!creatorOpen && !codeOpen && (
         <div className="glass p-3">
           <div className="flex gap-1.5 overflow-x-auto pb-2">
             {CATEGORIES.map((c) => (
@@ -60,7 +64,7 @@ export function CharacterSelect() {
             ))}
           </div>
           <div className="grid max-h-[30vh] grid-cols-2 gap-2 overflow-y-auto sm:grid-cols-4">
-            {CHARACTERS.filter((c) => c.category === cat && (c.id !== "hacker-code" || hackerSkinUnlocked)).map((c) => (
+            {CHARACTERS.filter((c) => c.category === cat && !c.code).map((c) => (
               <button
                 key={c.id}
                 type="button"
@@ -84,6 +88,41 @@ export function CharacterSelect() {
             ))}
           </div>
         </div>
+        )}
+        {codeOpen && (
+          <section className="glass space-y-3 p-3">
+            <div>
+              <div className="font-display text-lg text-accent">PERSONAGENS DE CÓDIGO</div>
+              <p className="text-xs text-muted-foreground">As silhuetas escondem personagens secretos. Digite o código correspondente para revelar e desbloquear cada um.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {CHARACTERS.filter((character) => !!character.code).map((character) => {
+                const unlocked = character.id === "hacker-code" ? hackerSkinUnlocked : settings.unlockedCodeCharacters.includes(character.id);
+                return (
+                  <button key={character.id} type="button" disabled={!unlocked} onClick={() => { set({ character: character.id }); runtime.celebrateT = 0; }} className={cn("relative flex min-h-28 flex-col items-center justify-center gap-1 rounded-xl border p-3 text-center", selected === character.id ? "border-accent bg-secondary" : "border-border bg-muted/60", !unlocked && "cursor-not-allowed")}>
+                    {unlocked ? <span className="h-12 w-12 rounded-full border-2 border-white/30 shadow-lg" style={{ background: "linear-gradient(135deg, " + character.main + ", " + character.accent + ")" }} /> : <UserRound className="h-12 w-12 fill-current text-black drop-shadow-[0_2px_2px_rgba(255,255,255,0.25)]" />}
+                    <span className="text-xs font-bold">{unlocked ? character.name : "??????"}</span>
+                    {!unlocked && <Lock className="absolute right-2 top-2 h-3.5 w-3.5 text-muted-foreground" />}
+                    {unlocked && <span className="text-[10px] text-emerald-400">Desbloqueado</span>}
+                  </button>
+                );
+              })}
+            </div>
+            <form className="flex flex-wrap gap-2" onSubmit={(e) => {
+              e.preventDefault();
+              const normalized = unlockCode.trim().toUpperCase();
+              const found = CHARACTERS.find((character) => character.code?.toUpperCase() === normalized);
+              if (!found) { setUnlockMessage("Código incorreto. Confira e tente novamente."); return; }
+              if (found.id === "hacker-code") set({ hackerSkinUnlocked: true });
+              else set({ unlockedCodeCharacters: Array.from(new Set([...settings.unlockedCodeCharacters, found.id])) });
+              setUnlockMessage(found.name + " desbloqueado! ✨");
+              setUnlockCode("");
+            }}>
+              <input aria-label="Código do personagem" value={unlockCode} onChange={(e) => setUnlockCode(e.target.value)} placeholder="Digite o código do personagem" autoComplete="off" className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent" />
+              <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground">Desbloquear</button>
+              {unlockMessage && <p role="status" className="w-full text-xs text-muted-foreground">{unlockMessage}</p>}
+            </form>
+          </section>
         )}
         {creatorOpen && (
         <section className="glass space-y-3 p-3">
