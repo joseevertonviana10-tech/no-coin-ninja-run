@@ -11,6 +11,7 @@ export function CharacterSelect() {
   const selected = useSettings((s) => s.character);
   const set = useSettings((s) => s.set);
   const bestBy = useStats((s) => s.bestByCharacter);
+  const hackerSkinUnlocked = useSettings((s) => s.hackerSkinUnlocked);
   const [cat, setCat] = useState<Category>(CHARACTER_BY_ID[selected]?.category ?? "Ninjas");
   const cur = CHARACTER_BY_ID[selected];
   return (
@@ -52,7 +53,7 @@ export function CharacterSelect() {
             ))}
           </div>
           <div className="grid max-h-[30vh] grid-cols-2 gap-2 overflow-y-auto sm:grid-cols-4">
-            {CHARACTERS.filter((c) => c.category === cat).map((c) => (
+            {CHARACTERS.filter((c) => c.category === cat && (c.id !== "hacker-code" || hackerSkinUnlocked)).map((c) => (
               <button
                 key={c.id}
                 type="button"
